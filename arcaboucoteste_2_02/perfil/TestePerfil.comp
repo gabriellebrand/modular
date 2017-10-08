@@ -1,5 +1,5 @@
-# Composicao do programa de teste de uma lista genérica duplamente encadeada
-# Este exemplo utiliza o arcabouço completo 
+# Composicao do programa de teste de uma lista genï¿½rica duplamente encadeada
+# Este exemplo utiliza o arcabouï¿½o completo 
 
 [Diretorios]
 
@@ -8,7 +8,7 @@ PathDefault =  .
 err         =  .
 
 [Modulos]
-TestPerfil
+TestPer
 Perfil
 
 [BuildInicio]
