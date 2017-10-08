@@ -7,20 +7,22 @@
  *  Nome da base de software:    Arcabouço para a automaçăo de testes de programas redigidos em C
  *
  *  Projeto: Trabalho 2 - Programaçăo Modular
- *  Autores: GB - Gabrielle Brandenburg
-    GC - Gabriel Cantergiani
-    WB - Wellingotn Bezerra
+ *  Autores:    GB - Gabrielle Brandenburg
+                GC - Gabriel Cantergiani
+                WB - Wellingotn Bezerra
  *
  *  $HA Histórico de evoluçăo:
  *     Versăo      Autor            Data                Observaçőes
- *     1.0       GB,GC,WB        02/out/2017       Criação do módulo
+ *     1.0          WB        02/out/2017       Criação do módulo
  *
  ***************************************************************************/
 
-#include <stdio.h>
+#include   <stdio.h>
 #include <stdlib.h>
-#include <malloc.h>
-#include <string.h>
+#include   <string.h>
+#include   <memory.h>
+#include   <malloc.h>
+#include   <assert.h>
 
 #define PERFIL_OWN
 #include "PERFIL.h"
@@ -36,24 +38,19 @@
 typedef struct PER_tagPerfil {
 
     char nome[100];
-        /* Nome do perfil
-         */
+        /* Nome do perfil */
     
     char email[20];
-        /* Email do perfil
-         */
+        /* Email do perfil */
     
     char cidade[20];
-        /* Cidade do perfil
-         */
+        /* Cidade do perfil */
     
     int idade;
-        /* Idade do perfil
-         */
+        /* Idade do perfil */
     
     int id;
-        /* Id do perfil
-         */
+        /* Id do perfil */
 
 } PER_tpPerfil ;
 
@@ -64,23 +61,24 @@ typedef struct PER_tagPerfil {
  *  Função: PER Criar Perfil
  *****/
 
-Perfil* PER_CriarPerfil(char *nome, char *email, char *cidade, int idade)
-{
+PER_tpCondRet  PER_CriarPerfil( PER_tppPerfil* ppPerfil, char *pNome, char *pEmail, char *pCidade, int pIdade ) {
     
-	Perfil *p;
+	PER_tpPerfil* pPerfil; 
 
-	p = (Perfil*) malloc( sizeof(Perfil) );
-	if( p == NULL ){
-		printf("Espaco insuficiente");
-		exit(1);
+	pPerfil = ( PER_tpPerfil * ) malloc( sizeof( PER_tpPerfil ));
+	if( pPerfil == NULL )
+    {
+		return PER_CondRetFaltouMemoria ;
 	} /* if */
     
-	strcpy(p->nome, nome);
-	strcpy(p->email, email);
-	strcpy(p->cidade, cidade);
-	p->idade = idade;
+	strcpy(pPerfil->nome, pNome);
+	strcpy(pPerfil->email, pEmail);
+	strcpy(pPerfil->cidade, pCidade);
+	pPerfil->idade = pIdade;
 
-	return p;
+    *ppPerfil = pPerfil;
+
+	return PER_CondRetOK ;
     
 } /* Fim função: PER  Criar Perfil */
 
@@ -90,8 +88,8 @@ Perfil* PER_CriarPerfil(char *nome, char *email, char *cidade, int idade)
  *  Função: PER Mostrar Perfil
  *****/
 
-void PER_MostrarPerfil(Perfil *p) {
-	printf("nome: %s, email: %s, cidade: %s, idade: %d", p->nome, p->email, p->cidade, p->idade);
+void PER_MostrarPerfil(PER_tppPerfil *pPerfil) {
+	//printf("nome: %s, email: %s, cidade: %s, idade: %d", pPerfil->nome, pPerfil->email, pPerfil->cidade, pPerfil->idade);
 
 } /* Fim função: PER  Mostrar Perfil */
 
@@ -100,8 +98,15 @@ void PER_MostrarPerfil(Perfil *p) {
  *  Função: PER Destruir Perfil
  *****/
 
-void PER_destroirPerfil(Perfil *p) {
-	free(p);
+PER_tpCondRet PER_destroirPerfil(PER_tppPerfil *pPerfil) {
+
+	if(pPerfil == NULL) {
+        return PER_CondRetPonteiroNulo;
+    }
+
+    free(pPerfil);
+
+    return PER_CondRetOK;
 
 } /* Fim função: PER  Destruir Perfil */
 
