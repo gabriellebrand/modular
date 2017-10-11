@@ -48,9 +48,6 @@ typedef struct PER_tagPerfil {
     
     int idade;
         /* Idade do perfil */
-    
-    int id;
-        /* Id do perfil */
 
 } PER_tpPerfil ;
 
@@ -88,10 +85,10 @@ PER_tpCondRet  PER_CriarPerfil( PER_tppPerfil* ppPerfil, char *pNome, char *pEma
  *  Função: PER Mostrar Perfil
  *****/
 
-void PER_MostrarPerfil(PER_tppPerfil *pPerfil) {
+//void PER_MostrarPerfil(PER_tppPerfil *pPerfil) {
 	//printf("nome: %s, email: %s, cidade: %s, idade: %d", pPerfil->nome, pPerfil->email, pPerfil->cidade, pPerfil->idade);
 
-} /* Fim função: PER  Mostrar Perfil */
+//} /* Fim função: PER  Mostrar Perfil */
 
 /***************************************************************************
  *
