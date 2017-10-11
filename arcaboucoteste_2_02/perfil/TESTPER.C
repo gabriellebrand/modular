@@ -48,9 +48,6 @@ typedef struct PER_tagPerfil {
     
     int idade;
         /* Idade do perfil */
-    
-    int id;
-        /* Id do perfil */
 
 } PER_tpPerfil ;
 
@@ -80,26 +77,24 @@ PER_tppPerfil   vtPerfil[ DIM_VT_PERFIL ] ;
 TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
   int indexPerfil = -1,
-      idade = -1;
-      CondRetEsperada = -1;
+      idade = -1,
+      NumLidos = -1;
 
   char nome[100],
        email[100],
        cidade[100];
 
-  char *stringObtida;      
-
   PER_tpCondRet CondRetObtido   = PER_CondRetOK ;
-  PER_tpCondRet CondRetEsperada = PER_CondRetFaltouMemoria ;
+  PER_tpCondRet CondRetEsperada = PER_CondRetOK ;
 
-  PER_tpPerfil* pPerfil;
+  PER_tppPerfil* pPerfil = NULL;
 
   
   //* Testar PER Criar Perfil */
 
   if ( strcmp( ComandoTeste , CRIAR_PERFIL_CMD ) == 0 )
   {
-    pPerfil = ( PER_tpPerfil * ) malloc( sizeof( PER_tpPerfil ) ) ;
+    pPerfil = ( PER_tppPerfil * ) malloc( sizeof( PER_tpPerfil ) ) ;
     NumLidos = LER_LerParametros( "isssi" , &indexPerfil, 
                                             &nome,
                                             &email,
@@ -110,7 +105,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
       return TST_CondRetParm ;
     } /* if */
 
-    CondRetObtido = PER_CriarPerfil( pPerfil, nome, email, cidade, idade )
+    CondRetObtido = PER_CriarPerfil( pPerfil, nome, email, cidade, idade );
     
     return TST_CompararInt( CondRetEsperada , CondRetObtido ,
       "Retorno errado ao criar perfil." );

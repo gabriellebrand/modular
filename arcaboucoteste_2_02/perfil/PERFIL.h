@@ -82,7 +82,13 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 
 PER_tpCondRet  PER_CriarPerfil( PER_tppPerfil* ppPerfil, char *pNome, char *pEmail, char *pCidade, int pIdade );
 
-void PER_MostrarPerfil(PER_tppPerfil *pPerfil);
+//void PER_MostrarPerfil(PER_tppPerfil *pPerfil);
 
 PER_tpCondRet PER_destroirPerfil(PER_tppPerfil *pPerfil);
 
+#undef PERFIL_EXT
+
+/********** Fim do módulo de definição: PER  Perfil **********/
+
+#else
+#endif
