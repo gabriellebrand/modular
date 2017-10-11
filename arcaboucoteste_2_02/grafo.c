@@ -67,10 +67,10 @@ GRA_tpCondRet GRA_criarGrafo(GRA_tpGrafo * pGrafo, void   ( * ExcluirValor ) ( v
     return GRA_CondRetFaltouMemoria;
   } /* if */
 
-    pGrafo->pVertCorr = NULL;
-    /* grafo está vazio, entao nao ha vertice corrente (NULL) */
-    pGrafo->pVertices = LIS_criarLista(ExcluirValor);
-    /*cria a lista de vertices vazia passando a funcao que sabe destruir o valor do vertice*/
+    pGrafo->pVertCorr = NULL; /* grafo está vazio, entao nao ha vertice corrente (NULL) */
+    
+    pGrafo->pVertices = LIS_criarLista(ExcluirValor);  /*cria a lista de vertices vazia passando a funcao que sabe destruir o valor do vertice*/
+   
     if (pGrafo->pVertices == NULL){
        free(pGrafo); /*libera memoria alocada para o grafo*/
        return GRA_CondRetFaltouMemoria;
