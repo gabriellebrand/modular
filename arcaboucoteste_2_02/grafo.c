@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <LISTA.c>
 
-#define GRAFO_OWN // MARK: pra que serve isso??
+#define GRAFO_OWN
 #include "GRAFO.h"
 #undef GRAFO_OWN
 
@@ -37,6 +37,10 @@ typedef struct GRA_tagGrafo {
 
 	LIS_tppLista pVertCorr;
 		/* ponteiro para o vertice corrente */
+
+  int ( * Compara ) ( void * pValor, void * valorChave ) ;
+  /*ponteiro para a funcao que compara o valor armazenado no vertice com a chave identificadora - retorna zero se forem iguais */
+
 } GRA_tpGrafo
 
 /***** Protótipos das funções encapuladas no módulo *****/
