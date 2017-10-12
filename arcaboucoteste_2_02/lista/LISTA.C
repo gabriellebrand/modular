@@ -515,7 +515,6 @@
 
    } /* Fim função: LIS  &Procurar elemento pelo conteudo apontado */
 
-
 /*****  Código das funções encapsuladas no módulo  *****/
 
 
