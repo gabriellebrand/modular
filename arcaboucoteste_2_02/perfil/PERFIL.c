@@ -79,6 +79,19 @@ PER_tpCondRet  PER_CriarPerfil( PER_tppPerfil* ppPerfil, char *pNome, char *pEma
     
 } /* Fim função: PER  Criar Perfil */
 
+/***************************************************************************
+ *
+ *  Função: PER Compara Perfil
+ *****/
+
+int PER_compararPerfil(void * pValor1, void * pValor2) {
+    PER_tppPerfil pPerfil;
+    char *email;
+    pPerfil = (PER_tppPerfil) pValor1;
+    email = (char*) pValor2;
+    return strcmp(pPerfil->email, email);
+
+} /* Fim função: PER  Comparar Perfil */    
 
 /***************************************************************************
  *
