@@ -112,7 +112,7 @@ typedef struct GRA_tagConteudoVert {
 
 /***** Protótipos das funções exportadas pelo módulo *****/
 
-GRA_tpCondRet GRA_criarGrafo(GRA_tpGrafo * pGrafo, void ( * ExcluirValor )( void * pValor ), int (*CompararValor)(void * pValor1, void * pValor2)); //done  
+GRA_tpCondRet GRA_criarGrafo(GRA_tppGrafo pGrafo, void ( * ExcluirValor )( void * pValor ), int (*CompararValor)(void * pValor1, void * pValor2)); //done  
 GRA_tpCondRet GRA_destruirGrafo(GRA_tppGrafo pGrafo); //done
 GRA_tpCondRet GRA_irVertice (GRA_tppGrafo pGrafo, void *pValor); //done
 void * GRA_obterCorrente (GRA_tppGrafo pGrafo);
@@ -136,7 +136,7 @@ void GRA_destruirValorListaAresta(void * pValor);
 *  Função: GRA  &Criar Grafo
 * **************************************************************************/
 
-GRA_tpCondRet GRA_criarGrafo(GRA_tpGrafo * pGrafo, void (* ExcluirValor)(void * pValor), int (* CompararValor)(void * pValor1, void * pValor2)) {
+GRA_tpCondRet GRA_criarGrafo(GRA_tppGrafo pGrafo, void (* ExcluirValor)(void * pValor), int (* CompararValor)(void * pValor1, void * pValor2)) {
   if (pGrafo){
     //TODO: o grafo já foi alocado! necessário destruir
     GRA_destruirGrafo(pGrafo);
@@ -251,7 +251,7 @@ GRA_tpCondRet GRA_destruirGrafo(GRA_tppGrafo pGrafo) {
 *  Função: GRA  &Esvaziar Grafo
 * **************************************************************************/
 
-void GRA_esvaziarGrafo(GRA_tpGrafo *pGrafo) {
+void GRA_esvaziarGrafo(GRA_tppGrafo pGrafo) {
   LIS_DestruirLista(pGrafo->pVertices);
   LIS_DestruirLista(pGrafo->pVertCorr);
 } /* Fim função: GRA  &Esvaziar Grafo */
@@ -296,10 +296,8 @@ GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pValor) {
   }
 
   LIS_InserirElementoApos(pVertice, pConteudoVert);
-  GRA_inserirVertice(pGrafo, pVertice);
 
-  return GRA_CondRetOK;
-
+  return GRA_inserirVertice(pGrafo, pVertice);
 }
 
 /***************************************************************************
@@ -313,6 +311,8 @@ GRA_tpCondRet GRA_inserirVertice(GRA_tppGrafo pGrafo, LIS_tppLista pVertice) {
   } /* if */
 
   LIS_InserirElementoApos(pGrafo->pVertices, pVertice);
+  pGrafo->pVertCorr = (LIS_tppLista) LIS_ObterValor(pGrafo->pVertices);
+  return GRA_CondRetOK
 }
 
 /***************************************************************************
@@ -336,6 +336,7 @@ GRA_tpCondRet GRA_irVertice (GRA_tppGrafo pGrafo, void *pValor) {
   pVertices = pGrafo->pVertices;
   /* vai para o inicio da lista vertices */
   IrInicioLista(pVertices);
+  //pGrafo->pVertCorr = (LIS_tppLista) LIS_ObterValor(pVertices);
 
   /* procura na lista de vertices o vertice atraves da chave identificadora */
   if (LIS_ProcurarPorConteudo(pGrafo->pVertices , pValor) == LIS_CondRetOK) {
@@ -347,14 +348,54 @@ GRA_tpCondRet GRA_irVertice (GRA_tppGrafo pGrafo, void *pValor) {
 }
 
 /***********************************************************************
-*
 *  $FC Função: GRA - Destruir Aresta
 *  $ED Descrição da função
 *    Ele nao faz nada com o valor1(vertice). Pois se voce matasse
 *    esse valor, voce estaria matando o vértice em si.
 *    Como não queremos isso, só ira ser apagada a referencia 
 *    para tal valor.
-*
 ***********************************************************************/
 
 void GRA_destruirValorListaAresta(void * pValor) {}
+
+/***********************************************************************
+*  $FC Função: GRA - Obter Corrente
+*  $ED Descrição da função
+*     Obtem a referência para o vertice corrente da lista vertices
+*     Se o grafo não existir (ponteiro nulo), ele retorna nulo. 
+*     Se o grafo estiver vazio (vertice corrente nulo), tambem é retornado nulo.
+***********************************************************************/
+
+LIS_tppLista * GRA_ObterCorrente( GRA_tppGrafo pGrafo ) {
+  if (!pGrafo) {
+    return NULL; //Grafo nao existe
+  }
+  return pGrafo->pVertCorr;
+}
+
+/***********************************************************************
+*  $FC Função: GRA - Obter Corrente
+*  $ED Descrição da função
+*     Obtem a referência do pValor contido dentro do vertice corrente.
+*     - retorna NULL, se o grafo não existir (ponteiro nulo), ele retorna nulo. 
+*     - retorna NULL, se o grafo estiver vazio (vertice corrente nulo).
+*     - retorna NULL, se o conteudo do vertice nao existir.
+*     - demais casos, retorna o valor do conteudo do vertice
+***********************************************************************/
+
+void * GRA_ObterValor( GRA_tppGrafo pGrafo ) {
+  LIS_tppLista pVerticeCorr;
+  GRA_tpConteudoVert *pConteudo;
+  pVerticeCorr = GRA_ObterCorrente(pGrafo);
+  if (!pVerticeCorr) {
+    return NULL;
+  }
+
+  pConteudo = (GRA_tpConteudoVert *) LIS_ObterValor(pVerticeCorr);
+
+  if (!pConteudo){
+    return NULL
+  }
+
+  return pConteudo->pValor;
+}
