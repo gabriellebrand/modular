@@ -120,9 +120,7 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *
 ***********************************************************************/
 
-   LIS_tppLista LIS_CriarLista(
-             void   ( * ExcluirValor ) ( void * pDado ) ) ;
-
+   LIS_tppLista LIS_CriarLista(void (* ExcluirValor)(void * pDado), int (*CompararValor)(void *pValor1, void *pValor2));
 
 /***********************************************************************
 *
@@ -203,9 +201,7 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *
 ***********************************************************************/
 
-   LIS_tpCondRet LIS_InserirElementoApos( LIS_tppLista pLista ,
-                                          void * pValor        )
-       ;
+   LIS_tpCondRet LIS_InserirElementoApos( LIS_tppLista pLista ,void * pValor);
 
 
 /***********************************************************************
@@ -366,7 +362,7 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 
    LIS_tpCondRet LIS_ProcurarPorConteudo( LIS_tppLista pLista ,
                                     void * pValor        ) ;
-
+                                    
 #undef LISTA_EXT
 
 /********** Fim do módulo de definição: LIS  Lista duplamente encadeada **********/

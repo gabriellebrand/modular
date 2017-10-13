@@ -96,8 +96,7 @@
 *  Função: LIS  &Criar lista
 *  ****/
 
-   LIS_tppLista LIS_CriarLista(
-             void   ( * ExcluirValor ) ( void * pDado ), int ( * CompararValor ) ( void * pValor1, void * pValor2 ) )
+   LIS_tppLista LIS_CriarLista(void (* ExcluirValor)(void * pDado), int (*CompararValor)(void *pValor1, void *pValor2))
    {
 
       LIS_tpLista * pLista = NULL ;
@@ -487,8 +486,7 @@
 *  Função: LIS  &Procurar elemento pelo conteudo apontado
 *  ****/
 
-   LIS_tpCondRet LIS_ProcurarPorConteudo( LIS_tppLista pLista ,
-                                    void * pValor        )
+   LIS_tpCondRet LIS_ProcurarPorConteudo( LIS_tppLista pLista , void * pValor)
    {
 
       tpElemLista * pElem ;
@@ -591,4 +589,3 @@
    } /* Fim função: LIS  -Limpar a cabeça da lista */
 
 /********** Fim do módulo de implementação: LIS  Lista duplamente encadeada **********/
-

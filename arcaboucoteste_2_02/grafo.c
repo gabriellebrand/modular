@@ -25,6 +25,7 @@
 #include "GRAFO.h"
 #undef GRAFO_OWN
 
+/****** PROVISORIO ATE CRIAR O .H: TYPEDEF DO ENUM ******/
  typedef enum {
      
  /* 0 */ GRA_CondRetOK ,
@@ -89,6 +90,7 @@ typedef struct GRA_tagGrafo {
 
 } GRA_tpGrafo;
 
+//MARK: TYPEDEF DEFINIDO AQUI PROVISORIAMENTE (até criar o .h)
 typedef struct GRA_tagGrafo * GRA_tppGrafo ;
 
 /***********************************************************************
