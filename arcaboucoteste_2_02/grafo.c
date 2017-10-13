@@ -65,15 +65,25 @@ typedef struct GRA_tagConteudoVert {
 
 /***** Protótipos das funções exportadas pelo módulo *****/
 
-  GRA_tpCondRet GRA_criarGrafo(GRA_tpGrafo * pGrafo, void ( * ExcluirValor )( void * pValor ), int (*CompararValor)(void * pValor1, void * pValor2));
-  void * GRA_destruirGrafo(GRA_tppGrafo pGrafo);
-  GRA_tpCondRet GRA_irVertice (GRA_tppGrafo pGrafo, void *pValor);
-  void * GRA_obterCorrente (GRA_tppGrafo pGrafo);
-  GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pValor);
-  GRA_tpCondRet GRA_destruirVertCorr(GRA_tppGrafo pGrafo);
-  GRA_tpCondRet GRA_criarAresta(GRA_tppGrafo pGrafo)
+GRA_tpCondRet GRA_criarGrafo(GRA_tpGrafo * pGrafo, void ( * ExcluirValor )( void * pValor ), int (*CompararValor)(void * pValor1, void * pValor2)); //done  
+void * GRA_destruirGrafo(GRA_tppGrafo pGrafo); //done
+GRA_tpCondRet GRA_irVertice (GRA_tppGrafo pGrafo, void *pValor); //done
+void * GRA_obterCorrente (GRA_tppGrafo pGrafo);
+GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pValor); //done
+GRA_tpCondRet GRA_destruirVertCorr(GRA_tppGrafo pGrafo);
+GRA_tpCondRet GRA_criarAresta(GRA_tppGrafo pGrafo, *pValor1, *pValor2);
 /********************************************************/
 
+/***** Protótipos das funções encapsuladas pelo módulo *****/
+void GRA_destruirVertice(void *pValor);
+void GRA_destruirConteudoVertice(void * conteudoVertice);
+int GRA_compararVertice(void *pValor1, void *pValor2);
+int GRA_compararConteudoVert(void *pValor1, void *pValor2);
+void GRA_esvaziarGrafo(GRA_tppGrafo pGrafo);
+GRA_tpCondRet GRA_inserirVertice(GRA_tppGrafo pGrafo, LIS_tppLista pVertice);
+void GRA_destruirValorListaAresta(void * pValor)
+
+/********************************************************/
 
 /***************************************************************************
 *  Função: GRA  &Criar Grafo
@@ -82,6 +92,7 @@ typedef struct GRA_tagConteudoVert {
 GRA_tpCondRet GRA_criarGrafo(GRA_tpGrafo * pGrafo, void (* ExcluirValor)(void * pValor), int (* CompararValor)(void * pValor1, void * pValor2)) {
   if (pGrafo){
     //TODO: o grafo já foi alocado! necessário destruir
+    GRA_destruirGrafo(pGrafo);
   }
 
   pGrafo = (GRA_tpGrafo*)malloc(sizeof(GRA_tpGrafo));
@@ -107,8 +118,8 @@ GRA_tpCondRet GRA_criarGrafo(GRA_tpGrafo * pGrafo, void (* ExcluirValor)(void * 
  /***********************************************************************
 *  $FC Função: GRA - Destruir Vertice
 *  $ED Descrição da função
-*  Dando um free no dado armazenado pelo vertice, e destruindo a lista arestas
-*  Essa funcao deve ser enviada como parametro do campor ExcluirValor da lista VERTICE
+*  Destroi a lista VERTICE
+*  Essa funcao deve ser enviada como parametro do campo ExcluirValor da lista VERTICES
 ***********************************************************************/
 
  void GRA_destruirVertice(void *pValor) {
@@ -129,7 +140,7 @@ GRA_tpCondRet GRA_criarGrafo(GRA_tpGrafo * pGrafo, void (* ExcluirValor)(void * 
 
 void GRA_destruirConteudoVertice(void * conteudoVertice) {
   GRA_tpConteudoVert *conteudo;
-  conteudo = (GRA_tpConteudoVert *) conteudoVertice; //GABRIELLE: não sei se estou fazendo esse typecast corretamente!!!
+  conteudo = (GRA_tpConteudoVert *) conteudoVertice; 
 
   free(conteudo->pValor) ;
 
@@ -141,7 +152,8 @@ void GRA_destruirConteudoVertice(void * conteudoVertice) {
 
 /***************************************************************************
 *  Função: GRA  &Comparar Vértice
-*  Descrição: Essa funcao deve ser passada para o campo 'compara' da lista VERTICES
+*  $ED Descrição da função
+*  Essa funcao deve ser passada para o campo 'compara' da lista VERTICES e da lista ARESTAS
 *  **************************************************************************/
 
 int GRA_compararVertice(void *pValor1, void *pValor2){
@@ -158,7 +170,8 @@ int GRA_compararVertice(void *pValor1, void *pValor2){
 
 /***************************************************************************
 *  Função: GRA  &Comparar Conteudo de Vértice
-*  Descrição: Essa funcao deve ser passada para o campo 'compara' da lista VERTICE
+*  $ED Descrição da função
+*  Essa funcao deve ser passada para o campo 'compara' da lista VERTICE
 * **************************************************************************/
 
 int GRA_compararConteudoVert(void *pValor1, void *pValor2){
@@ -188,6 +201,7 @@ void GRA_destruirGrafo(GRA_tppGrafo pGrafo) {
 /***************************************************************************
 *  Função: GRA  &Esvaziar Grafo
 * **************************************************************************/
+
 void GRA_esvaziarGrafo(GRA_tppGrafo pGrafo) {
   LIS_DestruirLista(pGrafo->pVertices);
   LIS_DestruirLista(pGrafo->pVertCorr);
@@ -196,10 +210,10 @@ void GRA_esvaziarGrafo(GRA_tppGrafo pGrafo) {
 /***************************************************************************
 *
 *  Função: GRA  &Criar Vertice
-*  ****/
+* **************************************************************************/
 
 GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pValor) {
-  
+  //TODO: VERIFICAR SE JÁ EXISTE UM VERTICE COM O PVALOR ESCOLHIDO
   LIS_tppLista pVertice;
   LIS_tppLista pArestas;
   GRA_tpConteudoVert * pConteudoVert;
@@ -208,7 +222,7 @@ GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pValor) {
     return GRA_CondRetGrafoNaoExiste;
   } /* if */
 
-  pArestas = LIS_CriarLista(GRA_destruirValorListaAresta);
+  pArestas = LIS_CriarLista(GRA_destruirValorListaAresta, GRA_compararVertice);
   /*OBS: a função de destruição de arestas não deve destruir seu pValor, pois ele está referenciado também na lista vérticeS */
   if (!pArestas) {
     returnGRA_CondRetFaltouMemoria;
@@ -228,8 +242,11 @@ GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pValor) {
 
   /* cria lista vértice de apenas um nó */
   pVertice = LIS_CriarLista(GRA_destruirConteudoVert, GRA_compararConteudoVert);
-  LIS_InserirElementoApos(pVertice, pConteudoVert);
+  if (!pVertice){
+    return GRA_CondRetFaltouMemoria;
+  }
 
+  LIS_InserirElementoApos(pVertice, pConteudoVert);
   GRA_inserirVertice(pGrafo, pVertice);
 
   return GRA_CondRetOK;
@@ -250,12 +267,34 @@ GRA_tpCondRet GRA_inserirVertice(GRA_tppGrafo pGrafo, LIS_tppLista pVertice) {
 }
 
 /***************************************************************************
-*
-*  Função: GRA  &Ir Vertice
-*  ****/
+*  Função: GRA  Ir Vertice
+*  $ED Descrição da função
+*  Essa funcao recebe um pValor que é a chave de busca do grafo.
+*  O vertice corrente do grafo passa a ser o vertice buscado, caso seja encontrado.
+*  Se não for encontrado, o vertice corrente continua o mesmo.
+* **************************************************************************/
 
 GRA_tpCondRet GRA_irVertice (GRA_tppGrafo pGrafo, void *pValor) {
 
+  LIS_tppLista pVertices;
+
+  if (!pGrafo) {
+    return GRA_CondRetGrafoNaoExiste
+  }
+  if (!pGrafo->pVertCorr) {
+    return GRA_CondRetGrafoVazio
+  }
+  pVertices = pGrafo->pVertices;
+  /* vai para o inicio da lista vertices */
+  IrInicioLista(pVertices);
+
+  /* procura na lista de vertices o vertice atraves da chave identificadora */
+  if (LIS_ProcurarPorConteudo(pGrafo->pVertices , pValor) == LIS_CondRetOK) {
+    /*achou o vertice, entao vertice corrente passa a ser o vertice buscado*/
+    pGrafo->pVertCorr = LIS_ObterValor(pVertices);
+    return GRA_CondRetOK;
+  }
+  return GRA_CondRetNaoAchou;
 }
 
 /***********************************************************************
@@ -269,7 +308,7 @@ GRA_tpCondRet GRA_irVertice (GRA_tppGrafo pGrafo, void *pValor) {
 *
 ***********************************************************************/
 
-void DestruirValorListaAresta(void * pValor) {}
+void GRA_destruirValorListaAresta(void * pValor) {}
 
 
 
