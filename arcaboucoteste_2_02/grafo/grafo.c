@@ -67,6 +67,10 @@
  /* 12 */ GRA_CondRetArestaIlegal
         /* Aresta para o proprio vértice */
 
+  /* 13 */  GRA_ValorNulo;
+        /* Ponteiro nulo */
+ 
+
    } GRA_tpCondRet ;
 
  /***********************************************************************
@@ -115,10 +119,12 @@ typedef struct GRA_tagConteudoVert {
 GRA_tpCondRet GRA_criarGrafo(GRA_tppGrafo pGrafo, void ( * ExcluirValor )( void * pValor ), int (*CompararValor)(void * pValor1, void * pValor2)); //done  
 GRA_tpCondRet GRA_destruirGrafo(GRA_tppGrafo pGrafo); //done
 GRA_tpCondRet GRA_irVertice (GRA_tppGrafo pGrafo, void *pValor); //done
-void * GRA_obterCorrente (GRA_tppGrafo pGrafo);
+GRA_tpCondRet GRA_irVizinho (GRA_tppGrafo pGrafo, void *pValor); //done
+void * GRA_obterCorrente (GRA_tppGrafo pGrafo); //done
+void * GRA_obterValor( GRA_tppGrafo pGrafo); //done
 GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pValor); //done
-GRA_tpCondRet GRA_destruirVertCorr(GRA_tppGrafo pGrafo);
-GRA_tpCondRet GRA_criarAresta(GRA_tppGrafo pGrafo, void * pValor1, void * pValor2);
+GRA_tpCondRet GRA_destruirVertCorr(GRA_tppGrafo pGrafo); //done
+GRA_tpCondRet GRA_criarAresta(GRA_tppGrafo pGrafo, void * pValor1, void * pValor2); //done
 /********************************************************/
 
 /***** Protótipos das funções encapsuladas pelo módulo *****/
@@ -136,15 +142,12 @@ void GRA_destruirValorListaAresta(void * pValor);
 *  Função: GRA  &Criar Grafo
 * **************************************************************************/
 
-GRA_tpCondRet GRA_criarGrafo(GRA_tppGrafo pGrafo, void (* ExcluirValor)(void * pValor), int (* CompararValor)(void * pValor1, void * pValor2)) {
-  if (pGrafo){
-    //TODO: o grafo já foi alocado! necessário destruir
-    GRA_destruirGrafo(pGrafo);
-  }
+GRA_tppGrafo GRA_criarGrafo(void (* ExcluirValor)(void * pValor), int (* CompararValor)(void * pValor1, void * pValor2)) {
+  GRA_tpGrafo *pGrafo = NULL;
 
   pGrafo = (GRA_tpGrafo*)malloc(sizeof(GRA_tpGrafo));
   if (pGrafo == NULL) {
-    return GRA_CondRetFaltouMemoria;
+    return NULL;
   } /* if */
 
   pGrafo->pVertCorr = NULL; /* grafo está vazio, entao nao ha vertice corrente */
@@ -156,10 +159,10 @@ GRA_tpCondRet GRA_criarGrafo(GRA_tppGrafo pGrafo, void (* ExcluirValor)(void * p
    
   if (pGrafo->pVertices == NULL) {
     free(pGrafo); /*libera memoria alocada para o grafo*/
-    return GRA_CondRetFaltouMemoria;
+    return NULL;
   } /*if */
 
-  return GRA_CondRetOK;
+  return pGrafo;
 }/* Fim função: GRA  &Criar Grafo */
 
  /***********************************************************************
@@ -303,7 +306,7 @@ GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pValor) {
 /***************************************************************************
 *
 *  Função: GRA  &Inserir Vertice
-*  ****/
+* ****/
 
 GRA_tpCondRet GRA_inserirVertice(GRA_tppGrafo pGrafo, LIS_tppLista pVertice) {
   if (!pVertice){
@@ -347,6 +350,83 @@ GRA_tpCondRet GRA_irVertice (GRA_tppGrafo pGrafo, void *pValor) {
   return GRA_CondRetNaoAchou;
 }
 
+/***************************************************************************
+*  Função: GRA  Ir Vertice
+*  $ED Descrição da função
+*  Essa funcao recebe um pValor que é a chave de busca do grafo.
+*  O vertice corrente do grafo passa a ser o vertice buscado, caso seja encontrado.
+*  Se não for encontrado, o vertice corrente continua o mesmo.
+* **************************************************************************/
+
+GRA_tpCondRet GRA_irVertice (GRA_tppGrafo pGrafo, void *pValor) {
+
+  LIS_tppLista pVertices;
+
+  if (!pGrafo) {
+    return GRA_CondRetGrafoNaoExiste;
+  }
+  if (!pGrafo->pVertCorr) {
+    return GRA_CondRetGrafoVazio;
+  }
+  pVertices = pGrafo->pVertices;
+  /* vai para o inicio da lista vertices */
+  IrInicioLista(pVertices);
+  //pGrafo->pVertCorr = (LIS_tppLista) LIS_ObterValor(pVertices);
+
+  /* procura na lista de vertices o vertice atraves da chave identificadora */
+  if (LIS_ProcurarPorConteudo(pGrafo->pVertices , pValor) == LIS_CondRetOK) {
+    /*achou o vertice, entao vertice corrente passa a ser o vertice buscado*/
+    pGrafo->pVertCorr = (LIS_tppLista) LIS_ObterValor(pVertices);
+    return GRA_CondRetOK;
+  }
+  return GRA_CondRetNaoAchou;
+}
+
+/***************************************************************************
+*  Função: GRA  Ir Vizinho
+*  $ED Descrição da função
+*  Essa funcao recebe um pValor que é a chave de busca do grafo.
+*  O vertice buscado passa a ser o vertice corrente do grafo , caso seja encontrado.
+*  Se não for encontrado, o vertice corrente continua o mesmo.
+*  A busca é feita na lista de arestas do vertice corrente.
+* **************************************************************************/
+
+GRA_tpCondRet GRA_irVizinho (GRA_tppGrafo pGrafo, void *pValor) {
+
+  LIS_tppLista pVerticeCorr, listaArestas;
+  GRA_tpConteudoVert *conteudoVert;
+
+  if (!pGrafo) {
+    return GRA_CondRetGrafoNaoExiste;
+  }
+
+  pVerticeCorr = pGrafo->pVertCorr;
+  if (!pVertCorr) {
+    return GRA_CondRetGrafoVazio;
+  }
+
+  
+  conteudoVert = (tpConteudoVert *) LIS_ObterValor(pVerticeCorr);
+  if (!conteudoVert) { return GRA_CondRetValorNulo; }
+
+  listaArestas = conteudoVert->pArestas;
+
+  if (LIS_ObterValor(listaArestas) == NULL) {
+    return GRA_CondRetNaoPossuiAresta;
+  }
+
+  /* vai para o inicio da lista vertices */
+  IrInicioLista(listaArestas);
+
+  /* procura na lista de arestas o vertice atraves da chave identificadora */
+  if (LIS_ProcurarPorConteudo(listaArestas , pValor) == LIS_CondRetOK) {
+    /*achou o vertice, entao vertice corrente passa a ser o vertice buscado*/
+    pGrafo->pVertCorr = (LIS_tppLista) LIS_ObterValor(listaArestas);
+    return GRA_CondRetOK;
+  }
+  return GRA_CondRetArestaNaoExiste;
+}
+
 /***********************************************************************
 *  $FC Função: GRA - Destruir Aresta
 *  $ED Descrição da função
@@ -366,15 +446,13 @@ void GRA_destruirValorListaAresta(void * pValor) {}
 *     Se o grafo estiver vazio (vertice corrente nulo), tambem é retornado nulo.
 ***********************************************************************/
 
-LIS_tppLista * GRA_ObterCorrente( GRA_tppGrafo pGrafo ) {
-  if (!pGrafo) {
-    return NULL; //Grafo nao existe
-  }
+LIS_tppLista * GRA_obterCorrente( GRA_tppGrafo pGrafo ) {
+  if (!pGrafo) { return NULL; /*Grafo nao existe*/ }
   return pGrafo->pVertCorr;
 }
 
 /***********************************************************************
-*  $FC Função: GRA - Obter Corrente
+*  $FC Função: GRA - Obter Valor
 *  $ED Descrição da função
 *     Obtem a referência do pValor contido dentro do vertice corrente.
 *     - retorna NULL, se o grafo não existir (ponteiro nulo), ele retorna nulo. 
@@ -383,19 +461,78 @@ LIS_tppLista * GRA_ObterCorrente( GRA_tppGrafo pGrafo ) {
 *     - demais casos, retorna o valor do conteudo do vertice
 ***********************************************************************/
 
-void * GRA_ObterValor( GRA_tppGrafo pGrafo ) {
+void * GRA_obterValor( GRA_tppGrafo pGrafo ) {
   LIS_tppLista pVerticeCorr;
-  GRA_tpConteudoVert *pConteudo;
-  pVerticeCorr = GRA_ObterCorrente(pGrafo);
-  if (!pVerticeCorr) {
-    return NULL;
-  }
+  GRA_tpConteudoVert * pConteudo;
+  pVerticeCorr = GRA_obterCorrente(pGrafo);
+  if (!pVerticeCorr) { return NULL; }
 
   pConteudo = (GRA_tpConteudoVert *) LIS_ObterValor(pVerticeCorr);
 
-  if (!pConteudo){
-    return NULL
-  }
+  if (!pConteudo){ return NULL; }
 
   return pConteudo->pValor;
+}
+
+/***********************************************************************
+*  $FC Função: GRA - Criar aresta
+*  $ED Descrição da função
+***********************************************************************/
+
+GRA_tpCondRet GRA_criarAresta(GRA_tppGrafo pGrafo, void * pValor1, void * pValor2) {
+  LIS_tppLista pVertice1, pVertice2;
+  GRA_tpConteudoVert *conteudoVert1, *conteudoVert2;
+
+  if (!pGrafo) { return GRA_CondRetGrafoNaoExiste; }
+  if (!pValor1 || !pValor2) { return GRA_ValorNulo; }
+  
+  /* passo1: obter a referencia para os vertices */
+  if (GRA_irVertice (pGrafo, pValor1) == GRA_CondRetOK) {
+    pVertice1 = GRA_obterCorrente(pGrafo);
+  } else { return GRA_CondRetNaoAchou; }
+  
+  if (GRA_irVertice (pGrafo, pValor2) == GRA_CondRetOK) {
+    pVertice2 = GRA_obterCorrente(pGrafo);
+  } else { return GRA_CondRetNaoAchou; }
+
+  /*obter o conteudo dos vertices*/
+  conteudoVert1 = (GRA_tpConteudoVert *) LIS_ObterValor(pVertice1);
+  conteudoVert2 = (GRA_tpConteudoVert *) LIS_ObterValor(pVertice2);
+  if(!conteudoVert1 || !conteudoVert2) {
+    return GRA_CondRetVerticeNaoExiste;
+  }
+
+  /*passo2: verificar se os dois vertices sao iguais -> aresta para si mesmo nao pode */
+  if (GRA_compararVertice(pVertice1, pValor2) == 0) { return GRA_CondRetArestaIlegal; }
+
+  /*passo3: verificar se ja existe aresta entre eles*/
+  if (GRA_irVertice (conteudoVert1->pArestas, pValor2) == GRA_CondRetOK) {
+    return GRA_CondRetArestaJaExiste;
+  }
+  
+  /*passo4: adicionar vertice2 na lista de arestas do vertice 1
+            adicionar vertice1 na lista de arestas do vertice 2 */
+  if (LIS_InserirElementoApos(conteudoVert1->pArestas, pVertice2) != LIS_CondRetOK) {
+    return GRA_CondRetFaltouMemoria;
+  }
+
+  if (LIS_InserirElementoApos(conteudoVert2->pArestas, pVertice1) != LIS_CondRetOK) {
+    LIS_ExcluirElemento(conteudoVert1->pArestas);
+    return GRA_CondRetFaltouMemoria;
+  }
+
+  return GRA_CondRetOK;
+}
+
+/***********************************************************************
+*  $FC Função: GRA - Destruir Vértice Corrente
+***********************************************************************/
+
+GRA_tpCondRet GRA_destruirVertCorr(GRA_tppGrafo pGrafo) {
+  if (!pGrafo) { return GRA_CondRetGrafoNaoExiste; }
+
+  LIS_ExcluirElemento(pGrafo->pVertices);
+  pGrafo->pVerticeCorr = LIS_ObterValor(pGrafo->pVertices);
+
+  return GRA_CondRetOK;
 }
