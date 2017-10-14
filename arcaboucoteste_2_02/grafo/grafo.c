@@ -1,29 +1,12 @@
-/***************************************************************************
-*  $MCI Módulo de implementação: GRA  Grafo Não-dirigido
-*
-*  Arquivo gerado:              GRAFO.c
-*  Letras identificadoras:      GRA
-*
-*  Nome da base de software:    Arcabouço para a automação de testes de programas redigidos em C
-*  Arquivo da base de software: D:\AUTOTEST\PROJETOS\LISTA.BSW
-*
-*  Projeto: INF 1301 / 1628 Automatização dos testes de módulos C
-*  Gestor:  LES/DI/PUC-Rio
-*  Autores:    gba - Gabrielle Brandemburg dos Anjos
-*			   
-*
-*  $HA Histórico de evolução:
-*     Versão  Autor      Data     Observações
-*     1       gba 20/sep/2017 Início desenvolvimento
-*
-* *************************************************************************/
 #include <stdlib.h>
 #include <stdio.h>
-#include <LISTA.h>
+#include "LISTA.h"
+#include "string.h"
 
-#define GRAFO_OWN
+/*#define GRAFO_OWN
 #include "GRAFO.h"
 #undef GRAFO_OWN
+*/
 
 /****** PROVISORIO ATE CRIAR O .H: TYPEDEF DO ENUM ******/
  typedef enum {
@@ -62,14 +45,13 @@
         /* Ja possui essa aresta */,
 
  /* 11 */ GRA_CondRetVerticeJaExiste,
-        /* Vertice nao Existe */
+        /* Vertice ja Existe */
 
- /* 12 */ GRA_CondRetArestaIlegal
+ /* 12 */ GRA_CondRetArestaIlegal,
         /* Aresta para o proprio vértice */
 
-  /* 13 */  GRA_ValorNulo;
+ /* 13 */  GRA_CondRetValorNulo
         /* Ponteiro nulo */
- 
 
    } GRA_tpCondRet ;
 
@@ -120,7 +102,7 @@ GRA_tppGrafo GRA_criarGrafo(void ( * ExcluirValor )( void * pValor ), int (*Comp
 GRA_tpCondRet GRA_destruirGrafo(GRA_tppGrafo pGrafo); //done
 GRA_tpCondRet GRA_irVertice (GRA_tppGrafo pGrafo, void *pValor); //done
 GRA_tpCondRet GRA_irVizinho (GRA_tppGrafo pGrafo, void *pValor); //done
-void * GRA_obterCorrente (GRA_tppGrafo pGrafo); //done
+LIS_tppLista GRA_obterCorrente(GRA_tppGrafo pGrafo); //done
 void * GRA_obterValor( GRA_tppGrafo pGrafo); //done
 GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pValor); //done
 GRA_tpCondRet GRA_destruirVertCorr(GRA_tppGrafo pGrafo); //done
@@ -274,6 +256,10 @@ GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pValor) {
     return GRA_CondRetGrafoNaoExiste;
   } /* if */
 
+  if (GRA_irVertice(pGrafo, pValor) == GRA_CondRetOK) {
+    return GRA_CondRetVerticeJaExiste;
+  }
+
   pArestas = LIS_CriarLista(GRA_destruirValorListaAresta, GRA_compararVertice);
   /*OBS: a função de destruição de arestas não deve destruir seu pValor, pois ele está referenciado também na lista vérticeS */
   if (!pArestas) {
@@ -315,39 +301,7 @@ GRA_tpCondRet GRA_inserirVertice(GRA_tppGrafo pGrafo, LIS_tppLista pVertice) {
 
   LIS_InserirElementoApos(pGrafo->pVertices, pVertice);
   pGrafo->pVertCorr = (LIS_tppLista) LIS_ObterValor(pGrafo->pVertices);
-  return GRA_CondRetOK
-}
-
-/***************************************************************************
-*  Função: GRA  Ir Vertice
-*  $ED Descrição da função
-*  Essa funcao recebe um pValor que é a chave de busca do grafo.
-*  O vertice corrente do grafo passa a ser o vertice buscado, caso seja encontrado.
-*  Se não for encontrado, o vertice corrente continua o mesmo.
-* **************************************************************************/
-
-GRA_tpCondRet GRA_irVertice (GRA_tppGrafo pGrafo, void *pValor) {
-
-  LIS_tppLista pVertices;
-
-  if (!pGrafo) {
-    return GRA_CondRetGrafoNaoExiste;
-  }
-  if (!pGrafo->pVertCorr) {
-    return GRA_CondRetGrafoVazio;
-  }
-  pVertices = pGrafo->pVertices;
-  /* vai para o inicio da lista vertices */
-  IrInicioLista(pVertices);
-  //pGrafo->pVertCorr = (LIS_tppLista) LIS_ObterValor(pVertices);
-
-  /* procura na lista de vertices o vertice atraves da chave identificadora */
-  if (LIS_ProcurarPorConteudo(pGrafo->pVertices , pValor) == LIS_CondRetOK) {
-    /*achou o vertice, entao vertice corrente passa a ser o vertice buscado*/
-    pGrafo->pVertCorr = (LIS_tppLista) LIS_ObterValor(pVertices);
-    return GRA_CondRetOK;
-  }
-  return GRA_CondRetNaoAchou;
+  return GRA_CondRetOK;
 }
 
 /***************************************************************************
@@ -401,12 +355,12 @@ GRA_tpCondRet GRA_irVizinho (GRA_tppGrafo pGrafo, void *pValor) {
   }
 
   pVerticeCorr = pGrafo->pVertCorr;
-  if (!pVertCorr) {
+  if (!pVerticeCorr) {
     return GRA_CondRetGrafoVazio;
   }
 
   
-  conteudoVert = (tpConteudoVert *) LIS_ObterValor(pVerticeCorr);
+  conteudoVert = (GRA_tpConteudoVert *) LIS_ObterValor(pVerticeCorr);
   if (!conteudoVert) { return GRA_CondRetValorNulo; }
 
   listaArestas = conteudoVert->pArestas;
@@ -446,7 +400,7 @@ void GRA_destruirValorListaAresta(void * pValor) {}
 *     Se o grafo estiver vazio (vertice corrente nulo), tambem é retornado nulo.
 ***********************************************************************/
 
-LIS_tppLista * GRA_obterCorrente( GRA_tppGrafo pGrafo ) {
+LIS_tppLista GRA_obterCorrente(GRA_tppGrafo pGrafo) {
   if (!pGrafo) { return NULL; /*Grafo nao existe*/ }
   return pGrafo->pVertCorr;
 }
@@ -484,7 +438,7 @@ GRA_tpCondRet GRA_criarAresta(GRA_tppGrafo pGrafo, void * pValor1, void * pValor
   GRA_tpConteudoVert *conteudoVert1, *conteudoVert2;
 
   if (!pGrafo) { return GRA_CondRetGrafoNaoExiste; }
-  if (!pValor1 || !pValor2) { return GRA_ValorNulo; }
+  if (!pValor1 || !pValor2) { return GRA_CondRetValorNulo; }
   
   /* passo1: obter a referencia para os vertices */
   if (GRA_irVertice (pGrafo, pValor1) == GRA_CondRetOK) {
@@ -506,7 +460,7 @@ GRA_tpCondRet GRA_criarAresta(GRA_tppGrafo pGrafo, void * pValor1, void * pValor
   if (GRA_compararVertice(pVertice1, pValor2) == 0) { return GRA_CondRetArestaIlegal; }
 
   /*passo3: verificar se ja existe aresta entre eles*/
-  if (GRA_irVertice (conteudoVert1->pArestas, pValor2) == GRA_CondRetOK) {
+  if (LIS_ProcurarPorConteudo(conteudoVert1->pArestas, pValor2) == LIS_CondRetOK) {
     return GRA_CondRetArestaJaExiste;
   }
   
@@ -532,7 +486,7 @@ GRA_tpCondRet GRA_destruirVertCorr(GRA_tppGrafo pGrafo) {
   if (!pGrafo) { return GRA_CondRetGrafoNaoExiste; }
 
   LIS_ExcluirElemento(pGrafo->pVertices);
-  pGrafo->pVerticeCorr = LIS_ObterValor(pGrafo->pVertices);
+  pGrafo->pVertCorr = (LIS_tppLista) LIS_ObterValor(pGrafo->pVertices);
 
   return GRA_CondRetOK;
 }
