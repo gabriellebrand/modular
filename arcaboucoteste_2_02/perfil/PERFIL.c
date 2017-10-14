@@ -131,7 +131,4 @@ PER_tpCondRet PER_MostrarPerfil(PER_tppPerfil pPerfil) {
 } /* Fim função: PER  Mostrar Perfil */
 
 
-
-
-
 /********** Fim do módulo de implementação: PER  Perfil  **********/
