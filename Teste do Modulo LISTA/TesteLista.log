@@ -1,0 +1,55 @@
+
+!!! Inicio dos testes
+!!!      Construto sob teste: Teste_Lista.exe
+!!!      Script de teste:     TesteLista.script
+
+!!!    0  Linha:     1  // Script - TesteLista.script 
+!!!    0  Linha:     2  // Programação Modular - 2017.2 
+!!!    0  Linha:     3  // Grupo: 
+!!!    0  Linha:     4  //Gabriel Cantergiani 
+!!!    0  Linha:     5  //Wellington Bezerra 
+!!!    0  Linha:     6  //Gabrielle Bradenburg 
+!!!    0  Linha:     8  // Propósito: Testar todas as funções e possíveis condições de retorno do módulo Lista Duplamente Encadeada 
+   11  == Inicializar valores
+!!!    0  Linha:    45  // ==========      Início dos testes   ===================================================================== 
+!!!    0  Linha:    47  //  Testes com Lista Vazia  ================================ 
+   49  ==Criação de Lista
+   52  == Verificar Obter Valor de Lista Vazia
+   55  ==Verificar avançar elemento em Lista Vazia
+!!!    0  Linha:    58  //==Verifica procurar valor em Lista Vazia 
+!!!    0  Linha:    59  //=procurarvalor	lista0	nome0 email0 cidade0 idade0 ListaVazia 
+   61  ==Verificar excluir elemento em Lista Vazia
+!!!    0  Linha:    64  //  Testes de Inserção 	de Elementos  ============================== 
+   66  == Verifica Inserção de Elemento Antes em Lista Vazia
+   69  ==Cria outra lista
+   72  ==Veririca Inserção de Elemento Após em Lista Vazia
+   75  ==Verifica Inserção de Elemento Antes
+   78  ==Verifica Inserção de Elemento Após
+   81  ==Verifica Inserção de Elemento Após
+!!!    0  Linha:    84  //	Testes de Percurso pela Lista (Avançar Elemento, Ir Fim e Ir Início) ======================= 
+   86  ==Verifica Avançar Elemento Corrente para frente (direção do fim)
+   89  ==Verifica Avançar Elemento Corrente para trás (direção início)
+   92  ==Verifica Avançar Elemento Final  (Retorno Fim de Lista)
+   95  ==Verifica Ir Início de Lista
+   98  ==Verifica Ir Final de Lista
+!!!    0  Linha:   101  //	Testes de Obtenção de Valor e Procura de Valor de um Elemento da Lista  ======================================== 
+  103  ==Verifica Obter valor de elemento , ponteiro não null
+  106  ==Verifica Obter valor de elemento , outro ponteiro não null
+  109  ==Verifica Procurar valor de elemento que não existe na lista
+!!!    0  Linha:   112  // Teste de Exclusão de um Elemento da Lista  ============================================== 
+  114  ==Verifica exclusão de elemento
+!!!    0  Linha:   117  // Testes de Esvaziar e Destruir lista ===================================================== 
+  119  ==Verifica esvaziar lista
+  123  ==Verifica se lista ficou vazia
+  126  ==Verifica destruir lista
+!!!    0  Linha:   132  // Fim do script de teste para o modulo Lista 
+
+!!! N�mero de linhas lidas:         132
+!!! N�mero de casos de teste:        23
+!!! N�mero comandos corretos:        50
+!!! N�mero de falhas encontradas:     0
+
+!!! N�o foram encontrados problemas
+
+
+!!! Numero de espacos ainda alocados: 0
