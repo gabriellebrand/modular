@@ -60,11 +60,32 @@ static const char PROCURAR_VALOR_CMD	  [ ] = "=procurarvalor"  ;
 
 LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
+typedef struct PER_tagPerfil {
+
+    char nome[100];
+        /* Nome do perfil */
+    
+    char email[20];
+        /* Email do perfil */
+    
+    char cidade[20];
+        /* Cidade do perfil */
+    
+    int idade;
+        /* Idade do perfil */
+
+} PER_tpPerfil ;
+
+typedef struct PER_tagPerfil * PER_tppPerfil ;
+
+
 /***** Protótipos das funções encapuladas no módulo *****/
 
    static void DestruirValor( void * pValor ) ;
 
    static int ValidarInxLista( int inxLista , int Modo ) ;
+
+   static int CompararValor(void * pValor1, void * pValor2) ;
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -96,10 +117,15 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
    TST_tpCondRet TST_EfetuarComando( char * ComandoTeste )
    {
+      char nome[100],
+           email[100],
+           cidade[100] ;
 
       int inxLista  = -1 ,
           numLidos   = -1 ,
-          CondRetEsp = -1  ;
+          CondRetEsp = -1,
+          //indexPerfil = -1,
+          idade = -1 ;
 
       TST_tpCondRet CondRet ;
       PER_tpCondRet CondRetPerfil;
@@ -110,6 +136,8 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
       int    intDado4;
       char * pDado ;
       PER_tppPerfil	  perfil;
+
+      PER_tppPerfil pDado ;
 
       int ValEsp = -1 ;
 
@@ -148,7 +176,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
             } /* if */
 
             vtListas[ inxLista ] =
-                 LIS_CriarLista( DestruirValor ) ;
+                 LIS_CriarLista( DestruirValor , CompararValor ) ;
 
             return TST_CompararPonteiroNulo( 1 , vtListas[ inxLista ] ,
                "Erro em ponteiro de nova lista."  ) ;
@@ -228,7 +256,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
          } /* fim ativa: Testar inserir elemento antes */
 
-      /* Testar inserir elemento apos */
+         /* Testar inserir elemento apos */
 
          else if ( strcmp( ComandoTeste , INS_ELEM_APOS_CMD ) == 0 )
          {
@@ -259,27 +287,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
          } /* fim ativa: Testar inserir elemento apos */
 
-      /* Testar excluir simbolo */
-
-         else if ( strcmp( ComandoTeste , EXC_ELEM_CMD ) == 0 )
-         {
-
-            numLidos = LER_LerParametros( "ii" ,
-                  &inxLista , &CondRetEsp ) ;
-
-            if ( ( numLidos != 2 )
-              || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
-            {
-               return TST_CondRetParm ;
-            } /* if */
-
-            return TST_CompararInt( CondRetEsp ,
-                      LIS_ExcluirElemento( vtListas[ inxLista ] ) ,
-                     "Condição de retorno errada ao excluir."   ) ;
-
-         } /* fim ativa: Testar excluir simbolo */
-
-      /* Testar obter valor do elemento corrente */
+         /* Testar obter valor do elemento corrente */
 
          else if ( strcmp( ComandoTeste , OBTER_VALOR_CMD ) == 0 )
          {
@@ -312,45 +320,27 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
          } /* fim ativa: Testar obter valor do elemento corrente */
 
-      /* Testar ir para o elemento inicial */
+         /* Testar excluir simbolo */
 
-         else if ( strcmp( ComandoTeste , IR_INICIO_CMD ) == 0 )
+         else if ( strcmp( ComandoTeste , EXC_ELEM_CMD ) == 0 )
          {
 
-            numLidos = LER_LerParametros( "i" , &inxLista ) ;
+            numLidos = LER_LerParametros( "ii" ,
+                  &inxLista , &CondRetEsp ) ;
 
-            if ( ( numLidos != 1 )
+            if ( ( numLidos != 2 )
               || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
             {
                return TST_CondRetParm ;
             } /* if */
 
-            IrInicioLista( vtListas[ inxLista ] ) ;
+            return TST_CompararInt( CondRetEsp ,
+                      LIS_ExcluirElemento( vtListas[ inxLista ] ) ,
+                     "Condição de retorno errada ao excluir."   ) ;
 
-            return TST_CondRetOK ;
+         } /* fim ativa: Testar excluir simbolo */
 
-         } /* fim ativa: Testar ir para o elemento inicial */
-
-      /* LIS  &Ir para o elemento final */
-
-         else if ( strcmp( ComandoTeste , IR_FIM_CMD ) == 0 )
-         {
-
-            numLidos = LER_LerParametros( "i" , &inxLista ) ;
-
-            if ( ( numLidos != 1 )
-              || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
-            {
-               return TST_CondRetParm ;
-            } /* if */
-
-            IrFinalLista( vtListas[ inxLista ] ) ;
-
-            return TST_CondRetOK ;
-
-         } /* fim ativa: LIS  &Ir para o elemento final */
-
-      /* LIS  &Avançar elemento */
+         /* LIS  &Avançar elemento */
 
          else if ( strcmp( ComandoTeste , AVANCAR_ELEM_CMD ) == 0 )
          {
@@ -418,6 +408,24 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
       PER_DestruirPerfil ( (PER_tppPerfil) pValor );
 
    } /* Fim função: TLIS -Destruir valor */
+
+/***********************************************************************
+*
+*  $FC Função: TLIS - Comparar valor
+*
+***********************************************************************/
+
+int CompararValor(void * pValor1, void * pValor2) {
+    
+    PER_tppPerfil pPerfil;
+    char *email;
+    pPerfil = (PER_tppPerfil) pValor1;
+    email = (char*) pValor2;
+
+    return strcmp(email,pPerfil->email);
+
+
+} /* Fim função: PER  Comparar Perfil */  
 
 
 /***********************************************************************
