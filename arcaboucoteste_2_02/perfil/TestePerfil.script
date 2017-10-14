@@ -25,8 +25,8 @@
 == Excluir um perfil 0 que nao existe
 =destruirperfil   per0   pNULL
 
-== Excluir um perfil que nao existe
-=destruirperfil   per0   pNULL
+== Excluir um perfil 1 que nao existe
+=destruirperfil   per1   pNULL
 
 == Criar o Perfil 0
 =criarperfil    per0   str0   str1   str2   ida0
@@ -36,5 +36,11 @@
 
 == Comparar Perfil 0 com Perfil 1
 =compararperfil   per0   per1   ida0
+
+== Excluir um perfil 0
+=destruirperfil   per0   OK
+
+== Excluir um perfil 1
+=destruirperfil   per1   OK
 
 // fim
