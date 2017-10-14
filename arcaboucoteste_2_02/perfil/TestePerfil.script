@@ -9,18 +9,50 @@
 == Inicializar valores
 
 =declararparm   per0    int  0
+=declararparm   per1    int  1
 
 =declararparm   str0    string  "wellingotn"
 =declararparm   str1    string  "w@w.com"
 =declararparm   str2    string  "RJ"
 
+=declararparm   ida0    int  0
+
 =declararparm   OK             int  0
 =declararparm   FaltouMemoria  int  1
+=declararparm   pNULL          int  2
 
-=declararparm   pNULL          int  0
-=declararparm   pNaoNULL       int  1
+
+== Mostrar informacoes do Perfil 0
+=mostrarperfil   per0   pNULL
+
+== Mostrar informacoes do Perfil 0
+=mostrarperfil   per1   pNULL
+
+== Excluir um perfil 0 que nao existe
+=destruirperfil   per0   pNULL
+
+== Excluir um perfil 1 que nao existe
+=destruirperfil   per1   pNULL
 
 == Criar o Perfil 0
-=criarperfil      per0   str0   str1   str2   OK 
+=criarperfil    per0   str0   str1   str2   ida0
+
+== Mostrar informacoes do Perfil 0
+=mostrarperfil   per0   OK
+
+== Criar o Perfil 1
+=criarperfil    per1   str0   str1   str2   ida0
+
+== Mostrar informacoes do Perfil 1
+=mostrarperfil   per1   OK
+
+== Comparar Perfil 0 com Perfil 1
+=compararperfil   per0   per1   ida0
+
+== Excluir um perfil 0
+=destruirperfil   per0   OK
+
+== Excluir um perfil 1
+=destruirperfil   per1   OK
 
 // fim

@@ -17,7 +17,8 @@
 *
 *  $HA Histórico de evolução:
 *     Versão  Autor    Data     Observaçõess
-*     1       wbs   02/out/2017 Início do desenvolvimento
+*     1.0       WB        02/out/2017       Criação do módulo
+*     1.1       WB        14/out/2017       Alteração da função criarPerfil
 *
 *  $ED Descrição do módulo
 *     Implementa o módulo usuário.
@@ -76,15 +77,69 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 *	  pIdade - idade do perfil a ser criado
 *
 *  $FV Valor retornado
-*	    PER_CondRetOK  - criou sem problemas
+*		Se executou corretamente retorna o ponteiro para um Perfil.
+*
+*		Se ocorreu algum erro, por exemplo falta de memoria ou dados errados,
+*		a funcao retorna NULL.
 *
 ***********************************************************************/
 
-PER_tpCondRet  PER_CriarPerfil( PER_tppPerfil* ppPerfil, char *pNome, char *pEmail, char *pCidade, int pIdade );
+    PER_tppPerfil  PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, int pIdade );
 
-//void PER_MostrarPerfil(PER_tppPerfil *pPerfil);
+/***********************************************************************
+ *
+ *  $FC Função: PER  &Destruir Perfil
+ *
+ *  $ED Descrição da função
+ *     Destroi um Perfil
+ *
+ *  $EP Parâmetros
+ *     pPerfil  - ponteiro do o perfil que será destruido
+ *
+ *  $FV Valor retornado
+ *	    PER_CondRetOK  - destruicao do perfil com sucesso
+ *      PER_CondRetPonteiroNulo - se o valor do perfil for NULL
+ *
+ ***********************************************************************/
 
-PER_tpCondRet PER_destroirPerfil(PER_tppPerfil *pPerfil);
+    PER_tpCondRet PER_DestruirPerfil(PER_tppPerfil pPerfil);
+
+/***********************************************************************
+ *
+ *  $FC Função: PER  &Comparar  Perfil
+ *
+ *  $ED Descrição da função
+ *     Compara dois perfis
+ *
+ *  $EP Parâmetros
+ *     pValor1  - ponteiro do o perfil 1
+ *     pValor2  - ponteiro do o perfil 2
+ *
+ *  $FV Valor retornado
+ *	    igual a 0  - dois perfis são iguais
+ *      diferente de 0 - dois perfis são diferentes
+ *
+ ***********************************************************************/
+
+    int PER_compararPerfil(void * pValor1, void * pValor2);
+
+/***********************************************************************
+ *
+ *  $FC Função: PER  &Mostrar  Perfil
+ *
+ *  $ED Descrição da função
+ *     Mostra as informações de um perfil
+ *
+ *  $EP Parâmetros
+ *     pPerfil  - ponteiro de um Perfil
+ *
+ *  $FV Valor retornado
+ *      PER_CondRetOK  - insformações do perfil mostradas com sucesso
+ *      PER_CondRetPonteiroNulo - valor do perfil é igual a NULL e nao mostra as inf do Perfil
+ *
+ ***********************************************************************/
+
+PER_tpCondRet PER_MostrarPerfil(PER_tppPerfil pPerfil);
 
 #undef PERFIL_EXT
 

@@ -6,7 +6,7 @@
  *
  *  Nome da base de software:    Arcabouço para a automaçăo de testes de programas redigidos em C
  *
- *  Projeto: Trabalho 2 - Programaçăo Modular
+ *  Projeto:    Trabalho 2 - Programaçăo Modular
  *  Autores:    GB - Gabrielle Brandenburg
                 GC - Gabriel Cantergiani
                 WB - Wellingotn Bezerra
@@ -14,11 +14,12 @@
  *  $HA Histórico de evoluçăo:
  *     Versăo      Autor            Data                Observaçőes
  *     1.0          WB        02/out/2017       Criação do módulo
+ *     1.1          WB        14/out/2017       Alteração da função criarPerfil
  *
  ***************************************************************************/
 
 #include   <stdio.h>
-#include <stdlib.h>
+#include   <stdlib.h>
 #include   <string.h>
 #include   <memory.h>
 #include   <malloc.h>
@@ -55,17 +56,14 @@ typedef struct PER_tagPerfil {
 
 /***************************************************************************
  *
- *  Função: PER Criar Perfil
+ *  Função: PER &Criar Perfil
  *****/
 
-PER_tpCondRet  PER_CriarPerfil( PER_tppPerfil* ppPerfil, char *pNome, char *pEmail, char *pCidade, int pIdade ) {
+PER_tppPerfil  PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, int pIdade ) {
     
-	PER_tpPerfil* pPerfil; 
-
-	pPerfil = ( PER_tpPerfil * ) malloc( sizeof( PER_tpPerfil ));
-	if( pPerfil == NULL )
-    {
-		return PER_CondRetFaltouMemoria ;
+	PER_tppPerfil pPerfil = ( PER_tppPerfil ) malloc( sizeof( PER_tpPerfil ));
+	if( pPerfil == NULL ) {
+		return pPerfil ;
 	} /* if */
     
 	strcpy(pPerfil->nome, pNome);
@@ -73,11 +71,28 @@ PER_tpCondRet  PER_CriarPerfil( PER_tppPerfil* ppPerfil, char *pNome, char *pEma
 	strcpy(pPerfil->cidade, pCidade);
 	pPerfil->idade = pIdade;
 
-    *ppPerfil = pPerfil;
-
-	return PER_CondRetOK ;
+	return pPerfil ;
     
-} /* Fim função: PER  Criar Perfil */
+} /* Fim função: PER  &Criar Perfil */
+
+
+/***************************************************************************
+ *
+ *  Função: PER &Destruir Perfil
+ *****/
+
+PER_tpCondRet PER_DestruirPerfil(PER_tppPerfil pPerfil) {
+
+    if(pPerfil == NULL) {
+        return PER_CondRetPonteiroNulo;
+    } /* if */
+
+    free(pPerfil);
+
+    return PER_CondRetOK;
+
+} /* Fim função: PER  &Destruir Perfil */
+
 
 /***************************************************************************
  *
@@ -89,35 +104,31 @@ int PER_compararPerfil(void * pValor1, void * pValor2) {
     char *email;
     pPerfil = (PER_tppPerfil) pValor1;
     email = (char*) pValor2;
-    return strcmp(pPerfil->email, email);
 
-} /* Fim função: PER  Comparar Perfil */    
+    return strcmp(email,pPerfil->email);
+
+} /* Fim função: PER  Comparar Perfil */  
+
 
 /***************************************************************************
  *
  *  Função: PER Mostrar Perfil
  *****/
 
-//void PER_MostrarPerfil(PER_tppPerfil *pPerfil) {
-	//printf("nome: %s, email: %s, cidade: %s, idade: %d", pPerfil->nome, pPerfil->email, pPerfil->cidade, pPerfil->idade);
+PER_tpCondRet PER_MostrarPerfil(PER_tppPerfil pPerfil) {
 
-//} /* Fim função: PER  Mostrar Perfil */
-
-/***************************************************************************
- *
- *  Função: PER Destruir Perfil
- *****/
-
-PER_tpCondRet PER_destroirPerfil(PER_tppPerfil *pPerfil) {
-
-	if(pPerfil == NULL) {
+    if(pPerfil == NULL) {
         return PER_CondRetPonteiroNulo;
-    }
+    } /* if */
 
-    free(pPerfil);
+    printf("\n\t  Nome: %s\n", pPerfil->nome );
+    printf("\t  Email: %s\n", pPerfil->email);
+    printf("\t  Cidade: %s\n", pPerfil->cidade);
+    printf("\t  Idade: %d\n", pPerfil->idade);
 
     return PER_CondRetOK;
 
-} /* Fim função: PER  Destruir Perfil */
+} /* Fim função: PER  Mostrar Perfil */
+
 
 /********** Fim do módulo de implementação: PER  Perfil  **********/

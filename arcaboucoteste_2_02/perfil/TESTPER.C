@@ -15,7 +15,8 @@
 *
 *  $HA Histórico de evolução:
 *     Versão  Autor    Data     Observações
-*     1       WB   08/out/2017 início desenvolvimento
+*     1.0          WB        02/out/2017       Cria‹o do m—dulo
+*     1.1          WB        14/out/2017       Altera‹o do teste criarperfil
 *
 ***************************************************************************/
 
@@ -31,7 +32,10 @@
 #include    "Perfil.h"
 
 
-static const char CRIAR_PERFIL_CMD         [ ] = "=criarperfil"     ;
+static const char CRIAR_PERFIL_CMD            [ ] = "=criarperfil";
+static const char DESTRUIR_PERFIL_CMD         [ ] = "=destruirperfil";
+static const char COMPARAR_PERFIL_CMD         [ ] = "=compararperfil";
+static const char MOSTRAR_PERFIL_CMD          [ ] = "=mostrarperfil";
 
 #define DIM_VT_PERFIL   10
 
@@ -53,8 +57,6 @@ typedef struct PER_tagPerfil {
 
 
 PER_tppPerfil   vtPerfil[ DIM_VT_PERFIL ] ;
-
-
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -78,23 +80,22 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
   int indexPerfil = -1,
       idade = -1,
-      NumLidos = -1;
+      NumLidos = -1,
+      indexPerfil1 = -2,
+      indexPerfil2 = -2;
 
   char nome[100],
        email[100],
        cidade[100];
 
-  PER_tpCondRet CondRetObtido   = PER_CondRetOK ;
-  PER_tpCondRet CondRetEsperada = PER_CondRetOK ;
+  PER_tpCondRet CondRetObtido;
+  PER_tpCondRet CondRetEsperada;
 
-  PER_tppPerfil* pPerfil = NULL;
-
-  
-  //* Testar PER Criar Perfil */
+  /* Criar Perfil */
 
   if ( strcmp( ComandoTeste , CRIAR_PERFIL_CMD ) == 0 )
   {
-    pPerfil = ( PER_tppPerfil * ) malloc( sizeof( PER_tpPerfil ) ) ;
+    
     NumLidos = LER_LerParametros( "isssi" , &indexPerfil, 
                                             &nome,
                                             &email,
@@ -105,16 +106,76 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
       return TST_CondRetParm ;
     } /* if */
 
-    CondRetObtido = PER_CriarPerfil( pPerfil, nome, email, cidade, idade );
+    vtPerfil[ indexPerfil ] = PER_CriarPerfil( nome, email, cidade, idade );
+    
+    return TST_CompararPonteiroNulo( 1 , vtPerfil[ indexPerfil ] ,
+               "Erro em ponteiro de novo Perfil."  ) ;
+
+  } /* fim ativa: Criar Perfil */
+
+  /* Destruir Perfil */
+
+  else if ( strcmp( ComandoTeste , DESTRUIR_PERFIL_CMD ) == 0 )
+  {
+    NumLidos = LER_LerParametros( "ii" , &indexPerfil,
+                                         &CondRetEsperada ); 
+                                           
+    if ( NumLidos != 2 )
+    {
+      return TST_CondRetParm ;
+    } /* if */
+
+    CondRetObtido = PER_DestruirPerfil(vtPerfil[ indexPerfil ]);
     
     return TST_CompararInt( CondRetEsperada , CondRetObtido ,
-      "Retorno errado ao criar perfil." );
+      "Retorno errado ao destruir perfil." );
 
-  } 
+  } /* fim ativa: Destruir Perfil */
+
+    /* Comparar Perfil */
+
+  else if ( strcmp( ComandoTeste , COMPARAR_PERFIL_CMD ) == 0 )
+  {
+    NumLidos = LER_LerParametros( "iii" , &indexPerfil1,
+                                          &indexPerfil2,
+                                         &CondRetEsperada ); 
+                                           
+    if ( NumLidos != 3 )
+    {
+      return TST_CondRetParm ;
+    } /* if */
+
+    CondRetObtido = PER_compararPerfil( vtPerfil[indexPerfil1] , vtPerfil[indexPerfil2]->email );
+    
+    return TST_CompararInt( CondRetEsperada , CondRetObtido ,
+      "Retorno errado ao comparar perfil." );
+
+  } /* fim ativa: Comparar Perfil */ 
+
+    /* Mostrar Perfil */
+
+  else if ( strcmp( ComandoTeste , MOSTRAR_PERFIL_CMD ) == 0 )
+  {
+    NumLidos = LER_LerParametros( "ii" , &indexPerfil,
+                                         &CondRetEsperada ); 
+                                           
+    if ( NumLidos != 2 )
+    {
+      return TST_CondRetParm ;
+    } /* if */
+
+    CondRetObtido = PER_MostrarPerfil( vtPerfil[ indexPerfil ] );
+    
+    return TST_CompararInt( CondRetEsperada , CondRetObtido ,
+      "Retorno errado ao mostrar perfil." );
+
+  } /* fim ativa: Mostrar Perfil */ 
+
+
 
   return TST_CondRetNaoConhec ;
 
-} /* Fim função: TRD Efetuar operações de teste específicas para Perfil */
+} /* Fim função: TPER Efetuar operações de teste específicas para Perfil */
 
 
 
