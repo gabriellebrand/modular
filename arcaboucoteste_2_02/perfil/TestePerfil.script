@@ -1,0 +1,40 @@
+// Script:    TesteLista.script
+// Autores: GB - Gabrielle Brandenburg
+//          GC - Gabriel Cantergiani
+//          WB - Wellington Bezerra
+// Data:      08/out/2017
+// Propósito: Testar o módulo Perfil.
+//
+
+== Inicializar valores
+
+=declararparm   per0    int  0
+=declararparm   per1    int  1
+
+=declararparm   str0    string  "wellingotn"
+=declararparm   str1    string  "w@w.com"
+=declararparm   str2    string  "RJ"
+
+=declararparm   ida0    int  0
+
+=declararparm   OK             int  0
+=declararparm   FaltouMemoria  int  1
+=declararparm   pNULL          int  2
+
+
+== Excluir um perfil 0 que nao existe
+=destruirperfil   per0   pNULL
+
+== Excluir um perfil que nao existe
+=destruirperfil   per0   pNULL
+
+== Criar o Perfil 0
+=criarperfil    per0   str0   str1   str2   ida0
+
+== Criar o Perfil 1
+=criarperfil    per1   str0   str1   str2   ida0
+
+== Comparar Perfil 0 com Perfil 1
+=compararperfil   per0   per1   ida0
+
+// fim
