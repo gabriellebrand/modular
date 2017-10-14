@@ -35,6 +35,7 @@
 static const char CRIAR_PERFIL_CMD            [ ] = "=criarperfil";
 static const char DESTRUIR_PERFIL_CMD         [ ] = "=destruirperfil";
 static const char COMPARAR_PERFIL_CMD         [ ] = "=compararperfil";
+static const char MOSTRAR_PERFIL_CMD          [ ] = "=mostrarperfil";
 
 #define DIM_VT_PERFIL   10
 
@@ -150,6 +151,25 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
       "Retorno errado ao comparar perfil." );
 
   } /* fim ativa: Comparar Perfil */ 
+
+    /* Mostrar Perfil */
+
+  else if ( strcmp( ComandoTeste , MOSTRAR_PERFIL_CMD ) == 0 )
+  {
+    NumLidos = LER_LerParametros( "ii" , &indexPerfil,
+                                         &CondRetEsperada ); 
+                                           
+    if ( NumLidos != 2 )
+    {
+      return TST_CondRetParm ;
+    } /* if */
+
+    CondRetObtido = PER_MostrarPerfil( vtPerfil[ indexPerfil ] );
+    
+    return TST_CompararInt( CondRetEsperada , CondRetObtido ,
+      "Retorno errado ao mostrar perfil." );
+
+  } /* fim ativa: Mostrar Perfil */ 
 
 
 

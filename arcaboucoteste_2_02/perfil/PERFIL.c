@@ -115,10 +115,20 @@ int PER_compararPerfil(void * pValor1, void * pValor2) {
  *  Função: PER Mostrar Perfil
  *****/
 
-//void PER_MostrarPerfil(PER_tppPerfil *pPerfil) {
-	//printf("nome: %s, email: %s, cidade: %s, idade: %d", pPerfil->nome, pPerfil->email, pPerfil->cidade, pPerfil->idade);
+PER_tpCondRet PER_MostrarPerfil(PER_tppPerfil pPerfil) {
 
-//} /* Fim função: PER  Mostrar Perfil */
+    if(pPerfil == NULL) {
+        return PER_CondRetPonteiroNulo;
+    } /* if */
+
+    printf("\n\t  Nome: %s\n", pPerfil->nome );
+    printf("\t  Email: %s\n", pPerfil->email);
+    printf("\t  Cidade: %s\n", pPerfil->cidade);
+    printf("\t  Idade: %d\n", pPerfil->idade);
+
+    return PER_CondRetOK;
+
+} /* Fim função: PER  Mostrar Perfil */
 
 
 

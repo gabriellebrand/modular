@@ -22,6 +22,12 @@
 =declararparm   pNULL          int  2
 
 
+== Mostrar informacoes do Perfil 0
+=mostrarperfil   per0   pNULL
+
+== Mostrar informacoes do Perfil 0
+=mostrarperfil   per1   pNULL
+
 == Excluir um perfil 0 que nao existe
 =destruirperfil   per0   pNULL
 
@@ -31,8 +37,14 @@
 == Criar o Perfil 0
 =criarperfil    per0   str0   str1   str2   ida0
 
+== Mostrar informacoes do Perfil 0
+=mostrarperfil   per0   OK
+
 == Criar o Perfil 1
 =criarperfil    per1   str0   str1   str2   ida0
+
+== Mostrar informacoes do Perfil 1
+=mostrarperfil   per1   OK
 
 == Comparar Perfil 0 com Perfil 1
 =compararperfil   per0   per1   ida0

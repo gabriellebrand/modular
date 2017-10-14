@@ -133,10 +133,13 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
  *  $EP Parâmetros
  *     pPerfil  - ponteiro de um Perfil
  *
+ *  $FV Valor retornado
+ *      PER_CondRetOK  - insformações do perfil mostradas com sucesso
+ *      PER_CondRetPonteiroNulo - valor do perfil é igual a NULL e nao mostra as inf do Perfil
+ *
  ***********************************************************************/
 
-
-//void PER_MostrarPerfil(PER_tppPerfil pPerfil);
+PER_tpCondRet PER_MostrarPerfil(PER_tppPerfil pPerfil);
 
 #undef PERFIL_EXT
 
