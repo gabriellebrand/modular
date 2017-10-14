@@ -116,7 +116,7 @@ typedef struct GRA_tagConteudoVert {
 
 /***** Protótipos das funções exportadas pelo módulo *****/
 
-GRA_tpCondRet GRA_criarGrafo(GRA_tppGrafo pGrafo, void ( * ExcluirValor )( void * pValor ), int (*CompararValor)(void * pValor1, void * pValor2)); //done  
+GRA_tppGrafo GRA_criarGrafo(void ( * ExcluirValor )( void * pValor ), int (*CompararValor)(void * pValor1, void * pValor2)); //done  
 GRA_tpCondRet GRA_destruirGrafo(GRA_tppGrafo pGrafo); //done
 GRA_tpCondRet GRA_irVertice (GRA_tppGrafo pGrafo, void *pValor); //done
 GRA_tpCondRet GRA_irVizinho (GRA_tppGrafo pGrafo, void *pValor); //done
