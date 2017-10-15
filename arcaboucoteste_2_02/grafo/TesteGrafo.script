@@ -7,28 +7,57 @@
 //
 
 == Inicializar valores
-=declararparm   grafo0  int 0
+=declararparm   grf0    int 0
 
 =declararparm   str0    string  "wellington"
 =declararparm   str1    string  "w@w.com"
 =declararparm   str2    string  "rj"
 
-=declararparm   ida0    	   int  23
+=declararparm   str3    string  "mariane"
+=declararparm   str4    string  "m@m.com"
+=declararparm   str5    string  "rj"
+
+=declararparm   ida0    	   int  23  
+=declararparm   ida1    	   int  25
 
 =declararparm   OK             int  0
-=declararparm   ListaVazia     int  1
-=declararparm   FimLista       int  2
-=declararparm   NaoAchou       int  3
-=declararparm   FaltouMemoria  int  4
+=declararparm   grfVazio       int  1
+=declararparm   naoAchou       int  2
+=declararparm   vertJaExist    int  9
 
 =declararparm   pNULL          int  0
 =declararparm   pNaoNULL       int  1
 
-== Criar o grafo 0
-=criargrafo      grafo0 
+== Criar o grafo
+=criargrafo      grf0
 
-== Inserir elemento em grafo vazio
-=criarvertice    grafo0   str0   str1   str2   ida0   OK
+== Criar vertices 
+=criarvertice    grf0   str0   str1   str2   ida0   OK
+=criarvertice    grf0   str3   str4   str5   ida0   OK
+
+
+
+== Tornar um vertice corrente
+=irvertice       grf0   str1   OK
+
+== Excluir vertice corrente
+=excluirvertice  grf0   OK
+
+== Tornar um vertice corrente que ja foi excluido
+=irvertice       grf0   str1   naoAchou
+
+== Tornar um vertice corrente 
+=irvertice       grf0   str4   OK
+
+== Excluir vertice corrente
+=excluirvertice  grf0   OK
+
+== Tornar um vertice corrente que ja foi excluido
+=irvertice       grf0   str4   grfVazio
+
+== Excluir grafo
+=excluirgrafo    grf0   OK
+
 
 // fim
 

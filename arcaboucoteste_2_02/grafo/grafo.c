@@ -129,7 +129,7 @@ int GRA_compararVertice(void *pDado, void *pChaveID){
   GRA_tpConteudoVert * pValorVert;
   
   /*faz um typecast do pDado (que deve ser uma lista VERTICE)*/
-  pVertice = (LIS_tppLista) pValor1;
+  pVertice = (LIS_tppLista) pDado;
 
   /*obtem o pDado da lista VERTICE e chama a funcao compara da propria lista vertice como valor de retorno */
   pValorVert = (GRA_tpConteudoVert *) LIS_ObterValor(pVertice);
