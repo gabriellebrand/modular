@@ -378,6 +378,7 @@ GRA_tpCondRet GRA_criarAresta(GRA_tppGrafo pGrafo, void * pChaveID_1, void * pCh
   GRA_tpConteudoVert *conteudoVert1, *conteudoVert2;
 
   if (!pGrafo) { return GRA_CondRetGrafoNaoExiste; }
+  if (!pGrafo->pVertCorr) { return GRA_CondRetGrafoVazio; }
 //  if (!pChaveID_1 || !pChaveID_2) { return GRA_CondRetValorNulo; }
   
   /* passo1: obter a referencia para os vertices */
