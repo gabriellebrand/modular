@@ -120,9 +120,7 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *
 ***********************************************************************/
 
-   LIS_tppLista LIS_CriarLista(
-             void   ( * ExcluirValor ) ( void * pDado ) ) ;
-
+   LIS_tppLista LIS_CriarLista(void (* ExcluirValor)(void * pDado), int (*CompararValor)(void *pValor1, void *pValor2));
 
 /***********************************************************************
 *
@@ -203,9 +201,7 @@ typedef struct LIS_tagLista * LIS_tppLista ;
 *
 ***********************************************************************/
 
-   LIS_tpCondRet LIS_InserirElementoApos( LIS_tppLista pLista ,
-                                          void * pValor        )
-       ;
+   LIS_tpCondRet LIS_InserirElementoApos( LIS_tppLista pLista ,void * pValor);
 
 
 /***********************************************************************
@@ -338,6 +334,35 @@ typedef struct LIS_tagLista * LIS_tppLista ;
    LIS_tpCondRet LIS_ProcurarValor( LIS_tppLista pLista ,
                                     void * pValor        ) ;
 
+/***********************************************************************
+*
+*  $FC Função: &Procurar elemento pelo conteudo apontado
+*
+*  $ED Descrição da função
+*     Procura o elemento através do conteúdo do valor apontado.
+*     Utiliza a função Compara da cabeca da lista que conhece a estrutura do valor do elemento.
+*     A função compara deve retornar zero no caso do conteúdo do elemento ser igual ao valor procurado.
+*
+*  $EP Parâmetros
+*     pLista  - ponteiro para a lista onde procura
+*     pValor  - ponteiro para o valor procurado
+*               Pode ser NULL
+*
+*  $FV Valor retornado
+*     LIS_CondRetOK  - se encontrou.
+*                      O elemento corrente é o primeiro elemento do
+*                      elemento corrente inclusive para o fim da lista
+*                      e que contém o ponteiro procurado
+*
+*     LIS_CondRetNaoEncontrou - se o ponteiro não foi encontrado
+*                      O elemento corrente continua o mesmo
+*     LIS_CondRetListaVazia   - se a lista estiver vazia
+*
+***********************************************************************/
+
+   LIS_tpCondRet LIS_ProcurarPorConteudo( LIS_tppLista pLista ,
+                                    void * pValor        ) ;
+                                    
 #undef LISTA_EXT
 
 /********** Fim do módulo de definição: LIS  Lista duplamente encadeada **********/
