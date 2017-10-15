@@ -42,7 +42,97 @@
 =declararparm   pNULL          int  0
 =declararparm   pNaoNULL       int  1
 
-// ==========      Início dos testes   =====================================================================
+// ==========      TESTES ORIGINAIS (ADAPTADOS) CRIADOS PELO ARNDT VON STAA   =====================================================================
+
+== Criar a lista 0
+=criarlista      lista0 
+
+== Verificar ObterValor relativo a lista vazia
+=obtervalorelem  lista0   "???"     pNULL
+
+== Inserir elemento em lista vazia
+=inselemantes    lista0   nome0 email0 cidade0 idade0   OK
+=obtervalorelem  lista0   email0   pNaoNULL
+
+== Inserir elemento após primeiro
+=inselemapos     lista0   nome1 email1 cidade1 idade1   OK
+=obtervalorelem  lista0   email1   pNaoNULL
+
+== Inserir elemento antes do último
+=inselemantes    lista0   nome2 email2 cidade2 idade2   OK
+=obtervalorelem  lista0   email2   pNaoNULL
+
+== Excluir elemento do meio
+=obtervalorelem  lista0   email2   pNaoNULL
+=excluirelem     lista0             OK
+
+== Excluir elemento do início
+=obtervalorelem  lista0   email0   pNaoNULL
+=excluirelem     lista0             OK
+
+== Excluir elemento final, único 
+=obtervalorelem  lista0   email1   pNaoNULL
+=excluirelem     lista0             OK
+
+== Ver se a lista ficou vazia
+=obtervalorelem  lista0   "???"     pNULL
+
+== Destruir a lista
+=destruirlista   lista0
+
+== Criar uma lista com dois elementos
+=criarlista      lista1 
+=inselemapos     lista1   nome0 email0 cidade0 idade0   OK
+=inselemapos     lista1   nome1 email1 cidade1 idade1   OK
+
+== Esvaziar a lista e ver se ficou vazia
+=esvaziarlista   lista1
+=obtervalorelem  lista1   "???"     pNULL
+
+== Destruir a lista
+=destruirlista   lista1
+
+== Criar uma lista com quatro elementos
+=criarlista      lista2 
+=inselemapos     lista2   nome0 email0 cidade0 idade0   OK
+=inselemapos     lista2   nome1 email1 cidade1 idade1   OK
+=inselemapos     lista2   nome2 email2 cidade2 idade2   OK
+=inselemapos     lista2   nome3 email3 cidade3 idade3   OK
+
+== Verificar a lista de trás para diante
+=obtervalorelem  lista2   email3   pNaoNULL
+=avancarelem     lista2   -1     OK
+=obtervalorelem  lista2   email2   pNaoNULL
+=avancarelem     lista2   -1     OK
+=obtervalorelem  lista2   email1   pNaoNULL
+=avancarelem     lista2   -1     OK
+=obtervalorelem  lista2   email0   pNaoNULL
+=avancarelem     lista2   -1     FimLista
+
+== Verificar a lista de frente para trás
+=obtervalorelem  lista2   email0   pNaoNULL
+=avancarelem     lista2   1      OK
+=obtervalorelem  lista2   email1   pNaoNULL
+=avancarelem     lista2   1      OK
+=obtervalorelem  lista2   email2   pNaoNULL
+=avancarelem     lista2   1      OK
+=obtervalorelem  lista2   email3   pNaoNULL
+=avancarelem     lista2   1      FimLista
+
+== Verificar a lista andando demais de trás para diante
+=avancarelem     lista2   -10     FimLista
+=obtervalorelem  lista2   email0   pNaoNULL
+
+== Verificar a lista andando demais de frente para trás
+=avancarelem     lista2   10     FimLista
+=obtervalorelem  lista2   email3   pNaoNULL
+
+== Destruir a lista
+=destruirlista   lista2
+
+
+
+// ========= 	TESTES CRIADOS PELO GRUPO ========================================================================================================
 
 //  Testes com Lista Vazia  ================================
 
@@ -56,7 +146,7 @@
 =avancarelem	lista0	1		ListaVazia
 
 //==Verifica procurar valor em Lista Vazia
-//=procurarvalor	lista0	nome0 email0 cidade0 idade0 ListaVazia
+//=procurarvalor	lista0	email0 ListaVazia
 
 ==Verificar excluir elemento em Lista Vazia
 =excluirelem	lista0	ListaVazia
@@ -107,7 +197,10 @@
 =obtervalorelem lista0	email0	pNaoNULL
 
 ==Verifica Procurar valor de elemento que não existe na lista
-=procurarvalor	lista0	nome3 email3 cidade3 idade3	NaoAchou
+=procurarvalor	lista0	email3	NaoAchou
+
+==Verifica Procurar valor de elemento que existe na lista
+=procurarvalor	lista0	email2	OK
 
 // Teste de Exclusão de um Elemento da Lista  ==============================================
 
