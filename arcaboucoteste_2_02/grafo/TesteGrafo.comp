@@ -1,0 +1,23 @@
+# Composicao do programa de teste de um Grafo
+# Este exemplo utiliza o arcabouco completo 
+
+[Diretorios]
+
+Nome        =  TesteGrafo
+PathDefault =  .
+err         =  .
+
+[Modulos]
+Lista
+TestGra
+Grafo
+
+[BuildInicio]
+/OUT:TesteGrafo.exe
+/INCREMENTAL:NO
+/MACHINE:IX86
+
+[BuildFim]
+ArcaboucoTeste.lib
+
+[Fim]

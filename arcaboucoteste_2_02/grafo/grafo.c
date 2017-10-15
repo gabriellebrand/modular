@@ -1,11 +1,13 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "LISTA.h"
-#include "string.h"
+#include <malloc.h>
+#include <string.h>
 
 #define GRAFO_OWN
-#include "GRAFO.h"
+#include "GRAFO.H"
 #undef GRAFO_OWN
+
+
 
 
  /***********************************************************************
@@ -176,7 +178,7 @@ GRA_tpCondRet GRA_destruirGrafo(GRA_tppGrafo pGrafo) {
 *  Função: GRA  &Criar Vertice
 * **************************************************************************/
 
-GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pValor) {
+GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pValor) { 
   //TODO: VERIFICAR SE JÁ EXISTE UM VERTICE COM O PVALOR ESCOLHIDO
   LIS_tppLista pVertice;
   LIS_tppLista pArestas;
@@ -219,6 +221,7 @@ GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pValor) {
 
   return GRA_inserirVertice(pGrafo, pVertice);
 }
+
 
 /***************************************************************************
 *  Função: GRA  &Inserir Vertice
