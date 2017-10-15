@@ -24,12 +24,18 @@
     <ClCompile Include="grafo.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PERFIL.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lista.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="grafo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="perfil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

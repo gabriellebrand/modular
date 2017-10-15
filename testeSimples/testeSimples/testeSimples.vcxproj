@@ -77,10 +77,12 @@
     <ClCompile Include="grafo.c" />
     <ClCompile Include="lista.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="PERFIL.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="grafo.h" />
     <ClInclude Include="lista.h" />
+    <ClInclude Include="perfil.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

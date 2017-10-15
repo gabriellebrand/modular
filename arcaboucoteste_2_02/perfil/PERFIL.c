@@ -105,7 +105,7 @@ int PER_compararPerfil(void * pValor1, void * pValor2) {
     pPerfil = (PER_tppPerfil) pValor1;
     email = (char*) pValor2;
 
-    return strcmp(email,pPerfil->email);
+    return strcmp(pPerfil->email, email);
 
 } /* Fim função: PER  Comparar Perfil */  
 

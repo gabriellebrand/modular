@@ -4,10 +4,10 @@
 #include <string.h>
 
 #define GRAFO_OWN
-#include "GRAFO.H"
+#include "grafo.h"
 #undef GRAFO_OWN
 
- /***********************************************************************
+/***********************************************************************
 *  $TC Tipo de dados: GRA descritor da cabeça do grafo
 * *********************************************************************/
 
@@ -59,6 +59,12 @@ LIS_tppLista GRA_obterCorrente(GRA_tppGrafo pGrafo); //done
 
 /***************************************************************************
 *  Função: GRA  &Criar Grafo
+*  $ED Descrição da função
+*     Cria um grafo genérico não dirigido.
+*     Os possíveis tipos são desconhecidos a priori.
+*     A tipagem é implicita.
+*     O identificador usado nos vértices do grafo é genérico e é definido
+*       pela função CompararValor passada como argumento na criação.
 * **************************************************************************/
 
 GRA_tppGrafo GRA_criarGrafo(void (* ExcluirValor)(void * pDado), int (* CompararValor)(void * pDado, void * pChaveID)) {
@@ -129,7 +135,7 @@ int GRA_compararVertice(void *pDado, void *pChaveID){
   GRA_tpConteudoVert * pValorVert;
   
   /*faz um typecast do pDado (que deve ser uma lista VERTICE)*/
-  pVertice = (LIS_tppLista) pValor1;
+  pVertice = (LIS_tppLista) pDado;
 
   /*obtem o pDado da lista VERTICE e chama a funcao compara da propria lista vertice como valor de retorno */
   pValorVert = (GRA_tpConteudoVert *) LIS_ObterValor(pVertice);
@@ -153,6 +159,12 @@ int GRA_compararConteudoVert(void *pDado, void *pChaveID){
 
 /***************************************************************************
 *  Função: GRA  &Destruir Grafo
+*  $ED Descrição da função
+*     Destrói o grafo fornecido.
+*     O parâmetro ponteiro para o grafo não é modificado.
+*     Se ocorrer algum erro durante a destruição, o grafo resultará
+*     estruturalmente incorreto.
+*     OBS. não existe previsão para possíveis falhas de execução.
 * **************************************************************************/
 
 GRA_tpCondRet GRA_destruirGrafo(GRA_tppGrafo pGrafo) {
@@ -340,10 +352,6 @@ LIS_tppLista GRA_obterCorrente(GRA_tppGrafo pGrafo) {
 *  $FC Função: GRA - Obter Valor
 *  $ED Descrição da função
 *     Obtem a referência do pDado contido dentro do vertice corrente.
-*     - retorna NULL, se o grafo não existir (ponteiro nulo), ele retorna nulo. 
-*     - retorna NULL, se o grafo estiver vazio (vertice corrente nulo).
-*     - retorna NULL, se o conteudo do vertice nao existir.
-*     - demais casos, retorna o valor do conteudo do vertice
 ***********************************************************************/
 
 void * GRA_obterValor( GRA_tppGrafo pGrafo ) {
@@ -362,6 +370,7 @@ void * GRA_obterValor( GRA_tppGrafo pGrafo ) {
 /***********************************************************************
 *  $FC Função: GRA - Criar aresta
 *  $ED Descrição da função
+*     Exclui uma aresta entre dois vertices, atraves de suas chaves identificadoras.
 ***********************************************************************/
 
 GRA_tpCondRet GRA_criarAresta(GRA_tppGrafo pGrafo, void * pChaveID_1, void * pChaveID_2) {
@@ -369,23 +378,23 @@ GRA_tpCondRet GRA_criarAresta(GRA_tppGrafo pGrafo, void * pChaveID_1, void * pCh
   GRA_tpConteudoVert *conteudoVert1, *conteudoVert2;
 
   if (!pGrafo) { return GRA_CondRetGrafoNaoExiste; }
-  if (!pChaveID_1 || !pChaveID_2) { return GRA_CondRetValorNulo; }
+//  if (!pChaveID_1 || !pChaveID_2) { return GRA_CondRetValorNulo; }
   
   /* passo1: obter a referencia para os vertices */
   if (GRA_irVertice (pGrafo, pChaveID_1) == GRA_CondRetOK) {
     pVertice1 = GRA_obterCorrente(pGrafo);
-  } else { return GRA_CondRetNaoAchou; }
+  } else { return GRA_CondRetVerticeNaoExiste; }
   
   if (GRA_irVertice (pGrafo, pChaveID_2) == GRA_CondRetOK) {
     pVertice2 = GRA_obterCorrente(pGrafo);
-  } else { return GRA_CondRetNaoAchou; }
+  } else { return GRA_CondRetVerticeNaoExiste; }
 
   /*obter o conteudo dos vertices*/
   conteudoVert1 = (GRA_tpConteudoVert *) LIS_ObterValor(pVertice1);
   conteudoVert2 = (GRA_tpConteudoVert *) LIS_ObterValor(pVertice2);
-  if(!conteudoVert1 || !conteudoVert2) {
-    return GRA_CondRetVerticeNaoExiste;
-  }
+  //if(!conteudoVert1 || !conteudoVert2) {
+  //  return GRA_CondRetValorNulo;
+  //}
 
   /*passo2: verificar se os dois vertices sao iguais -> aresta para si mesmo nao pode */
   if (GRA_compararVertice(pVertice1, pChaveID_2) == 0) { return GRA_CondRetArestaIlegal; }
