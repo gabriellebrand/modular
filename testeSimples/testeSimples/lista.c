@@ -296,7 +296,7 @@
             pLista->pElemCorr    = pElem->pProx ;
             pLista->pOrigemLista = pLista->pElemCorr ;
          } /* if */
-
+		 
       /* Desencadeia à direita */
 
          if ( pElem->pProx != NULL )
@@ -306,9 +306,9 @@
          {
             pLista->pFimLista = pElem->pAnt ;
          } /* if */
-
+		
       LiberarElemento( pLista , pElem ) ;
-
+	  
       return LIS_CondRetOK ;
 
    } /* Fim função: LIS  &Excluir elemento */
@@ -531,7 +531,6 @@
    void LiberarElemento( LIS_tppLista   pLista ,
                          tpElemLista  * pElem   )
    {
-
       if ( ( pLista->ExcluirValor != NULL )
         && ( pElem->pValor != NULL        ))
       {
@@ -539,7 +538,6 @@
       } /* if */
 
       free( pElem ) ;
-
       pLista->numElem-- ;
 
    } /* Fim função: LIS  -Liberar elemento da lista */

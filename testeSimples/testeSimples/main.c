@@ -93,6 +93,8 @@ typedef struct GRA_tagConteudoVert {
 
   int (* compara)(void * pValor1, void * pValor2);
 
+  void (* exclui) (void * pValor) ;
+
 } GRA_tpConteudoVert;
 
 /***** Protótipos das funções exportadas pelo módulo *****/
@@ -101,11 +103,11 @@ GRA_tppGrafo GRA_criarGrafo(void ( * ExcluirValor )( void * pValor ), int (*Comp
 GRA_tpCondRet GRA_destruirGrafo(GRA_tppGrafo pGrafo); //done
 GRA_tpCondRet GRA_irVertice (GRA_tppGrafo pGrafo, void *pValor); //done
 GRA_tpCondRet GRA_irVizinho (GRA_tppGrafo pGrafo, void *pValor); //done
-LIS_tppLista GRA_obterCorrente(GRA_tppGrafo pGrafo); //done
 void * GRA_obterValor( GRA_tppGrafo pGrafo); //done
 GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pValor); //done
-GRA_tpCondRet GRA_destruirVertCorr(GRA_tppGrafo pGrafo); //done
+GRA_tpCondRet GRA_excluirVertCorr(GRA_tppGrafo pGrafo); //done
 GRA_tpCondRet GRA_criarAresta(GRA_tppGrafo pGrafo, void * pValor1, void * pValor2); //done
+GRA_tpCondRet GRA_excluirAresta(GRA_tppGrafo pGrafo, void *pValor1, void *pValor2); //done
 /********************************************************/
 
 /***** Protótipos das funções encapsuladas pelo módulo *****/
@@ -113,10 +115,11 @@ void GRA_destruirVertice(void *pValor);
 void GRA_destruirConteudoVert(void * conteudoVertice);
 int GRA_compararVertice(void *pValor1, void *pValor2);
 int GRA_compararConteudoVert(void *pValor1, void *pValor2);
-void GRA_esvaziarGrafo(GRA_tppGrafo pGrafo);
 GRA_tpCondRet GRA_inserirVertice(GRA_tppGrafo pGrafo, LIS_tppLista pVertice);
 void GRA_destruirValorListaAresta(void * pValor);
-
+GRA_tpCondRet GRA_destruirAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2);
+GRA_tpCondRet GRA_liberarAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2);
+LIS_tppLista GRA_obterCorrente(GRA_tppGrafo pGrafo); //done
 /********************************************************/
 
 /***************************************************************************
@@ -155,7 +158,7 @@ GRA_tppGrafo GRA_criarGrafo(void (* ExcluirValor)(void * pValor), int (* Compara
 
  void GRA_destruirVertice(void *pValor) {
   LIS_tppLista pVertice;
-
+  
   pVertice = (LIS_tppLista) pValor;
 
   LIS_DestruirLista(pVertice);
@@ -173,8 +176,7 @@ void GRA_destruirConteudoVert(void * conteudoVertice) {
   GRA_tpConteudoVert *conteudo;
   conteudo = (GRA_tpConteudoVert *) conteudoVertice; 
 
-  free(conteudo->pValor) ;
-
+  conteudo->exclui(conteudo->pValor);
   LIS_DestruirLista(conteudo->pArestas) ;
 
   free(conteudoVertice);
@@ -224,21 +226,13 @@ GRA_tpCondRet GRA_destruirGrafo(GRA_tppGrafo pGrafo) {
     return GRA_CondRetGrafoNaoExiste ;
   } /*if */
 
-  GRA_esvaziarGrafo(pGrafo);
+  LIS_DestruirLista(pGrafo->pVertices);
+  
   free(pGrafo);
   pGrafo = NULL;
 
   return GRA_CondRetOK;
 } /* Fim função: GRA  &Destruir Grafo */
-
-/***************************************************************************
-*  Função: GRA  &Esvaziar Grafo
-* **************************************************************************/
-
-void GRA_esvaziarGrafo(GRA_tppGrafo pGrafo) {
-  LIS_DestruirLista(pGrafo->pVertices);
-  LIS_DestruirLista(pGrafo->pVertCorr);
-} /* Fim função: GRA  &Esvaziar Grafo */
 
 /***************************************************************************
 *
@@ -256,7 +250,7 @@ GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pValor) {
   } /* if */
 
   if (GRA_irVertice(pGrafo, pValor) == GRA_CondRetOK) {
-	  return GRA_CondRetVerticeJaExiste;
+    return GRA_CondRetVerticeJaExiste;
   }
 
   pArestas = LIS_CriarLista(GRA_destruirValorListaAresta, GRA_compararVertice);
@@ -276,6 +270,7 @@ GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pValor) {
   pConteudoVert->pArestas = pArestas;
   pConteudoVert->pValor = pValor;
   pConteudoVert->compara = pGrafo->compara;
+  pConteudoVert->exclui = pGrafo->exclui;
 
   /* cria lista vértice de apenas um nó */
   pVertice = LIS_CriarLista(GRA_destruirConteudoVert, GRA_compararConteudoVert);
@@ -478,20 +473,115 @@ GRA_tpCondRet GRA_criarAresta(GRA_tppGrafo pGrafo, void * pValor1, void * pValor
 }
 
 /***********************************************************************
-*  $FC Função: GRA - Destruir Vértice Corrente
+*  $FC Função: GRA - Excluir aresta
+*  $ED Descrição da função
+*     Exclui uma aresta entre dois vertices, atraves de suas chaves identificadoras
+***********************************************************************/
+GRA_tpCondRet GRA_excluirAresta(GRA_tppGrafo pGrafo, void *pValor1, void *pValor2) {
+  LIS_tppLista pVertice1, pVertice2;
+
+  if (!pGrafo) {
+    return GRA_CondRetGrafoNaoExiste;
+  }
+  if(!pGrafo->pVertCorr){
+    return GRA_CondRetGrafoVazio;
+  }
+
+  /*procura a referencia para o vertice 1 a partir da chave identificadora*/
+  if(GRA_irVertice(pGrafo, pValor1) != GRA_CondRetOK) {
+    return GRA_CondRetVerticeNaoExiste;
+  }
+  pVertice1 = GRA_obterCorrente(pGrafo);
+  /*procura a referencia para o vertice 2 a partir da chave identificadora*/
+  if(GRA_irVertice(pGrafo, pValor2) != GRA_CondRetOK) {
+    return GRA_CondRetVerticeNaoExiste;
+  }
+  pVertice2 = GRA_obterCorrente(pGrafo);
+
+  return GRA_destruirAresta(pVertice1 , pVertice2);
+}
+
+/***********************************************************************
+*  $FC Função: GRA - Destruir aresta
+*  $ED Descrição da função
+*  Destroi arestas entre duas listas vertice
+***********************************************************************/
+GRA_tpCondRet GRA_destruirAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2) {
+
+  if( !pVertice1 || !pVertice2 )
+  {
+    GRA_CondRetVerticeNaoExiste;
+  } /* if */
+
+  /*primeiro deleta o vertice 2 da lista de arestas do vertice 1*/
+  if (GRA_liberarAresta(pVertice1 ,pVertice2) == GRA_CondRetArestaNaoExiste) {
+    return GRA_CondRetArestaNaoExiste;
+  }
+  /*depois deleta o vertice 1 da lista de arestas do vertice 2*/
+  if (GRA_liberarAresta(pVertice2 ,pVertice1) == GRA_CondRetArestaNaoExiste) {
+    return GRA_CondRetArestaNaoExiste;
+  }
+
+  return GRA_CondRetOK;
+}
+
+/***********************************************************************
+*  $FC Função: GRA - Liberar Aresta
+***********************************************************************/
+GRA_tpCondRet GRA_liberarAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2) {
+  GRA_tpConteudoVert *conteudo;
+
+  /* acessar aresta do vertice 1*/
+  conteudo = (GRA_tpConteudoVert *) LIS_ObterValor(pVertice1);
+  IrInicioLista(conteudo->pArestas);
+  /* verificar se existe aresta entre os vertices */
+  if (LIS_ProcurarValor(conteudo->pArestas, pVertice2) != LIS_CondRetOK) {
+    return GRA_CondRetArestaNaoExiste;
+  }
+  /*excluir vertice2 das arestas do vertice 1*/
+  LIS_ExcluirElemento(conteudo->pArestas);
+
+  return GRA_CondRetOK;
+}
+
+/***********************************************************************
+*  $FC Função: GRA - Excluir Vértice Corrente
 ***********************************************************************/
 
-GRA_tpCondRet GRA_destruirVertCorr(GRA_tppGrafo pGrafo) {
+GRA_tpCondRet GRA_excluirVertCorr(GRA_tppGrafo pGrafo) {
+  LIS_tppLista pVertCorr, pVizinho;
+  GRA_tpConteudoVert * conteudoVertCorr;
+
   if (!pGrafo) { return GRA_CondRetGrafoNaoExiste; }
 
+  pVertCorr = GRA_obterCorrente(pGrafo);
+  if (!pVertCorr) { return GRA_CondRetGrafoVazio; }
+
+  conteudoVertCorr = (GRA_tpConteudoVert *) LIS_ObterValor(pVertCorr);
+
+  /* Iterando sobre cada
+     vertice da sua lista de arestas, para remove-lo da
+     lista de arestas dos vértices vizinhos */
+
+  IrInicioLista(conteudoVertCorr->pArestas) ;
+
+  //Obtendo cada vértice pela sua lista de arestas
+  while ((pVizinho = (LIS_tppLista) LIS_ObterValor(conteudoVertCorr->pArestas)) != NULL) { 
+
+	/* Exclui conexão */
+    GRA_destruirAresta(pVertCorr, pVizinho);
+	/* acho que nao é necessario avancar o elemento corrente pois a aresta é excluida, 
+	entao o elemento seguinte passar a ser o vizinho corrente*/
+  } //while (LIS_AvancarElementoCorrente(conteudoVertCorr->pArestas, 1) != LIS_CondRetFimLista);
+  
+  /*após deletar todas as conexoes com os vizinhos, o vertice corrente pode ser excluido*/
+  if (LIS_ObterValor(pGrafo->pVertices) == pGrafo->pVertCorr){
+  }
   LIS_ExcluirElemento(pGrafo->pVertices);
   pGrafo->pVertCorr = (LIS_tppLista) LIS_ObterValor(pGrafo->pVertices);
 
   return GRA_CondRetOK;
 }
-
-
-
 
 
 
@@ -503,10 +593,8 @@ int comparacao(void *pValor1, void *pValor2){
 }
 
 void excluir(void *pValor) {
-	free(pValor);
 	pValor = NULL;
 }
-
 
 
 int main () {
@@ -571,9 +659,49 @@ int main () {
 	val = (char*) GRA_obterValor(grafo);
 	printf("\nvertice inexistente:\ncria aresta a-x - condRet: %d vert corrente: %s \n", ret, val);
 
-	//val = (char*) GRA_obterValor(grafo);
-	//printf("\n val: %s \n", val);
 
+	ret = GRA_irVertice(grafo, "b@b.com");
+	val = (char*) GRA_obterValor(grafo);
+	printf("\nir vertice b - condRet: %d vert corrente: %s \n", ret, val);
+
+	ret = GRA_irVertice(grafo, "e@e.com");
+	ret = GRA_irVizinho(grafo, "a@a.com");
+	val = (char*) GRA_obterValor(grafo);
+	printf("\nir vizinho a do vertice e - condRet: %d vert corrente: %s \n", ret, val);
+
+	ret = GRA_irVertice(grafo, "b@b.com");
+	ret = GRA_irVizinho(grafo, "d@d.com");
+	val = (char*) GRA_obterValor(grafo);
+	printf("\nvertices desconexos: \nir vizinho d do vertice b - condRet: %d vert corrente: %s \n", ret, val);
+
+	ret = GRA_excluirAresta(grafo, "a@a.com", "e@e.com");
+	val = (char*) GRA_obterValor(grafo);
+	printf("\nexcluir aresta a-e - condRet: %d vert corrente: %s \n", ret, val);
+
+	ret = GRA_irVizinho(grafo, "a@a.com");
+	val = (char*) GRA_obterValor(grafo);
+	printf("\nvertices desconexos: \nir vizinho a do vertice e - condRet: %d vert corrente: %s \n", ret, val);
+
+	ret = GRA_irVertice(grafo, "a@a.com");
+	val = (char*) GRA_obterValor(grafo);
+	printf("\nir vertice a - condRet: %d vert corrente: %s \n", ret, val);
+
+	ret = GRA_excluirVertCorr(grafo);
+	ret = GRA_irVertice(grafo, "a@a.com");
+	val = (char*) GRA_obterValor(grafo);
+	printf("\nexcluiu vertice a: \nir vertice a - condRet: %d vert corrente: %s \n", ret, val);
+
+	ret = GRA_irVertice(grafo, "d@d.com");
+	val = (char*) GRA_obterValor(grafo);
+	printf("\nir vertice d - condRet: %d vert corrente: %s \n", ret, val);
+
+	ret = GRA_irVizinho(grafo, "a@a.com");
+	val = (char*) GRA_obterValor(grafo);
+	printf("\nvertices desconexos: \nir vizinho a do vertice d - condRet: %d vert corrente: %s \n", ret, val);
+
+	ret = GRA_destruirGrafo(grafo);
+	printf("\n excluir grafo, ret = %d \n", ret);
+	if (grafo == NULL) printf("\ngrafo nao existe mais"); 
 
 	return 0;
 }

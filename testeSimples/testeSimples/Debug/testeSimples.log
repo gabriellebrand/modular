@@ -1,7 +1,7 @@
-﻿Build started 14/10/17 14:33:45.
+﻿Build started 14/10/17 21:40:26.
      1>Project "\\Mac\Home\Documents\Visual Studio 2010\Projects\testeSimples\testeSimples\testeSimples.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
-         Creating "Debug\testeSimples.unsuccessfulbuild" because "AlwaysCreate" was specified.
+         Touching "Debug\testeSimples.unsuccessfulbuild".
        ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TC /analyze- /errorReport:prompt main.c
          main.c
@@ -24,4 +24,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.07
+Time Elapsed 00:00:00.60
