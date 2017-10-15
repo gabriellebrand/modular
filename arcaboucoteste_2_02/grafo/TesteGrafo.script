@@ -8,6 +8,10 @@
 
 == Inicializar valores
 =declararparm   grf0    int 0
+=declararparm   grf1    int 1
+=declararparm   grf2    int 2
+=declararparm   grf3    int 3
+=declararparm   grf4    int 4
 
 =declararparm   str0    string  "wellington"
 =declararparm   str1    string  "w@w.com"
@@ -17,12 +21,26 @@
 =declararparm   str4    string  "m@m.com"
 =declararparm   str5    string  "rj"
 
+=declararparm   str6    string  "liercio"
+=declararparm   str7    string  "l@l.com"
+=declararparm   str8    string  "rj"
+
+=declararparm   str9    string  "claudia"
+=declararparm   str10   string  "c@c.com"
+=declararparm   str11   string  "rj"
+
 =declararparm   ida0    	   int  23  
 =declararparm   ida1    	   int  25
+=declararparm   ida2    	   int  54
+=declararparm   ida3    	   int  40
 
 =declararparm   OK             int  0
 =declararparm   grfVazio       int  1
 =declararparm   naoAchou       int  2
+=declararparm   grfNaoExist    int  4
+=declararparm   vertNaoExist   int  6
+=declararparm   aresNaoExist   int  7
+=declararparm   aresJaExist    int  8
 =declararparm   vertJaExist    int  9
 
 =declararparm   pNULL          int  0
@@ -35,7 +53,8 @@
 =criarvertice    grf0   str0   str1   str2   ida0   OK
 =criarvertice    grf0   str3   str4   str5   ida0   OK
 
-
+== Criar vertice que ja existe - mesmo email 
+=criarvertice    grf0   str6   str1   str8   ida0   vertJaExist 
 
 == Tornar um vertice corrente
 =irvertice       grf0   str1   OK
@@ -57,6 +76,101 @@
 
 == Excluir grafo
 =excluirgrafo    grf0   OK
+
+
+== Criar o grafo
+=criargrafo      grf1
+
+== Criar vertices 
+=criarvertice    grf1   str0   str1   str2   ida0   OK
+=criarvertice    grf1   str3   str4   str5   ida1   OK
+=criarvertice    grf1   str6   str7   str8   ida2   OK
+
+== Criar aresta
+=criararesta     grf1   str1   str4   OK
+=criararesta     grf1   str4   str7   OK
+
+== Criar uma aresta com um vertice que nao existe
+=criararesta     grf1   str4   str10  vertNaoExist
+
+== Criar aresta que ja existe
+=criararesta     grf1   str1   str4   aresJaExist
+
+== Tornar um vertice corrente 
+=irvertice       grf1   str1   OK
+
+== Ir no vizinho de um vertice
+=irviziho        grf1   str4   OK   
+=irviziho        grf1   str7   OK
+
+== Ir para um vertice que nao é vizinho 
+=irviziho        grf1   str1   aresNaoExist
+
+== Excluir aresta
+=excluiraresta    grf1   str1   str4   OK
+=excluiraresta    grf1   str7   str4   OK
+
+== Excluir aresta de um vertice que nao existe
+=excluiraresta    grf1   str1   str10  vertNaoExist
+
+== Excluir aresta que nao existe
+=excluiraresta    grf1   str1   str4   aresNaoExist
+
+== Excluir vertice corrente
+=excluirvertice  grf1   OK
+=excluirvertice  grf1   OK
+=excluirvertice  grf1   OK
+
+== Excluir vertice corrente de um grafo que ficou vazio
+=excluirvertice  grf1   grfVazio
+
+== Excluir grafo
+=excluirgrafo    grf1   OK
+
+== Excluir grafo que nao existe
+=excluirgrafo    grf2   grfNaoExist
+
+== Criar vertice em um grafo que nao existe 
+=criarvertice    grf2   str0   str1   str2   ida0   grfNaoExist
+
+== Excluir um vertice de um grafo que nao existe
+=excluirvertice  grf2   grfNaoExist
+
+== Criar aresta de um grafo que nao existe
+=criararesta     grf2   str1   str4   grfNaoExist
+
+== Excluir aresta de um grafo que nao existe
+=excluiraresta    grf2   str7   str4   grfNaoExist
+
+== Ir para para o vizinho de um vertice de um grafo que nao existe 
+=irviziho        grf2   str1   grfNaoExist
+
+== Tornar um vertice corrente de um grafo que nao existe
+=irvertice       grf2   str1   grfNaoExist
+
+== Criar o grafo
+=criargrafo      grf3
+
+== Tornar um vertice corrente de um grafo vazio
+=irvertice       grf3   str1   grfVazio
+
+== Ir para para o vizinho de um vertice de um grafo vazio 
+=irviziho        grf3   str1   grfVazio
+
+== Excluir vertice corrente de um grafo que e vazio
+=excluirvertice  grf3   grfVazio
+
+== Excluir aresta de um grafo vazio
+=excluiraresta    grf3   str7   str4   grfVazio
+
+
+
+
+
+
+
+
+
 
 
 // fim

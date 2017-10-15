@@ -74,6 +74,9 @@
          void ( * ExcluirValor ) ( void * pValor ) ;
                /* Ponteiro para a função de destruição do valor contido em um elemento */
 
+         int (*CompararValor) (void *pValor1, void *pValor2);
+            /* Ponteiro para a função que compara o valor contido no elemento. Retorna zero no caso de valor igual */
+
    } LIS_tpLista ;
 
 /***** Protótipos das funções encapuladas no módulo *****/
@@ -93,8 +96,7 @@
 *  Função: LIS  &Criar lista
 *  ****/
 
-   LIS_tppLista LIS_CriarLista(
-             void   ( * ExcluirValor ) ( void * pDado ) )
+   LIS_tppLista LIS_CriarLista(void (* ExcluirValor)(void * pDado), int (*CompararValor)(void *pValor1, void *pValor2))
    {
 
       LIS_tpLista * pLista = NULL ;
@@ -108,6 +110,7 @@
       LimparCabeca( pLista ) ;
 
       pLista->ExcluirValor = ExcluirValor ;
+      pLista->CompararValor = CompararValor ;
 
       return pLista ;
 
@@ -451,7 +454,7 @@
 *  ****/
 
    LIS_tpCondRet LIS_ProcurarValor( LIS_tppLista pLista ,
-                                    void * pValor   )
+                                    void * pValor        )
    {
 
       tpElemLista * pElem ;
@@ -464,10 +467,8 @@
       {
          return LIS_CondRetListaVazia ;
       } /* if */
-		
-      for ( pElem  = pLista->pElemCorr ;
-            pElem != NULL ;
-            pElem  = pElem->pProx )
+
+      for ( pElem  = pLista->pElemCorr ; pElem != NULL ; pElem  = pElem->pProx )
       {
          if ( pElem->pValor == pValor )
          {
@@ -480,6 +481,37 @@
 
    } /* Fim função: LIS  &Procurar elemento contendo valor */
 
+/***************************************************************************
+*
+*  Função: LIS  &Procurar elemento pelo conteudo apontado
+*  ****/
+
+   LIS_tpCondRet LIS_ProcurarPorConteudo( LIS_tppLista pLista , void * pValor)
+   {
+	  
+      tpElemLista * pElem ;
+
+      #ifdef _DEBUG
+         assert( pLista  != NULL ) ;
+      #endif
+
+      if ( pLista->pElemCorr == NULL )
+      {
+         return LIS_CondRetListaVazia ;
+      } /* if */
+
+      for ( pElem  = pLista->pElemCorr ; pElem != NULL ; pElem  = pElem->pProx )
+      {	
+         if (pLista->CompararValor(pElem->pValor, pValor) == 0)
+         {
+            pLista->pElemCorr = pElem ;
+            return LIS_CondRetOK ;
+         } /* if */
+      } /* for */
+
+      return LIS_CondRetNaoAchou ;
+
+   } /* Fim função: LIS  &Procurar elemento pelo conteudo apontado */
 
 /*****  Código das funções encapsuladas no módulo  *****/
 
@@ -557,4 +589,3 @@
    } /* Fim função: LIS  -Limpar a cabeça da lista */
 
 /********** Fim do módulo de implementação: LIS  Lista duplamente encadeada **********/
-

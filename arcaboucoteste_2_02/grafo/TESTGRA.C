@@ -29,7 +29,6 @@
 
 #include    "Grafo.h"
 #include    "Lista.h"
-//#include    "Perfil.h"
 
 
 static const char CRIAR_GRAFO_CMD            [ ] = "=criargrafo";
@@ -37,6 +36,9 @@ static const char CRIAR_VERTICE_CMD          [ ] = "=criarvertice";
 static const char IR_VERTICE_CMD             [ ] = "=irvertice";
 static const char EXCLUIR_VERTICE_CMD        [ ] = "=excluirvertice";
 static const char EXCLUIR_GRAFO_CMD          [ ] = "=excluirgrafo";
+static const char CRIAR_ARESTA_CMD           [ ] = "=criararesta";
+static const char EXCLUIR_ARESTA_CMD         [ ] = "=excluiraresta";
+static const char IR_VIZINHO_CMD             [ ] = "=irviziho";
 
 
 
@@ -95,6 +97,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
       idade = -1 ;
   char nome[100],
        email[100],
+       email2[100],
        cidade[100];
 
   PER_tppPerfil pPerfil;
@@ -202,7 +205,62 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
       } /* fim ativa: Testar Excluir Grafo */
 
+  /* Testar Criar Aresta */
 
+      if ( strcmp( ComandoTeste , CRIAR_ARESTA_CMD ) == 0 )
+      {
+
+        numLidos = LER_LerParametros( "issi" ,
+         &inxGrafo, &email, &email2, &CondRetEsperada ) ;
+
+        if ( numLidos != 4 ) {
+          return TST_CondRetParm ;
+        } /* if */
+        
+        CondRetObtido = GRA_criarAresta(vtGrafos[ inxGrafo ], email, email2);
+
+        return TST_CompararInt( CondRetEsperada , CondRetObtido ,
+              "Retorno errado criar aresta." );
+
+      } /* fim ativa: Testar Criar Aresta */
+
+  /* Testar Excluir Aresta */
+
+      if ( strcmp( ComandoTeste , EXCLUIR_ARESTA_CMD ) == 0 )
+      {
+
+        numLidos = LER_LerParametros( "issi" ,
+         &inxGrafo, &email, &email2, &CondRetEsperada ) ;
+
+        if ( numLidos != 4 ) {
+          return TST_CondRetParm ;
+        } /* if */
+        
+        CondRetObtido = GRA_excluirAresta(vtGrafos[ inxGrafo ], email, email2);
+
+        return TST_CompararInt( CondRetEsperada , CondRetObtido ,
+              "Retorno errado excluir aresta." );
+
+      } /* fim ativa: Testar Excluir Aresta */
+
+  /* Testar Ir Vizinho */
+
+      if ( strcmp( ComandoTeste , IR_VIZINHO_CMD ) == 0 )
+      {
+
+        numLidos = LER_LerParametros( "isi" ,
+         &inxGrafo, &email, &CondRetEsperada ) ;
+
+        if ( numLidos != 3 ) {
+          return TST_CondRetParm ;
+        } /* if */
+        
+        CondRetObtido = GRA_irVizinho (vtGrafos[ inxGrafo ], email);
+
+        return TST_CompararInt( CondRetEsperada , CondRetObtido ,
+              "Retorno errado ir vizinho." );
+
+      } /* fim ativa: Testar Ir Vizinho */
 
 
 
