@@ -1,0 +1,36 @@
+// Script:    TesteGrafo.script
+// Autores: GB - Gabrielle Brandenburg
+//          GC - Gabriel Cantergiani
+//          WB - Wellington Bezerra
+// Data:      12/out/2017
+// Propósito: Testar o módulo Grafo.
+//
+
+== Inicializar valores
+=declararparm   grafo0  int 0
+
+=declararparm   str0    string  "wellington"
+=declararparm   str1    string  "w@w.com"
+=declararparm   str2    string  "rj"
+
+=declararparm   ida0    	   int  23
+
+=declararparm   OK             int  0
+=declararparm   ListaVazia     int  1
+=declararparm   FimLista       int  2
+=declararparm   NaoAchou       int  3
+=declararparm   FaltouMemoria  int  4
+
+=declararparm   pNULL          int  0
+=declararparm   pNaoNULL       int  1
+
+== Criar o grafo 0
+=criargrafo      grafo0 
+
+== Inserir elemento em grafo vazio
+=criarvertice    grafo0   str0   str1   str2   ida0   OK
+
+// fim
+
+
+
