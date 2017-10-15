@@ -9,13 +9,11 @@
 *
 *  Projeto: Trabalho 2 - Programa;cão Modular
 *  Gestor:  LES/DI/PUC-Rio
-*  Autores:    GB - Gabrielle Brandenburg
-                GC - Gabriel Cantergiani
-                WB - Wellington Bezerra
+*  Autor:  WB - Wellington Bezerra
 *
 *  $HA Histórico de evolução:
 *     Versão  Autor    Data     Observações
-*     1       WB   12/out/2017 início desenvolvimento
+*     1       WB   09/out/2017 início desenvolvimento
 *
 ***************************************************************************/
 
@@ -30,10 +28,16 @@
 #include    "LerParm.h"
 
 #include    "Grafo.h"
+#include    "Lista.h"
+//#include    "Perfil.h"
 
 
 static const char CRIAR_GRAFO_CMD            [ ] = "=criargrafo";
 static const char CRIAR_VERTICE_CMD          [ ] = "=criarvertice";
+static const char IR_VERTICE_CMD             [ ] = "=irvertice";
+static const char EXCLUIR_VERTICE_CMD        [ ] = "=excluirvertice";
+static const char EXCLUIR_GRAFO_CMD          [ ] = "=excluirgrafo";
+
 
 
 #define DIM_VT_GRAFO   10
@@ -57,6 +61,7 @@ typedef struct PER_tagPerfil {
 } PER_tpPerfil ;
 
 typedef struct PER_tagPerfil * PER_tppPerfil ;
+
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
@@ -86,12 +91,16 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
   int numLidos = -1,
-      inxGrafo = -1 ;
+      inxGrafo = -1,
+      idade = -1 ;
+  char nome[100],
+       email[100],
+       cidade[100];
 
-  LIS_tppLista pVertice;
+  PER_tppPerfil pPerfil;
 
-  //GRA_tpCondRet CondRetObtido;
-  //GRA_tpCondRet CondRetEsperada;
+  GRA_tpCondRet CondRetObtido;
+  GRA_tpCondRet CondRetEsperada;
 
   
   /* Testar Criar Grafo */
@@ -105,7 +114,6 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
         if ( numLidos != 1 ) {
           return TST_CondRetParm ;
         } /* if */
-
         vtGrafos[ inxGrafo ] =
         GRA_criarGrafo( DestruirValor , CompararValor ) ;
 
@@ -114,14 +122,94 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
       } /* fim ativa: Testar Criar Grafo */
 
-  /* Testar GRF Adicionar vertice */
+  /* Testar Criar vertice */
+
+      else if ( strcmp( ComandoTeste , CRIAR_VERTICE_CMD ) == 0 ) {
+
+          numLidos = LER_LerParametros( "isssii" ,
+                       &inxGrafo , &nome, &email, &cidade, &idade , &CondRetEsperada ) ;
+          if ( numLidos != 6 ) {
+            return TST_CondRetParm ;
+          } /* if */
+
+          pPerfil = ( PER_tppPerfil ) malloc( sizeof( PER_tpPerfil ));
+          if ( pPerfil == NULL ) {
+               return TST_CondRetMemoria ;
+          } /* if */
+          strcpy( pPerfil->nome , nome ) ;
+          strcpy( pPerfil->email , email ) ;
+          strcpy( pPerfil->cidade , cidade ) ;
+          pPerfil->idade = idade ;
+
+          CondRetObtido = GRA_criarVertice(vtGrafos[ inxGrafo ], pPerfil, email);
+          
+
+          return TST_CompararInt( CondRetEsperada , CondRetObtido ,
+              "Retorno errado criar vertice." );
+
+      } /* fim ativa: Testar Criar vertice */
+
+  /* Testar Ir Vertice */
+
+      else if ( strcmp( ComandoTeste , IR_VERTICE_CMD ) == 0 ) {
+
+          numLidos = LER_LerParametros( "isi" ,
+                       &inxGrafo , &email, &CondRetEsperada ) ;
+          if ( numLidos != 3 ) {
+            return TST_CondRetParm ;
+          } /* if */
+          
+          CondRetObtido = GRA_irVertice (vtGrafos[ inxGrafo ], email);
+
+          return TST_CompararInt( CondRetEsperada , CondRetObtido ,
+              "Retorno errado ao ir no vertice" );
+
+      } /* fim ativa: Ir Vertice */
+
+  /* Testar Excluir Vertice Corrente*/
+
+      else if ( strcmp( ComandoTeste , EXCLUIR_VERTICE_CMD  ) == 0 ) {
+
+          numLidos = LER_LerParametros( "ii" ,
+                       &inxGrafo , &CondRetEsperada ) ;
+          if ( numLidos != 2 ) {
+            return TST_CondRetParm ;
+          } /* if */
+          
+          CondRetObtido = GRA_excluirVertCorr(vtGrafos[ inxGrafo ]);
+
+          return TST_CompararInt( CondRetEsperada , CondRetObtido ,
+              "Retorno errado ao excluir vertice." );
+
+      } /* fim ativa: Excluir Vertice Corrente*/
+
+  /* Testar Excluir Grafo */
+
+      if ( strcmp( ComandoTeste , EXCLUIR_GRAFO_CMD ) == 0 )
+      {
+
+        numLidos = LER_LerParametros( "ii" ,
+         &inxGrafo, &CondRetEsperada ) ;
+
+        if ( numLidos != 2 ) {
+          return TST_CondRetParm ;
+        } /* if */
+        
+        CondRetObtido = GRA_destruirGrafo(vtGrafos[ inxGrafo ]);
+
+        return TST_CompararInt( CondRetEsperada , CondRetObtido ,
+              "Retorno errado excluir grafo." );
+
+      } /* fim ativa: Testar Excluir Grafo */
+
+
 
 
 
 
         
 
-  /* fim ativa: Testar GRF Adicionar vertice */
+
 
           //GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pValor) 
 
@@ -155,12 +243,12 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
    int CompararValor( void * pValor1, void * pValor2 )
    {
 
-    PER_tppPerfil pPerfil;
+    PER_tppPerfil pPerfil1;
     char *email;
-    pPerfil = (PER_tppPerfil) pValor1;
+    pPerfil1 = (PER_tppPerfil) pValor1;
     email = (char*) pValor2;
 
-    return strcmp(email,pPerfil->email);
+    return strcmp(email,pPerfil1->email);
 
    } /* Fim função: TGRA - Comparar valor */
 
