@@ -128,7 +128,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
           return TST_CondRetParm ;
         } /* if */
         vtGrafos[ inxGrafo ] =
-        GRA_criarGrafo( DestruirValor , CompararValor ) ;
+        GRA_CriarGrafo( DestruirValor , CompararValor ) ;
 
         return TST_CompararPonteiroNulo( 1 , vtGrafos[ inxGrafo ] ,
            "Erro em ponteiro de novo grafo."  ) ;
@@ -155,7 +155,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
           strcpy( pPerfil->cidade , cidade ) ;
           strcpy( pPerfil->dataNasc, dataNasc ) ;
 
-          CondRetObtido = GRA_criarVertice(vtGrafos[ inxGrafo ], pPerfil, email);
+          CondRetObtido = GRA_CriarVertice(vtGrafos[ inxGrafo ], pPerfil, email);
 
           return TST_CompararInt( CondRetEsperada , CondRetObtido ,
               "Retorno errado criar vertice." );
@@ -172,7 +172,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
             return TST_CondRetParm ;
           } /* if */
           
-          CondRetObtido = GRA_irVertice (vtGrafos[ inxGrafo ], email);
+          CondRetObtido = GRA_IrVertice (vtGrafos[ inxGrafo ], email);
 
           return TST_CompararInt( CondRetEsperada , CondRetObtido ,
               "Retorno errado ao ir no vertice" );
@@ -189,7 +189,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
             return TST_CondRetParm ;
           } /* if */
           
-          CondRetObtido = GRA_excluirVertCorr(vtGrafos[ inxGrafo ]);
+          CondRetObtido = GRA_ExcluirVertCorr(vtGrafos[ inxGrafo ]);
 
           return TST_CompararInt( CondRetEsperada , CondRetObtido ,
               "Retorno errado ao excluir vertice." );
@@ -208,7 +208,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
           return TST_CondRetParm ;
         } /* if */
         
-        CondRetObtido = GRA_destruirGrafo(&vtGrafos[ inxGrafo ]);
+        CondRetObtido = GRA_DestruirGrafo(&vtGrafos[ inxGrafo ]);
 
         return TST_CompararInt( CondRetEsperada , CondRetObtido ,
               "Retorno errado excluir grafo." );
@@ -227,7 +227,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
           return TST_CondRetParm ;
         } /* if */
         
-        CondRetObtido = GRA_criarAresta(vtGrafos[ inxGrafo ], email, email2);
+        CondRetObtido = GRA_CriarAresta(vtGrafos[ inxGrafo ], email, email2);
 
         return TST_CompararInt( CondRetEsperada , CondRetObtido ,
               "Retorno errado criar aresta." );
@@ -246,7 +246,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
           return TST_CondRetParm ;
         } /* if */
         
-        CondRetObtido = GRA_excluirAresta(vtGrafos[ inxGrafo ], email, email2);
+        CondRetObtido = GRA_ExcluirAresta(vtGrafos[ inxGrafo ], email, email2);
 
         return TST_CompararInt( CondRetEsperada , CondRetObtido ,
               "Retorno errado excluir aresta." );
@@ -265,7 +265,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
           return TST_CondRetParm ;
         } /* if */
         
-        CondRetObtido = GRA_irVizinho (vtGrafos[ inxGrafo ], email);
+        CondRetObtido = GRA_IrVizinho (vtGrafos[ inxGrafo ], email);
 
         return TST_CompararInt( CondRetEsperada , CondRetObtido ,
               "Retorno errado ir vizinho." );
@@ -285,7 +285,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
         } /* if */
 
 
-        return TST_CompararPonteiroNulo( CondRetEsperada , GRA_obterValor( vtGrafos[ inxGrafo ]) ,
+        return TST_CompararPonteiroNulo( CondRetEsperada , GRA_ObterValor( vtGrafos[ inxGrafo ]) ,
            "Erro em ponteiro de OBTER VALOR."  ) ;
 
       } /* fim ativa: Testar  Obter Valor */
