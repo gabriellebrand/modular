@@ -256,10 +256,9 @@ GRA_tpCondRet GRA_irVertice (GRA_tppGrafo pGrafo, void *pChaveID) {
   pVertices = pGrafo->pVertices;
   /* vai para o inicio da lista vertices */
   IrInicioLista(pVertices);
-  //pGrafo->pVertCorr = (LIS_tppLista) LIS_ObterValor(pVertices);
 
   /* procura na lista de vertices o vertice atraves da chave identificadora */
-  if (LIS_ProcurarPorConteudo(pGrafo->pVertices , pChaveID) == LIS_CondRetOK) {
+  if (LIS_ProcurarPorConteudo(pVertices , pChaveID) == LIS_CondRetOK) {
     /*achou o vertice, entao vertice corrente passa a ser o vertice buscado*/
     pGrafo->pVertCorr = (LIS_tppLista) LIS_ObterValor(pVertices);
     return GRA_CondRetOK;
@@ -300,7 +299,7 @@ GRA_tpCondRet GRA_irVizinho (GRA_tppGrafo pGrafo, void *pChaveID) {
     return GRA_CondRetNaoPossuiAresta;
   } 
 
-  /* vai para o inicio da lista vertices */
+  /* vai para o inicio da lista arestas */
   IrInicioLista(listaArestas);
 
   /* procura na lista de arestas o vertice atraves da chave identificadora */
@@ -375,6 +374,7 @@ GRA_tpCondRet GRA_criarAresta(GRA_tppGrafo pGrafo, void * pChaveID_1, void * pCh
   if (GRA_compararVertice(pVertice1, pChaveID_2) == 0) { return GRA_CondRetArestaIlegal; }
 
   /*passo3: verificar se ja existe aresta entre eles*/
+  IrInicioLista(conteudoVert1->pArestas);
   if (LIS_ProcurarPorConteudo(conteudoVert1->pArestas, pChaveID_2) == LIS_CondRetOK) {
     return GRA_CondRetArestaJaExiste;
   }
@@ -425,7 +425,7 @@ GRA_tpCondRet GRA_excluirAresta(GRA_tppGrafo pGrafo, void *pChaveID_1, void *pCh
 /***********************************************************************
 *  $FC Função: GRA - Destruir aresta
 *  $ED Descrição da função
-*  Destroi arestas entre duas listas vertice
+*     Destroi arestas entre duas listas vertice
 ***********************************************************************/
 GRA_tpCondRet GRA_destruirAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2) {
 
@@ -458,6 +458,7 @@ GRA_tpCondRet GRA_liberarAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2)
   conteudo = (GRA_tpConteudoVert *) LIS_ObterValor(pVertice1);
   IrInicioLista(conteudo->pArestas);
   /* verificar se existe aresta entre os vertices */
+  IrInicioLista(conteudo->pArestas);
   if (LIS_ProcurarValor(conteudo->pArestas, pVertice2) != LIS_CondRetOK) {
     return GRA_CondRetArestaNaoExiste;
   }
@@ -469,6 +470,10 @@ GRA_tpCondRet GRA_liberarAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2)
 
 /***********************************************************************
 *  $FC Função: GRA - Excluir Vértice Corrente
+*  $ED Descrição da função
+*     Exclui o vértice corrente do grafo, incluindo suas arestas.
+*     Apaga todas as referências do vértice das arestas dos vizinhos.
+*     Vertice corrente passa a ser qualquer um.
 ***********************************************************************/
 
 GRA_tpCondRet GRA_excluirVertCorr(GRA_tppGrafo pGrafo) {
@@ -493,9 +498,9 @@ GRA_tpCondRet GRA_excluirVertCorr(GRA_tppGrafo pGrafo) {
 
   /* Exclui conexão */
     GRA_destruirAresta(pVertCorr, pVizinho);
-  /* acho que nao é necessario avancar o elemento corrente pois a aresta é excluida, 
+  /*nao é necessario avancar o elemento corrente pois a aresta é excluida, 
   entao o elemento seguinte passar a ser o vizinho corrente*/
-  } //while (LIS_AvancarElementoCorrente(conteudoVertCorr->pArestas, 1) != LIS_CondRetFimLista);
+  }
   
   /*após deletar todas as conexoes com os vizinhos, o vertice corrente pode ser excluido*/
   if (LIS_ObterValor(pGrafo->pVertices) == pGrafo->pVertCorr){
