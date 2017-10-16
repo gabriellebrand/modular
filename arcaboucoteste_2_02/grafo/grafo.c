@@ -157,7 +157,7 @@ int GRA_compararConteudoVert(void *pDado, void *pChaveID){
 
 GRA_tpCondRet GRA_destruirGrafo(GRA_tppGrafo *pGrafo) {
 
-  if (!pGrafo){
+  if (! (*pGrafo)){
     return GRA_CondRetGrafoNaoExiste ;
   } /*if */
 

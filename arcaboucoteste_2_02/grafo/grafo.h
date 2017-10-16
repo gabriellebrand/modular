@@ -162,7 +162,7 @@ GRA_tppGrafo GRA_criarGrafo(void ( * ExcluirValor )( void * pDado ), int (*Compa
 *     GRA_CondRetOK                - destruiu sem problemas
 *     GRA_CondRetGrafoNaoExiste    - ponteiro para o grafo é nulo
 ***********************************************************************/
-GRA_tpCondRet GRA_destruirGrafo(GRA_tppGrafo pGrafo);
+GRA_tpCondRet GRA_destruirGrafo(GRA_tppGrafo *pGrafo);
 
 /***************************************************************************
 *  Função: GRA  &Ir Vertice

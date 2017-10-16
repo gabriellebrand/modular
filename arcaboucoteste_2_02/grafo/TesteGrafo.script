@@ -12,6 +12,8 @@
 =declararparm   grf2    int 2
 =declararparm   grf3    int 3
 =declararparm   grf4    int 4
+=declararparm   grf5    int 5
+=declararparm   grf11   int 11
 
 =declararparm   str0    string  "wellington"
 =declararparm   str1    string  "w@w.com"
@@ -36,14 +38,15 @@
 
 =declararparm   OK             int  0
 =declararparm   grfVazio       int  1
-=declararparm   naoAchou       int  2
-=declararparm   grfNaoExist    int  4
-=declararparm   naoTemAres     int  5
-=declararparm   vertNaoExist   int  6
-=declararparm   aresNaoExist   int  7
-=declararparm   aresJaExist    int  8
-=declararparm   vertJaExist    int  9
-=declararparm   aresIlegal     int  10
+
+=declararparm   grfNaoExist    int  3
+=declararparm   naoTemAres     int  4
+=declararparm   vertNaoExist   int  5
+=declararparm   aresNaoExist   int  6
+=declararparm   aresJaExist    int  7
+=declararparm   vertJaExist    int  8
+=declararparm   aresIlegal     int  9
+
 
 =declararparm   pNULL          int  0
 =declararparm   pNaoNULL       int  1
@@ -65,7 +68,7 @@
 =excluirvertice  grf0   OK
 
 == Tornar um vertice corrente que ja foi excluido
-=irvertice       grf0   str1   naoAchou
+=irvertice       grf0   str1   vertNaoExist
 
 == Tornar um vertice corrente 
 =irvertice       grf0   str4   OK
@@ -185,6 +188,35 @@
 
 == Excluir grafo
 =excluirgrafo    grf4   OK
+
+== Obter dado de um vertice de um grafo que nao existe
+=obtervalor      grf5   pNULL
+
+== Criar o grafo
+=criargrafo      grf5
+
+== Criar vertice 
+=criarvertice    grf5   str0   str1   str2   ida0   OK
+
+== Obter dado de um vertice de um grafo
+=obtervalor      grf5   pNaoNULL
+
+== Excluir vertice corrente de um grafo que e vazio
+=excluirvertice  grf5   OK
+
+== Excluir grafo
+=excluirgrafo    grf5   OK
+
+== Criar vertice em um grafo que nao existe 
+=criarvertice    grf5   str0   str1   str2   ida0   grfNaoExist   
+
+
+
+
+
+
+
+
 
 
 // fim
