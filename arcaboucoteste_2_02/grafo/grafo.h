@@ -145,7 +145,7 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo;
 *     a função retornará NULL.
 *     Não será dada mais informação quanto ao problema ocorrido.
 ***********************************************************************/
-GRA_tppGrafo GRA_criarGrafo(void ( * ExcluirValor )( void * pDado ), int (*CompararValor)(void * pDado, void * pChaveID)); 
+GRA_tppGrafo GRA_CriarGrafo(void ( * ExcluirValor )( void * pDado ), int (*CompararValor)(void * pDado, void * pChaveID)); 
 
 /***********************************************************************
 *
@@ -165,7 +165,7 @@ GRA_tppGrafo GRA_criarGrafo(void ( * ExcluirValor )( void * pDado ), int (*Compa
 *     GRA_CondRetOK                - destruiu sem problemas
 *     GRA_CondRetGrafoNaoExiste    - ponteiro para o grafo é nulo
 ***********************************************************************/
-GRA_tpCondRet GRA_destruirGrafo(GRA_tppGrafo *pGrafo);
+GRA_tpCondRet GRA_DestruirGrafo(GRA_tppGrafo *pGrafo);
 
 /***************************************************************************
 *  Função: GRA  &Ir Vertice
@@ -185,7 +185,7 @@ GRA_tpCondRet GRA_destruirGrafo(GRA_tppGrafo *pGrafo);
 *     GRA_CondRetGrafoVazio        - caso o grafo esteja vazio (vertice corrente nulo)
 *     GRA_CondRetVerticeNaoExiste  - vertice com a chaveID correspondente não foi encontrado
 * **************************************************************************/
-GRA_tpCondRet GRA_irVertice (GRA_tppGrafo pGrafo, void *pChaveID);
+GRA_tpCondRet GRA_IrVertice (GRA_tppGrafo pGrafo, void *pChaveID);
 
 /***************************************************************************
 *  Função: GRA  &Ir Vizinho
@@ -208,7 +208,7 @@ GRA_tpCondRet GRA_irVertice (GRA_tppGrafo pGrafo, void *pChaveID);
 *     GRA_CondRetValorNulo         - se o conteúdo do vértice corrente for nulo
 *     GRA_CondRetNaoPossuiAresta   - se o vértice corrente não possuir nenhuma aresta
 * **************************************************************************/
-GRA_tpCondRet GRA_irVizinho (GRA_tppGrafo pGrafo, void *pChaveID);
+GRA_tpCondRet GRA_IrVizinho (GRA_tppGrafo pGrafo, void *pChaveID);
 
 /***********************************************************************
 *  $FC Função: GRA &Obter Valor
@@ -224,7 +224,7 @@ GRA_tpCondRet GRA_irVizinho (GRA_tppGrafo pGrafo, void *pChaveID);
 *     NULL    - se o conteudo do vertice nao existir.
 *     !=NULL  - retorna o valor do conteudo do vertice
 ***********************************************************************/
-void * GRA_obterValor( GRA_tppGrafo pGrafo);
+void * GRA_ObterValor( GRA_tppGrafo pGrafo);
 
 /***********************************************************************
 *  $FC Função: GRA - Obter Valor
@@ -247,7 +247,7 @@ void * GRA_obterValor( GRA_tppGrafo pGrafo);
 *     GRA_CondRetOK                - vértice foi criado e inserido ao grafo corretamente
 *     
 ***********************************************************************/
-GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pDado, void *pChaveID);
+GRA_tpCondRet GRA_CriarVertice(GRA_tppGrafo pGrafo, void *pDado, void *pChaveID);
 
 /***********************************************************************
 *  $FC Função: GRA - Excluir Vértice Corrente
@@ -265,7 +265,7 @@ GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pDado, void *pChaveID)
 *     GRA_CondRetGrafoVazio        - caso o grafo esteja vazio (vertice corrente nulo)
 *     GRA_CondRetOK                - vértice foi excluído
 ***********************************************************************/
-GRA_tpCondRet GRA_excluirVertCorr(GRA_tppGrafo pGrafo);
+GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo);
 
 /***********************************************************************
 *  $FC Função: GRA - Criar aresta
@@ -286,7 +286,7 @@ GRA_tpCondRet GRA_excluirVertCorr(GRA_tppGrafo pGrafo);
 *     GRA_CondRetFaltouMemoria     - faltou memoria na hora de alocar a aresta entre os vertice
 *     GRA_CondRetOK                - vertices foram conectados corretamente
 ***********************************************************************/
-GRA_tpCondRet GRA_criarAresta(GRA_tppGrafo pGrafo, void * pChaveID_1, void * pChaveID_2);
+GRA_tpCondRet GRA_CriarAresta(GRA_tppGrafo pGrafo, void * pChaveID_1, void * pChaveID_2);
 
 /***********************************************************************
 *  $FC Função: GRA - Excluir aresta
@@ -305,7 +305,7 @@ GRA_tpCondRet GRA_criarAresta(GRA_tppGrafo pGrafo, void * pChaveID_1, void * pCh
 *     GRA_CondRetArestaNaoExiste   - não há aresta entre os vértices
 *     GRA_CondRetOK                - excluiu aresta com corretamente
 ***********************************************************************/
-GRA_tpCondRet GRA_excluirAresta(GRA_tppGrafo pGrafo, void *pChaveID_1, void *pChaveID_2);
+GRA_tpCondRet GRA_ExcluirAresta(GRA_tppGrafo pGrafo, void *pChaveID_1, void *pChaveID_2);
 
 #undef GRAFO_EXT
 
