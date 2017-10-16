@@ -183,6 +183,7 @@ GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pDado, void *pChaveID)
     return GRA_CondRetGrafoNaoExiste;
   } /* if */
 
+if(!pDado || !pChaveID) return GRA_CondRetValorNulo;
   /*verifica se já existe um vertice com a chave escolhida*/
   if (GRA_irVertice(pGrafo, pChaveID) == GRA_CondRetOK) {
     return GRA_CondRetVerticeJaExiste;
@@ -342,9 +343,6 @@ void * GRA_obterValor( GRA_tppGrafo pGrafo ) {
   if (!pVerticeCorr) { return NULL; }
 
   pConteudo = (GRA_tpConteudoVert *) LIS_ObterValor(pVerticeCorr);
-
-  if (!pConteudo){ return NULL; }
-
   return pConteudo->pDado;
 } /* Fim função: GRA  &Obter Valor */
 
