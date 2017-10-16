@@ -180,7 +180,7 @@ GRA_tpCondRet GRA_destruirGrafo(GRA_tppGrafo pGrafo);
 *     GRA_CondRetOK                - encontrou o vértice e o colocou como corrente
 *     GRA_CondRetGrafoNaoExiste    - ponteiro para o grafo é nulo
 *     GRA_CondRetGrafoVazio        - caso o grafo esteja vazio (vertice corrente nulo)
-*     GRA_CondRetNaoAchou          - vertice com a chaveID correspondente não foi encontrado
+*     GRA_CondRetVerticeNaoExiste  - vertice com a chaveID correspondente não foi encontrado
 * **************************************************************************/
 GRA_tpCondRet GRA_irVertice (GRA_tppGrafo pGrafo, void *pChaveID);
 
