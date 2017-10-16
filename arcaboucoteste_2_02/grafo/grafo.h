@@ -257,6 +257,7 @@ GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pDado, void *pChaveID)
 *     pGrafo    - ponteiro para o grafo
 *     
 *  $FV Valor retornado
+*     GRA_CondRetValorNulo         - se o ponteiro ou a chaveID forem nulas
 *     GRA_CondRetGrafoNaoExiste    - ponteiro para o grafo é nulo
 *     GRA_CondRetGrafoVazio        - caso o grafo esteja vazio (vertice corrente nulo)
 *     GRA_CondRetOK                - vértice foi excluído

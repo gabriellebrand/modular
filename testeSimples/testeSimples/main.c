@@ -8,7 +8,6 @@ int main () {
 	GRA_tppGrafo grafo = NULL;
 	GRA_tpCondRet ret;
 	PER_tppPerfil per, perfil1, perfil2;
-	char * val, *email;
 
 	grafo = GRA_criarGrafo(PER_DestruirPerfil,PER_compararPerfil);
 	perfil1 = PER_CriarPerfil("perfil", "p@p.com", "rj", 1);
@@ -75,6 +74,13 @@ int main () {
 	printf("\nfoi no vizinho q do vertice p: %s %d\n", PER_recuperaEmail(per), ret);
 	//printf("ir vertice p@p.com - condRet: %d vert corrente: %s\n", ret, PER_recuperaEmail(per));
 	//email = (perfil1)->email;
+
+	ret = GRA_destruirGrafo(&grafo);
+	printf("\n excluir grado %d %x \n", ret, grafo);
+
+	ret = GRA_destruirGrafo(&grafo);
+	printf("\n excluir grado %d \n", ret);
+
 	
 	//printf("compara: %d %s \n", PER_compararPerfil(perfil1, "p@p.com"), PER_recuperaEmail(perfil1));
 
