@@ -39,6 +39,7 @@ static const char EXCLUIR_GRAFO_CMD          [ ] = "=excluirgrafo";
 static const char CRIAR_ARESTA_CMD           [ ] = "=criararesta";
 static const char EXCLUIR_ARESTA_CMD         [ ] = "=excluiraresta";
 static const char IR_VIZINHO_CMD             [ ] = "=irviziho";
+static const char OBTER_VALOR_CMD             [ ] = "=obtervalor";
 
 #define TRUE  1
 #define FALSE 0
@@ -124,7 +125,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
         numLidos = LER_LerParametros( "i" ,
          &inxGrafo ) ;
 
-        if ( numLidos != 1  ) {
+        if ( numLidos != 1  || !ValidarInxGrafo( inxGrafo , VAZIO )) {
           return TST_CondRetParm ;
         } /* if */
         vtGrafos[ inxGrafo ] =
@@ -208,7 +209,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
           return TST_CondRetParm ;
         } /* if */
         
-        CondRetObtido = GRA_destruirGrafo(vtGrafos[ inxGrafo ]);
+        CondRetObtido = GRA_destruirGrafo(&vtGrafos[ inxGrafo ]);
 
         return TST_CompararInt( CondRetEsperada , CondRetObtido ,
               "Retorno errado excluir grafo." );
@@ -271,6 +272,24 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
               "Retorno errado ir vizinho." );
 
       } /* fim ativa: Testar Ir Vizinho */
+
+     /* Testar  Obter Valor */
+
+      else if ( strcmp( ComandoTeste , OBTER_VALOR_CMD ) == 0 )
+      {
+
+        numLidos = LER_LerParametros( "ii" ,
+         &inxGrafo, &CondRetEsperada ) ;
+
+        if ( numLidos != 2 ) {
+          return TST_CondRetParm ;
+        } /* if */
+
+
+        return TST_CompararPonteiroNulo( CondRetEsperada , GRA_obterValor( vtGrafos[ inxGrafo ]) ,
+           "Erro em ponteiro de OBTER VALOR."  ) ;
+
+      } /* fim ativa: Testar  Obter Valor */
 
 
   return TST_CondRetNaoConhec ;
