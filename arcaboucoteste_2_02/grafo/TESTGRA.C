@@ -39,7 +39,7 @@ static const char EXCLUIR_GRAFO_CMD          [ ] = "=excluirgrafo";
 static const char CRIAR_ARESTA_CMD           [ ] = "=criararesta";
 static const char EXCLUIR_ARESTA_CMD         [ ] = "=excluiraresta";
 static const char IR_VIZINHO_CMD             [ ] = "=irviziho";
-static const char OBTER_VALOR_CMD             [ ] = "=obtervalor";
+static const char OBTER_VALOR_CMD            [ ] = "=obtervalor";
 
 #define TRUE  1
 #define FALSE 0
@@ -62,8 +62,8 @@ typedef struct PER_tagPerfil {
     char cidade[20];
         /* Cidade do perfil */
     
-    int idade;
-        /* Idade do perfil */
+    char dataNasc[10];
+        /* data de nascimento do perfil */
 
 } PER_tpPerfil ;
 
@@ -78,7 +78,7 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 
    static int ValidarInxGrafo( int inxGrafo , int Modo ) ;
 
-   /*****  Código das funções exportadas pelo módulo  *****/
+/*****  Código das funções exportadas pelo módulo  *****/
 
 
 /***********************************************************************
@@ -104,19 +104,18 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
   int numLidos = -1,
-      inxGrafo = -1,
-      idade = -1 ;
+      inxGrafo = -1;
+
   char nome[100],
        email[100],
        email2[100],
-       cidade[100];
+       cidade[100],
+       dataNasc[10];
 
   PER_tppPerfil pPerfil;
-
   GRA_tpCondRet CondRetObtido;
   GRA_tpCondRet CondRetEsperada;
 
-  
   /* Testar Criar Grafo */
 
       if ( strcmp( ComandoTeste , CRIAR_GRAFO_CMD ) == 0 )
@@ -140,8 +139,8 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
       else if ( strcmp( ComandoTeste , CRIAR_VERTICE_CMD ) == 0 ) {
 
-          numLidos = LER_LerParametros( "isssii" ,
-                       &inxGrafo , &nome, &email, &cidade, &idade , &CondRetEsperada ) ;
+          numLidos = LER_LerParametros( "issssi" ,
+                       &inxGrafo , &nome, &email, &cidade, &dataNasc , &CondRetEsperada ) ;
           if ( numLidos != 6  ) {
             return TST_CondRetParm ;
           } /* if */
@@ -150,13 +149,13 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
           if ( pPerfil == NULL ) {
                return TST_CondRetMemoria ;
           } /* if */
+
           strcpy( pPerfil->nome , nome ) ;
           strcpy( pPerfil->email , email ) ;
           strcpy( pPerfil->cidade , cidade ) ;
-          pPerfil->idade = idade ;
+          strcpy( pPerfil->dataNasc, dataNasc ) ;
 
           CondRetObtido = GRA_criarVertice(vtGrafos[ inxGrafo ], pPerfil, email);
-          
 
           return TST_CompararInt( CondRetEsperada , CondRetObtido ,
               "Retorno errado criar vertice." );
