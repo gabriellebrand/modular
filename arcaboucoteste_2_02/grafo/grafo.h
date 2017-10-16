@@ -86,34 +86,31 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo;
  /* 1 */ GRA_CondRetGrafoVazio ,
                /* O grafo não contém vértices */
 
- /* 2 */ GRA_CondRetNaoAchou ,
-               /* Não encontrou o valor procurado */
-
- /* 3 */ GRA_CondRetFaltouMemoria,
+ /* 2 */ GRA_CondRetFaltouMemoria,
                /* Faltou memória ao tentar criar um vértice do grafo */
        
- /* 4 */ GRA_CondRetGrafoNaoExiste,
+ /* 3 */ GRA_CondRetGrafoNaoExiste,
          /* Grafo não existe ao inserir */
 
- /* 5 */ GRA_CondRetNaoPossuiAresta,
+ /* 4 */ GRA_CondRetNaoPossuiAresta,
          /* Não possui aresta para o vertice */
 
- /* 6 */ GRA_CondRetVerticeNaoExiste,
+ /* 5 */ GRA_CondRetVerticeNaoExiste,
         /* Vertice nao Existe */
      
- /* 7 */ GRA_CondRetArestaNaoExiste,
+ /* 6 */ GRA_CondRetArestaNaoExiste,
         /* Não possui arestas */
 
- /* 8 */ GRA_CondRetArestaJaExiste
+ /* 7 */ GRA_CondRetArestaJaExiste
         /* Ja possui essa aresta */,
 
- /* 9 */ GRA_CondRetVerticeJaExiste,
+ /* 8 */ GRA_CondRetVerticeJaExiste,
         /* Vertice ja Existe */
 
- /* 10 */ GRA_CondRetArestaIlegal,
+ /* 9 */ GRA_CondRetArestaIlegal,
         /* Aresta para o proprio vértice */
 
- /* 11 */  GRA_CondRetValorNulo
+ /* 10 */  GRA_CondRetValorNulo
         /* Ponteiro nulo */
 
    } GRA_tpCondRet ;

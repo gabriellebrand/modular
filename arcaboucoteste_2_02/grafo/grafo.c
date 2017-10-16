@@ -263,7 +263,7 @@ GRA_tpCondRet GRA_irVertice (GRA_tppGrafo pGrafo, void *pChaveID) {
     pGrafo->pVertCorr = (LIS_tppLista) LIS_ObterValor(pVertices);
     return GRA_CondRetOK;
   }
-  return GRA_CondRetNaoAchou;
+  return GRA_CondRetVerticeNaoExiste;
 } /* Fim função: GRA  &Ir Vertice */
 
 /***************************************************************************
@@ -363,18 +363,15 @@ GRA_tpCondRet GRA_criarAresta(GRA_tppGrafo pGrafo, void * pChaveID_1, void * pCh
   /* passo1: obter a referencia para os vertices */
   if (GRA_irVertice (pGrafo, pChaveID_1) == GRA_CondRetOK) {
     pVertice1 = GRA_obterCorrente(pGrafo);
-  } else { return GRA_CondRetNaoAchou; }
+  } else { return GRA_CondRetVerticeNaoExiste; }
   
   if (GRA_irVertice (pGrafo, pChaveID_2) == GRA_CondRetOK) {
     pVertice2 = GRA_obterCorrente(pGrafo);
-  } else { return GRA_CondRetNaoAchou; }
+  } else { return GRA_CondRetVerticeNaoExiste; }
 
   /*obter o conteudo dos vertices*/
   conteudoVert1 = (GRA_tpConteudoVert *) LIS_ObterValor(pVertice1);
   conteudoVert2 = (GRA_tpConteudoVert *) LIS_ObterValor(pVertice2);
-  if(!conteudoVert1 || !conteudoVert2) {
-    return GRA_CondRetVerticeNaoExiste;
-  }
 
   /*passo2: verificar se os dois vertices sao iguais -> aresta para si mesmo nao pode */
   if (GRA_compararVertice(pVertice1, pChaveID_2) == 0) { return GRA_CondRetArestaIlegal; }
