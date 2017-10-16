@@ -128,12 +128,13 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo;
 *  $EP Parâmetros
 *     ExcluirValor  - ponteiro para a função que processa a
 *                     exclusão do valor referenciado pelo elemento
-*                     a ser excluído.
+*                     a ser excluído. Pode ser NULL se não precisar 
+*                     liberar o dado alocado.
 *                     Ver descrição do módulo.
 *     CompararValor - ponteiro para a função que compara um dado armazenado
 *                     no vértice com uma chave identificadora. Deve retornar
 *                     zero caso o identificador corresponda ao dado.
-*                     Ver descrição do módulo.
+*                     Ver descrição do módulo. 
 *
 *  $FV Valor retornado
 *     Se executou corretamente retorna o ponteiro para o grafo.
