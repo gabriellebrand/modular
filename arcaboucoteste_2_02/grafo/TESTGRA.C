@@ -40,7 +40,11 @@ static const char CRIAR_ARESTA_CMD           [ ] = "=criararesta";
 static const char EXCLUIR_ARESTA_CMD         [ ] = "=excluiraresta";
 static const char IR_VIZINHO_CMD             [ ] = "=irviziho";
 
+#define TRUE  1
+#define FALSE 0
 
+#define VAZIO     0
+#define NAO_VAZIO 1
 
 #define DIM_VT_GRAFO   10
 
@@ -71,22 +75,28 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 
    static int CompararValor(void * pValor1, void * pValor2) ;
 
+   static int ValidarInxGrafo( int inxGrafo , int Modo ) ;
 
-/*****  Código das funções exportadas pelo módulo  *****/
+   /*****  Código das funções exportadas pelo módulo  *****/
+
 
 /***********************************************************************
 *
-*  $FC Função: TGRA Efetuar operações de teste específicas para Grafo
+*  $FC Função: TGRA &Testar Grafo
 *
 *  $ED Descrição da função
-*     Efetua os diversos comandos de teste específicos para o módulo
-*     Grafo sendo testado.
+*     Podem ser criadas até 10 grafos, identificados pelos índices 0 a 9
 *
-*  $EP Parâmetros
-*     $P ComandoTeste - String contendo o comando
+*     Comandos disponíveis:
 *
-*  $FV Valor retornado
-*     Ver TST_tpCondRet definido em TST_ESPC.H
+* =criargrafo            inxGrafo
+* =criarvertice          inxGrafo nome email cidade idade CondRetEsperada
+* =irvertice             inxGrafo email CondRetEsperada
+* =excluirvertice        inxGrafo CondRetEsperada
+* =excluirgrafo          inxGrafo CondRetEsperada 
+* =criararesta           inxGrafo email email2 CondRetEsperada 
+* =excluiraresta         inxGrafo email email2 CondRetEsperada
+* =irvizinho             inxGrafo email CondRetEsperada
 *
 ***********************************************************************/
 
@@ -114,7 +124,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
         numLidos = LER_LerParametros( "i" ,
          &inxGrafo ) ;
 
-        if ( numLidos != 1 ) {
+        if ( numLidos != 1  ) {
           return TST_CondRetParm ;
         } /* if */
         vtGrafos[ inxGrafo ] =
@@ -131,7 +141,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
           numLidos = LER_LerParametros( "isssii" ,
                        &inxGrafo , &nome, &email, &cidade, &idade , &CondRetEsperada ) ;
-          if ( numLidos != 6 ) {
+          if ( numLidos != 6  ) {
             return TST_CondRetParm ;
           } /* if */
 
@@ -188,7 +198,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
   /* Testar Excluir Grafo */
 
-      if ( strcmp( ComandoTeste , EXCLUIR_GRAFO_CMD ) == 0 )
+      else if ( strcmp( ComandoTeste , EXCLUIR_GRAFO_CMD ) == 0 )
       {
 
         numLidos = LER_LerParametros( "ii" ,
@@ -207,7 +217,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
   /* Testar Criar Aresta */
 
-      if ( strcmp( ComandoTeste , CRIAR_ARESTA_CMD ) == 0 )
+      else if ( strcmp( ComandoTeste , CRIAR_ARESTA_CMD ) == 0 )
       {
 
         numLidos = LER_LerParametros( "issi" ,
@@ -226,7 +236,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
   /* Testar Excluir Aresta */
 
-      if ( strcmp( ComandoTeste , EXCLUIR_ARESTA_CMD ) == 0 )
+      else if ( strcmp( ComandoTeste , EXCLUIR_ARESTA_CMD ) == 0 )
       {
 
         numLidos = LER_LerParametros( "issi" ,
@@ -245,7 +255,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
   /* Testar Ir Vizinho */
 
-      if ( strcmp( ComandoTeste , IR_VIZINHO_CMD ) == 0 )
+      else if ( strcmp( ComandoTeste , IR_VIZINHO_CMD ) == 0 )
       {
 
         numLidos = LER_LerParametros( "isi" ,
@@ -263,14 +273,6 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
       } /* fim ativa: Testar Ir Vizinho */
 
 
-
-
-        
-
-
-
-          //GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pValor) 
-
   return TST_CondRetNaoConhec ;
 
 } /* Fim função: TGRA Efetuar operações de teste específicas para Grafo */
@@ -278,6 +280,38 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
 /*****  Código das funções encapsuladas no módulo  *****/
 
+/***********************************************************************
+*
+*  $FC Função: TGRA -Validar indice do Grafo
+*
+***********************************************************************/
+
+   static int ValidarInxGrafo( int inxGrafo , int Modo )
+   {
+
+      if ( ( inxGrafo <  0 )
+        || ( inxGrafo >= DIM_VT_GRAFO ))
+      {
+         return FALSE ;
+      } /* if */
+         
+      if ( Modo == VAZIO )
+      {
+         if ( vtGrafos[ inxGrafo ] != 0 )
+         {
+            return FALSE ;
+         } /* if */
+      } else
+      {
+         if ( vtGrafos[ inxGrafo ] == 0 )
+         {
+            return FALSE ;
+         } /* if */
+      } /* if */
+         
+      return TRUE ;
+
+   } /* Fim função: TGRA -Validar indice do grafo */
 
 /***********************************************************************
 *

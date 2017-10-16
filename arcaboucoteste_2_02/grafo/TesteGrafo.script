@@ -38,10 +38,12 @@
 =declararparm   grfVazio       int  1
 =declararparm   naoAchou       int  2
 =declararparm   grfNaoExist    int  4
+=declararparm   naoTemAres     int  5
 =declararparm   vertNaoExist   int  6
 =declararparm   aresNaoExist   int  7
 =declararparm   aresJaExist    int  8
 =declararparm   vertJaExist    int  9
+=declararparm   aresIlegal     int  10
 
 =declararparm   pNULL          int  0
 =declararparm   pNaoNULL       int  1
@@ -163,14 +165,26 @@
 == Excluir aresta de um grafo vazio
 =excluiraresta    grf3   str7   str4   grfVazio
 
+== Excluir grafo
+=excluirgrafo    grf3   OK
 
+== Criar o grafo
+=criargrafo      grf4
 
+== Criar vertice 
+=criarvertice    grf4   str0   str1   str2   ida0   OK
 
+== Ir para para o vizinho sendo que nao tem aresta
+=irviziho        grf4   str4   naoTemAres
 
+== Criar aresta de um vertice com ele mesmo
+=criararesta     grf4   str1   str1   aresIlegal
 
+== Excluir vertice corrente de um grafo que e vazio
+=excluirvertice  grf4   OK
 
-
-
+== Excluir grafo
+=excluirgrafo    grf4   OK
 
 
 // fim
