@@ -20,7 +20,7 @@
 *     1       gba   08/10/2017 início desenvolvimento
 *
 *  $ED Descrição do módulo
-*	    Implementa grafos genéricos não dirigidos.
+*     Implementa grafos genéricos não dirigidos.
 *     Podem existir n grafos em operação simultaneamente.
 *     Os grafos possuem uma cabeça encapsulando o seu estado.
 *     
@@ -165,10 +165,10 @@ GRA_tppGrafo GRA_criarGrafo(void ( * ExcluirValor )( void * pDado ), int (*Compa
 *     GRA_CondRetOK                - destruiu sem problemas
 *     GRA_CondRetGrafoNaoExiste    - ponteiro para o grafo é nulo
 ***********************************************************************/
-GRA_tpCondRet GRA_destruirGrafo(GRA_tppGrafo pGrafo);
+GRA_tpCondRet GRA_destruirGrafo(GRA_tppGrafo *pGrafo);
 
 /***************************************************************************
-*  Função: GRA  &Ir Vertice
+*  Função: GRA  Ir Vertice
 *  $ED Descrição da função
 *     Anda por todos os vértices do grafo até encontrar o vértice
 *     correspondente à chave identificadora passada como parâmetro.
@@ -178,131 +178,58 @@ GRA_tpCondRet GRA_destruirGrafo(GRA_tppGrafo pGrafo);
 *  $EP Parâmetros
 *     pGrafo - ponteiro para o grafo
 *     pChaveID - ponteiro para a chave identificadora do vertice
-*  		
+*     
 *  $FV Valor retornado
 *     GRA_CondRetOK                - encontrou o vértice e o colocou como corrente
 *     GRA_CondRetGrafoNaoExiste    - ponteiro para o grafo é nulo
-*     GRA_CondRetGrafoVazio        - caso o grafo esteja vazio (vertice corrente nulo)
-*     GRA_CondRetNaoAchou          - vertice com a chaveID correspondente não foi encontrado
 * **************************************************************************/
 GRA_tpCondRet GRA_irVertice (GRA_tppGrafo pGrafo, void *pChaveID);
 
 /***************************************************************************
-*  Função: GRA  &Ir Vizinho
+*  Função: GRA  Ir Vizinho
 *  $ED Descrição da função
-*     Percore as arestas do vértice corrente até encontrar o vértice
-*     correspondente à chave identificadora passada como parâmetro.
+*     Essa funcao recebe um pValor que é a chave de busca do grafo.
 *     O vertice buscado passa a ser o vertice corrente do grafo , caso seja encontrado.
 *     Se não for encontrado, o vertice corrente continua o mesmo.
-*     A busca é feita nas arestas do vertice corrente.
+*     A busca é feita na lista de arestas do vertice corrente.
 *
 *  $EP Parâmetros
 *     pGrafo - ponteiro para o grafo
 *     pChaveID - ponteiro para a chave identificadora do vertice vizinho
-*
-*  $FV Valor retornado
-*     GRA_CondRetOK                - encontrou o vértice e o colocou como corrente
-*     GRA_CondRetGrafoNaoExiste    - ponteiro para o grafo é nulo
-*     GRA_CondRetGrafoVazio        - caso o grafo esteja vazio (vertice corrente nulo)
-*     GRA_CondRetArestaNaoExiste   - vizinho com a chaveID correspondente não foi encontrado nas arestas do vertice corrente
-*     GRA_CondRetValorNulo         - se o conteúdo do vértice corrente for nulo
-*     GRA_CondRetNaoPossuiAresta   - se o vértice corrente não possuir nenhuma aresta
 * **************************************************************************/
 GRA_tpCondRet GRA_irVizinho (GRA_tppGrafo pGrafo, void *pChaveID);
 
 /***********************************************************************
-*  $FC Função: GRA &Obter Valor
+*  $FC Função: GRA - Obter Valor
 *  $ED Descrição da função
-*     Obtem a referência do pDado contido dentro do vertice corrente.
-*
-*  $EP Parâmetros
-*     pGrafo - ponteiro para o grafo
-*     
-*  $FV Valor retornado
-*     NULL    - se o grafo não existir (ponteiro nulo), ele retorna nulo. 
-*     NULL    - se o grafo estiver vazio (vertice corrente nulo).
-*     NULL    - se o conteudo do vertice nao existir.
-*     !=NULL  - retorna o valor do conteudo do vertice
+*     Obtem a referência do pValor contido dentro do vertice corrente.
+*     - retorna NULL, se o grafo não existir (ponteiro nulo), ele retorna nulo. 
+*     - retorna NULL, se o grafo estiver vazio (vertice corrente nulo).
+*     - retorna NULL, se o conteudo do vertice nao existir.
+*     - demais casos, retorna o valor do conteudo do vertice
 ***********************************************************************/
 void * GRA_obterValor( GRA_tppGrafo pGrafo);
 
-/***********************************************************************
-*  $FC Função: GRA - Obter Valor
-*  $ED Descrição da função
-*     Cria um novo vértice e insere ele no grafo.
-*     Se inserido corretamente, o novo vértice passa a ser o vértice corrente.
-*     Faz uma busca para verificar se já existe um vértice com a chaveID passada.
-*
-*  $EP Parâmetros
-*     pGrafo    - ponteiro para o grafo
-*     pDado     - ponteiro para o dado a ser armazenado no vértice
-*     pChaveID  - chade idenficadora do vértice corrente
-*                (esta chave deve estar contida dentro da estrutura do pDado, 
-*                 pois ela não é copiada para o vértice separadamente!)
-*     
-*  $FV Valor retornado
-*     GRA_CondRetGrafoNaoExiste    - ponteiro para o grafo é nulo
-*     GRA_CondRetVerticeJaExiste   - já existe um vértice com a chaveID correspondente
-*     GRA_CondRetFaltouMemoria     - faltou memoria para alocação do novo vértice
-*     GRA_CondRetOK                - vértice foi criado e inserido ao grafo corretamente
-*     
-***********************************************************************/
+/***************************************************************************
+*  Função: GRA  &Criar Vertice
+* **************************************************************************/
 GRA_tpCondRet GRA_criarVertice(GRA_tppGrafo pGrafo, void *pDado, void *pChaveID);
 
 /***********************************************************************
 *  $FC Função: GRA - Excluir Vértice Corrente
-*  $ED Descrição da função
-*     Exclui o vértice corrente do grafo, incluindo suas arestas.
-*     Apaga todas as referências do vértice das arestas dos vizinhos.
-*     Vertice corrente passa a ser qualquer um.
-*
-*  $EP Parâmetros
-*     pGrafo    - ponteiro para o grafo
-*     
-*  $FV Valor retornado
-*     GRA_CondRetGrafoNaoExiste    - ponteiro para o grafo é nulo
-*     GRA_CondRetGrafoVazio        - caso o grafo esteja vazio (vertice corrente nulo)
-*     GRA_CondRetOK                - vértice foi excluído
 ***********************************************************************/
 GRA_tpCondRet GRA_excluirVertCorr(GRA_tppGrafo pGrafo);
 
 /***********************************************************************
 *  $FC Função: GRA - Criar aresta
 *  $ED Descrição da função
-*     Cria uma aresta entre os dois vértices correspondentes às chaveID's passadas.
-*
-*  $EP Parâmetros
-*     pGrafo     - ponteiro para o grafo
-*     pChaveID_1 - ponteiro para a chave identificadora correspondente ao vértice 1
-*     pChaveID_2 - ponteiro para a chave identificadora correspondente ao vértice 2
-*     
-*  $FV Valor retornado
-*     GRA_CondRetGrafoNaoExiste    - ponteiro para o grafo é nulo
-*     GRA_CondRetGrafoVazio        - caso o grafo esteja vazio (vertice corrente nulo)
-*     GRA_CondRetVerticeNaoExiste  - não encontrou o vértice 1 ou 2 no grafo
-*     GRA_CondRetArestaIlegal      - tentativa de conectar um grafo a si mesmo
-*     GRA_CondRetArestaJaExiste    - os dois vértices já estão conectados
-*     GRA_CondRetFaltouMemoria     - faltou memoria na hora de alocar a aresta entre os vertice
-*     GRA_CondRetOK                - vertices foram conectados corretamente
 ***********************************************************************/
 GRA_tpCondRet GRA_criarAresta(GRA_tppGrafo pGrafo, void * pChaveID_1, void * pChaveID_2);
 
 /***********************************************************************
 *  $FC Função: GRA - Excluir aresta
 *  $ED Descrição da função
-*     Exclui uma aresta entre dois vertices, atraves de suas chaves identificadoras.
-*
-*  $EP Parâmetros
-*     pGrafo     - ponteiro para o grafo
-*     pChaveID_1 - ponteiro para a chave identificadora correspondente ao vértice 1
-*     pChaveID_2 - ponteiro para a chave identificadora correspondente ao vértice 2
-*
-*  $FV Valor retornado
-*     GRA_CondRetGrafoNaoExiste    - ponteiro para o grafo é nulo
-*     GRA_CondRetGrafoVazio        - caso o grafo esteja vazio (vertice corrente nulo)
-*     GRA_CondRetVerticeNaoExiste  - não encontrou o vértice 1 ou 2 no grafo
-*     GRA_CondRetArestaNaoExiste   - não há aresta entre os vértices
-*     GRA_CondRetOK                - excluiu aresta com corretamente
+*     Exclui uma aresta entre dois vertices, atraves de suas chaves identificadoras
 ***********************************************************************/
 GRA_tpCondRet GRA_excluirAresta(GRA_tppGrafo pGrafo, void *pChaveID_1, void *pChaveID_2);
 
