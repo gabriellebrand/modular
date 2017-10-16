@@ -13,11 +13,13 @@
 *  Projeto: INF 1301 T2
 *  Gestor:  LES/DI/PUC-Rio
 *  Autores: gba - Gabrielle Brandemburg dos Anjos
+*           wbs - Wellington Bezerra da Silva
+*           gc  - Gabriel Cantergiani
 *
 *  $HA Histórico de evolução:
-*     Versão  Autor    Data     Observações
-*     1       gba   14/10/2017 finalização
-*     1       gba   08/10/2017 início desenvolvimento
+*     Versão  Autor             Data      Observações
+*     1       gba, wbs, gc   14/10/2017   finalização
+*     1       gba, wbs, gc   08/10/2017   início desenvolvimento
 *
 *  $ED Descrição do módulo
 *     Implementa grafos genéricos não dirigidos.

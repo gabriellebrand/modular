@@ -7,7 +7,30 @@
 #include "grafo.h"
 #undef GRAFO_OWN
 
- /***********************************************************************
+/***************************************************************************
+*
+*  $MCD Módulo de implementação: GRA  Grafo Genérico Não-Dirigido
+*
+*  Arquivo gerado:              GRAFO.h
+*  Letras identificadoras:      GRA
+*
+*  Nome da base de software:    Arcabouço para a automação de testes de programas redigidos em C
+*  Arquivo da base de software: D:\AUTOTEST\PROJETOS\LISTA.BSW
+*
+*  Projeto: INF 1301 T2
+*  Gestor:  LES/DI/PUC-Rio
+*  Autores: gba - Gabrielle Brandemburg dos Anjos
+*           wbs - Wellington Bezerra da Silva
+*           gc  - Gabriel Cantergiani
+*
+*  $HA Histórico de evolução:
+*     Versão  Autor    Data     Observações
+*     1       gba   16/10/2017  correções de bugs
+*     1       gba   14/10/2017  finalização
+*     1       gba   08/10/2017  início desenvolvimento
+* ***************************************************************************/
+
+/***********************************************************************
 *  $TC Tipo de dados: GRA descritor da cabeça do grafo
 * *********************************************************************/
 
