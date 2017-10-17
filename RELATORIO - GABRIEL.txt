@@ -1,0 +1,42 @@
+  Data	  Horas Trabalhadas		Tipo de Tarefa									Descrição da Tarefa Realizada
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+18/09/2017	1		Estudar,Projetar							Estudo e criação da nova versão da biblioteca ArcabouçoTeste.lib.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+20/09/2017	1		Projetar, Revisar Código					Estudo e revisão dos códigos e funções de cada módulo para entendimento do 																												programa.Estudo de como remover dependência de .dll do projeto.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+24/09/2017	1		Especificar os Modulos						Especificação dos requisitos tecnicos do sistema. Especificação do funcionamento e estrutura 	
+																do Grafo.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+27/09/2017	1		Estudar, Especificar os Módulos, Projetar	Estudo do funcionamento das listas de Mensagens. Estudo das interfaces entre os módulos 
+																Perfil e Mensagens. Estudo do armazenamento das listas de mensagens. Especificação da 							estrutura principal de Grafo.				 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+02/10/2017	2		Estudar, Especificar os módulos   			Discussão em grupo sobre a reestruturação dos módulos, suas interfaces e suas conexões. Definição de como as Mensagens 	  																serão implementadas. Divisão de tarefas.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+03/10/2017	2		Especificar os módulos, Projetar			Criação da arquitetura de módulos, do diagrama de componentes e das interfaces através de ferramenta online.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+09/10/2017	2		Especificar Modulos, Projetar				Correção da arquitetura de módulos. Criação do modelo físico.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+09/10/2017	1		Redigir script de teste 					Criação do script de teste para o módulo lista.		
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+12/10/2017	2		Revisar Código do Módulo 					Reconstrução do Módulo de teste TESTLIS.c para testar o módulo lista lendo email, nome, idade e cidade.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+14/10/2017	2		Revisar Código, Redigir script de Teste 	Correção de erros no módulo de teste TESTLIS.c, criação de novo script de teste compatível com o módulo atualizado.		
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+16/10/2017	4		Revisar Código, Realizar testes				Inclusão das funções e estruturas de Perfil no módulo de teste TESLIS.c. Reconstrução do script de teste 
+																TesteLista.script		
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+16/10/2017	2		Projetar									Revisão do modelo físico e de arquitetura e criação dos modelos de arquitetura e físico através de ferramenta.
+			
+			
+			
+			
+			
+			
+			
+			
