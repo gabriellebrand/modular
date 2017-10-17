@@ -37,18 +37,19 @@
 #include    "Lista.h"
 
 
-static const char RESET_LISTA_CMD         [ ] = "=resetteste"     ;
-static const char CRIAR_LISTA_CMD         [ ] = "=criarlista"     ;
-static const char DESTRUIR_LISTA_CMD      [ ] = "=destruirlista"  ;
-static const char ESVAZIAR_LISTA_CMD      [ ] = "=esvaziarlista"  ;
-static const char INS_ELEM_ANTES_CMD      [ ] = "=inselemantes"   ;
-static const char INS_ELEM_APOS_CMD       [ ] = "=inselemapos"    ;
-static const char OBTER_VALOR_CMD         [ ] = "=obtervalorelem" ;
-static const char EXC_ELEM_CMD            [ ] = "=excluirelem"    ;
-static const char IR_INICIO_CMD           [ ] = "=irinicio"       ;
-static const char IR_FIM_CMD              [ ] = "=irfinal"        ;
-static const char AVANCAR_ELEM_CMD        [ ] = "=avancarelem"    ;
-static const char PROCURAR_CONTEUDO_CMD	  [ ] = "=procurarvalor"  ;
+static const char RESET_LISTA_CMD         [ ] = "=resetteste"       ;
+static const char CRIAR_LISTA_CMD         [ ] = "=criarlista"       ;
+static const char DESTRUIR_LISTA_CMD      [ ] = "=destruirlista"    ;
+static const char ESVAZIAR_LISTA_CMD      [ ] = "=esvaziarlista"    ;
+static const char INS_ELEM_ANTES_CMD      [ ] = "=inselemantes"     ;
+static const char INS_ELEM_APOS_CMD       [ ] = "=inselemapos"      ;
+static const char OBTER_VALOR_CMD         [ ] = "=obtervalorelem"   ;
+static const char EXC_ELEM_CMD            [ ] = "=excluirelem"      ;
+static const char IR_INICIO_CMD           [ ] = "=irinicio"         ;
+static const char IR_FIM_CMD              [ ] = "=irfinal"          ;
+static const char AVANCAR_ELEM_CMD        [ ] = "=avancarelem"      ;
+static const char PROCURAR_CONTEUDO_CMD   [ ] = "=procurarconteudo" ;
+static const char PROCURAR_VALOR_CMD	  [ ] = "=procurarvalor"    ;
 
 
 #define TRUE  1
@@ -58,9 +59,8 @@ static const char PROCURAR_CONTEUDO_CMD	  [ ] = "=procurarvalor"  ;
 #define NAO_VAZIO 1
 
 #define DIM_VT_LISTA   10
+#define DIM_VT_PERFIL   10
 #define DIM_VALOR     100
-
-LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
 /***********************************************************************
  *
@@ -99,6 +99,9 @@ typedef enum {
       /* Ponteiro Nulo */
 
    } PER_tpCondRet ;
+
+LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
+PER_tppPerfil  vtPerfis[ DIM_VT_PERFIL] ;
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
@@ -145,7 +148,8 @@ typedef enum {
 
       int inxLista  = -1 ,
           numLidos   = -1 ,
-          CondRetEsp = -1  ;
+          CondRetEsp = -1  ,
+          inxPerfil = -1 ;
 
       TST_tpCondRet CondRet ;
       PER_tpCondRet CondRetPerfil;
@@ -247,26 +251,26 @@ typedef enum {
          else if ( strcmp( ComandoTeste , INS_ELEM_ANTES_CMD ) == 0 )
          {
 
-            numLidos = LER_LerParametros( "issssi" ,
-                       &inxLista , StringDado, StringDado2, StringDado3, StringDado4 , &CondRetEsp ) ;
+            numLidos = LER_LerParametros( "issssii" ,
+                       &inxLista , StringDado, StringDado2, StringDado3, StringDado4 , &inxPerfil, &CondRetEsp ) ;
 
-            if ( ( numLidos != 6 )
+            if ( ( numLidos != 7 )
               || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
             {
                return TST_CondRetParm ;
             } /* if */
 
 
-            perfil = PER_CriarPerfil(StringDado, StringDado2, StringDado3,  StringDado4);
+            vtPerfis [ inxPerfil ] = PER_CriarPerfil(StringDado, StringDado2, StringDado3,  StringDado4);
 
-            if (perfil==NULL)
+            if (vtPerfis [ inxPerfil ]==NULL)
             	return TST_CondRetNaoConhec;
 
-            CondRet = LIS_InserirElementoAntes( vtListas[ inxLista ] , perfil ) ;
+            CondRet = LIS_InserirElementoAntes( vtListas[ inxLista ] , vtPerfis [ inxPerfil ] ) ;
 
             if ( CondRet != LIS_CondRetOK )
             {
-               PER_DestruirPerfil( perfil );
+               PER_DestruirPerfil( vtPerfis [ inxPerfil ] );
             } /* if */
 
             return TST_CompararInt( CondRetEsp , CondRet ,
@@ -279,25 +283,25 @@ typedef enum {
          else if ( strcmp( ComandoTeste , INS_ELEM_APOS_CMD ) == 0 )
          {
 
-            numLidos = LER_LerParametros( "issssi" ,
-                       &inxLista , StringDado , StringDado2, StringDado3, StringDado4, &CondRetEsp ) ;
+            numLidos = LER_LerParametros( "issssii" ,
+                       &inxLista , StringDado , StringDado2, StringDado3, StringDado4, &inxPerfil, &CondRetEsp ) ;
 
-            if ( ( numLidos != 6 )
+            if ( ( numLidos != 7 )
               || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
             {
                return TST_CondRetParm ;
             } /* if */
 
-             perfil = PER_CriarPerfil(StringDado, StringDado2, StringDado3,  StringDado4);
+             vtPerfis [ inxPerfil ] = PER_CriarPerfil(StringDado, StringDado2, StringDado3,  StringDado4);
 
-            if (perfil==NULL)
+            if (vtPerfis [ inxPerfil ]==NULL)
             	return TST_CondRetNaoConhec;
 
-            CondRet = LIS_InserirElementoApos( vtListas[ inxLista ] , perfil ) ;
+            CondRet = LIS_InserirElementoApos( vtListas[ inxLista ] , vtPerfis [ inxPerfil ] ) ;
 
             if ( CondRet != LIS_CondRetOK )
             {
-               PER_DestruirPerfil ( perfil );
+               PER_DestruirPerfil ( vtPerfis [ inxPerfil ] );
             } /* if */
 
             return TST_CompararInt( CondRetEsp , CondRet ,
@@ -339,17 +343,17 @@ typedef enum {
                return TST_CondRetParm ;
             } /* if */
 
-            perfil =  (PER_tppPerfil) LIS_ObterValor( vtListas[ inxLista ] ) ;
+            vtPerfis [ inxPerfil ] =  (PER_tppPerfil) LIS_ObterValor( vtListas[ inxLista ] ) ;
 
             if ( ValEsp == 0 )
             {
-               return TST_CompararPonteiroNulo( 0 , perfil ,
+               return TST_CompararPonteiroNulo( 0 , vtPerfis [ inxPerfil ] ,
                          "Valor não deveria existir." ) ;
             } /* if */
 
 			else
             {
-               return TST_CompararPonteiroNulo( 1 , perfil ,
+               return TST_CompararPonteiroNulo( 1 , vtPerfis [ inxPerfil ] ,
                          "Dado tipo um deveria existir." ) ;
             } /* if */
 
@@ -413,7 +417,29 @@ typedef enum {
 
          } /* fim ativa: LIS  &Avançar elemento */
 
-		  /* Testar procurar valor na lista */
+      /* Testar procurar valor na lista   */
+
+        else if ( strcmp( ComandoTeste , PROCURAR_VALOR_CMD ) == 0 )
+         {
+
+            numLidos = LER_LerParametros( "iii" ,
+                       &inxLista , &inxPerfil, &CondRetEsp ) ;
+
+            if ( ( numLidos != 3 )
+              || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+            
+            CondRet = LIS_ProcurarValor( vtListas[ inxLista ] , vtPerfis[inxPerfil]);
+             
+
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao procurar valor."   ) ;
+
+         } /* fim ativa: Testar */
+
+		  /* Testar procurar valor por conteudo na lista */
 
          else if ( strcmp( ComandoTeste , PROCURAR_CONTEUDO_CMD ) == 0 )
          {
