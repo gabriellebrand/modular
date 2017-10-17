@@ -176,6 +176,12 @@ int GRA_CompararConteudoVert(void *pDado, void *pChaveID){
 
 /***************************************************************************
 *  Função: GRA  &Destruir Grafo
+*  $ED Descrição da função
+*     Destrói o grafo fornecido.
+*     O parâmetro ponteiro para o grafo não é modificado.
+*     Se ocorrer algum erro durante a destruição, o grafo resultará
+*     estruturalmente incorreto.
+*     OBS. não existe previsão para possíveis falhas de execução.
 * **************************************************************************/
 
 GRA_tpCondRet GRA_DestruirGrafo(GRA_tppGrafo *pGrafo) {
@@ -194,6 +200,10 @@ GRA_tpCondRet GRA_DestruirGrafo(GRA_tppGrafo *pGrafo) {
 
 /***************************************************************************
 *  Função: GRA  &Criar Vertice
+*  $ED Descrição da função
+*     Cria um novo vértice e insere ele no grafo.
+*     Se inserido corretamente, o novo vértice passa a ser o vértice corrente.
+*     Faz uma busca para verificar se já existe um vértice com a chaveID passada.
 * **************************************************************************/
 
 GRA_tpCondRet GRA_CriarVertice(GRA_tppGrafo pGrafo, void *pDado, void *pChaveID) { 
@@ -421,6 +431,7 @@ GRA_tpCondRet GRA_CriarAresta(GRA_tppGrafo pGrafo, void * pChaveID_1, void * pCh
 *  $ED Descrição da função
 *     Exclui uma aresta entre dois vertices, atraves de suas chaves identificadoras
 ***********************************************************************/
+
 GRA_tpCondRet GRA_ExcluirAresta(GRA_tppGrafo pGrafo, void *pChaveID_1, void *pChaveID_2) {
   LIS_tppLista pVertice1, pVertice2;
 
@@ -450,6 +461,7 @@ GRA_tpCondRet GRA_ExcluirAresta(GRA_tppGrafo pGrafo, void *pChaveID_1, void *pCh
 *  $ED Descrição da função
 *     Destroi arestas entre duas listas vertice
 ***********************************************************************/
+
 GRA_tpCondRet GRA_DestruirAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2) {
 
   if( !pVertice1 || !pVertice2 )
@@ -474,6 +486,7 @@ GRA_tpCondRet GRA_DestruirAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2
 *  $ED Descrição da função
 *     Libera vertice2 da lista de arestas do vertice1
 ***********************************************************************/
+
 GRA_tpCondRet GRA_LiberarAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2) {
   GRA_tpConteudoVert *conteudo;
 
@@ -498,7 +511,7 @@ GRA_tpCondRet GRA_LiberarAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2)
 *     Apaga todas as referências do vértice das arestas dos vizinhos.
 *     Vertice corrente passa a ser qualquer um.
 ***********************************************************************/
-
+  
 GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
   LIS_tppLista pVertCorr, pVizinho;
   GRA_tpConteudoVert * conteudoVertCorr;
