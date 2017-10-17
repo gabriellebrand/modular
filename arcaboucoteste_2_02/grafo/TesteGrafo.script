@@ -31,10 +31,10 @@
 =declararparm   str10   string  "c@c.com"
 =declararparm   str11   string  "rj"
 
-=declararparm   ida0    	   int  23  
-=declararparm   ida1    	   int  25
-=declararparm   ida2    	   int  54
-=declararparm   ida3    	   int  40
+=declararparm   datNasc0   string  "01/01/1950"  
+=declararparm   datNasc1   string  "05/03/1960" 
+=declararparm   datNasc2   string  "15/06/1970" 
+=declararparm   datNasc3   string  "27/08/1990" 
 
 =declararparm   OK             int  0
 =declararparm   grfVazio       int  1
@@ -55,11 +55,11 @@
 =criargrafo      grf0
 
 == Criar vertices 
-=criarvertice    grf0   str0   str1   str2   ida0   OK
-=criarvertice    grf0   str3   str4   str5   ida0   OK
+=criarvertice    grf0   str0   str1   str2   datNasc0   OK
+=criarvertice    grf0   str3   str4   str5   datNasc0   OK
 
 == Criar vertice que ja existe - mesmo email 
-=criarvertice    grf0   str6   str1   str8   ida0   vertJaExist 
+=criarvertice    grf0   str6   str1   str8   datNasc0   vertJaExist 
 
 == Tornar um vertice corrente
 =irvertice       grf0   str1   OK
@@ -87,9 +87,9 @@
 =criargrafo      grf1
 
 == Criar vertices 
-=criarvertice    grf1   str0   str1   str2   ida0   OK
-=criarvertice    grf1   str3   str4   str5   ida1   OK
-=criarvertice    grf1   str6   str7   str8   ida2   OK
+=criarvertice    grf1   str0   str1   str2   datNasc0   OK
+=criarvertice    grf1   str3   str4   str5   datNasc1   OK
+=criarvertice    grf1   str6   str7   str8   datNasc2   OK
 
 == Criar aresta
 =criararesta     grf1   str1   str4   OK
@@ -136,7 +136,7 @@
 =excluirgrafo    grf2   grfNaoExist
 
 == Criar vertice em um grafo que nao existe 
-=criarvertice    grf2   str0   str1   str2   ida0   grfNaoExist
+=criarvertice    grf2   str0   str1   str2   datNasc0   grfNaoExist
 
 == Excluir um vertice de um grafo que nao existe
 =excluirvertice  grf2   grfNaoExist
@@ -175,7 +175,7 @@
 =criargrafo      grf4
 
 == Criar vertice 
-=criarvertice    grf4   str0   str1   str2   ida0   OK
+=criarvertice    grf4   str0   str1   str2   datNasc0   OK
 
 == Ir para para o vizinho sendo que nao tem aresta
 =irviziho        grf4   str4   naoTemAres
@@ -196,7 +196,7 @@
 =criargrafo      grf5
 
 == Criar vertice 
-=criarvertice    grf5   str0   str1   str2   ida0   OK
+=criarvertice    grf5   str0   str1   str2   datNasc0   OK
 
 == Obter dado de um vertice de um grafo
 =obtervalor      grf5   pNaoNULL
@@ -208,7 +208,7 @@
 =excluirgrafo    grf5   OK
 
 == Criar vertice em um grafo que nao existe 
-=criarvertice    grf5   str0   str1   str2   ida0   grfNaoExist   
+=criarvertice    grf5   str0   str1   str2   datNasc0   grfNaoExist   
 
 
 
