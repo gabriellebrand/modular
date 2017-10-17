@@ -1,11 +1,11 @@
 // Script - TesteLista.script
-// Programação Modular - 2017.2
+// Programacao Modular - 2017.2
 // Grupo: 
 //Gabriel Cantergiani
 //Wellington Bezerra
 //Gabrielle Bradenburg
 
-// Propósito: Testar todas as funções e possíveis condições de retorno do módulo Lista Duplamente Encadeada
+// Proposito: Testar todas as funcoes e possiveis condicoes de retorno do modulo Lista Duplamente Encadeada
 
 
 == Inicializar valores
@@ -14,12 +14,12 @@
 =declararparm   lista2  int 2
 
 =declararparm   nome0    string  "pedro"
-=declararparm   nome1    string  "joão"
+=declararparm   nome1    string  "joao"
 =declararparm   nome2    string  "gabriel"
 =declararparm   nome3    string  "lucas"
 
 =declararparm   email0    string  "pedro@gmail.com"
-=declararparm   email1    string  "joão@gmail.com"
+=declararparm   email1    string  "joao@gmail.com"
 =declararparm   email2    string  "gabriel@gmail.com"
 =declararparm   email3    string  "lucas@gmail.com"
 
@@ -28,10 +28,10 @@
 =declararparm   cidade2    string  "belo horizonte"
 =declararparm   cidade3    string  "fortaleza"
 
-=declararparm   idade0    int  22
-=declararparm   idade1    int  35
-=declararparm   idade2    int  42
-=declararparm   idade3    int  55
+=declararparm   data0    string  "01-01-1990"
+=declararparm   data1    string  "15-07-1985"
+=declararparm   data2    string  "22-03-1978"
+=declararparm   data3    string  "13-08-1998"
 
 =declararparm   OK             int  0
 =declararparm   ListaVazia     int  1
@@ -51,26 +51,26 @@
 =obtervalorelem  lista0   "???"     pNULL
 
 == Inserir elemento em lista vazia
-=inselemantes    lista0   nome0 email0 cidade0 idade0   OK
+=inselemantes    lista0   nome0 email0 cidade0 data0   OK
 =obtervalorelem  lista0   email0   pNaoNULL
 
-== Inserir elemento após primeiro
-=inselemapos     lista0   nome1 email1 cidade1 idade1   OK
+== Inserir elemento apos primeiro
+=inselemapos     lista0   nome1 email1 cidade1 data1   OK
 =obtervalorelem  lista0   email1   pNaoNULL
 
-== Inserir elemento antes do último
-=inselemantes    lista0   nome2 email2 cidade2 idade2   OK
+== Inserir elemento antes do ultimo
+=inselemantes    lista0   nome2 email2 cidade2 data2   OK
 =obtervalorelem  lista0   email2   pNaoNULL
 
 == Excluir elemento do meio
 =obtervalorelem  lista0   email2   pNaoNULL
 =excluirelem     lista0             OK
 
-== Excluir elemento do início
+== Excluir elemento do inicio
 =obtervalorelem  lista0   email0   pNaoNULL
 =excluirelem     lista0             OK
 
-== Excluir elemento final, único 
+== Excluir elemento final, unico 
 =obtervalorelem  lista0   email1   pNaoNULL
 =excluirelem     lista0             OK
 
@@ -82,8 +82,8 @@
 
 == Criar uma lista com dois elementos
 =criarlista      lista1 
-=inselemapos     lista1   nome0 email0 cidade0 idade0   OK
-=inselemapos     lista1   nome1 email1 cidade1 idade1   OK
+=inselemapos     lista1   nome0 email0 cidade0 data0   OK
+=inselemapos     lista1   nome1 email1 cidade1 data1   OK
 
 == Esvaziar a lista e ver se ficou vazia
 =esvaziarlista   lista1
@@ -94,12 +94,12 @@
 
 == Criar uma lista com quatro elementos
 =criarlista      lista2 
-=inselemapos     lista2   nome0 email0 cidade0 idade0   OK
-=inselemapos     lista2   nome1 email1 cidade1 idade1   OK
-=inselemapos     lista2   nome2 email2 cidade2 idade2   OK
-=inselemapos     lista2   nome3 email3 cidade3 idade3   OK
+=inselemapos     lista2   nome0 email0 cidade0 data0   OK
+=inselemapos     lista2   nome1 email1 cidade1 data1   OK
+=inselemapos     lista2   nome2 email2 cidade2 data2   OK
+=inselemapos     lista2   nome3 email3 cidade3 data3   OK
 
-== Verificar a lista de trás para diante
+== Verificar a lista de tras para diante
 =obtervalorelem  lista2   email3   pNaoNULL
 =avancarelem     lista2   -1     OK
 =obtervalorelem  lista2   email2   pNaoNULL
@@ -109,7 +109,7 @@
 =obtervalorelem  lista2   email0   pNaoNULL
 =avancarelem     lista2   -1     FimLista
 
-== Verificar a lista de frente para trás
+== Verificar a lista de frente para tras
 =obtervalorelem  lista2   email0   pNaoNULL
 =avancarelem     lista2   1      OK
 =obtervalorelem  lista2   email1   pNaoNULL
@@ -119,11 +119,11 @@
 =obtervalorelem  lista2   email3   pNaoNULL
 =avancarelem     lista2   1      FimLista
 
-== Verificar a lista andando demais de trás para diante
+== Verificar a lista andando demais de tras para diante
 =avancarelem     lista2   -10     FimLista
 =obtervalorelem  lista2   email0   pNaoNULL
 
-== Verificar a lista andando demais de frente para trás
+== Verificar a lista andando demais de frente para tras
 =avancarelem     lista2   10     FimLista
 =obtervalorelem  lista2   email3   pNaoNULL
 
@@ -136,13 +136,13 @@
 
 //  Testes com Lista Vazia  ================================
 
-==Criação de Lista
+==Criacao de Lista
 =criarlista		lista0
 
 == Verificar Obter Valor de Lista Vazia
 =obtervalorelem	lista0	email0	pNULL
 
-==Verificar avançar elemento em Lista Vazia
+==Verificar avancar elemento em Lista Vazia
 =avancarelem	lista0	1		ListaVazia
 
 //==Verifica procurar valor em Lista Vazia
@@ -151,60 +151,60 @@
 ==Verificar excluir elemento em Lista Vazia
 =excluirelem	lista0	ListaVazia
 
-//  Testes de Inserção 	de Elementos  ==============================
+//  Testes de Insercao 	de Elementos  ==============================
 
-== Verifica Inserção de Elemento Antes em Lista Vazia
-=inselemantes	lista0	nome0 email0 cidade0 idade0	OK
+== Verifica Insercao de Elemento Antes em Lista Vazia
+=inselemantes	lista0	nome0 email0 cidade0 data0	OK
 
 ==Cria outra lista
 =criarlista		lista1
 
-==Veririca Inserção de Elemento Após em Lista Vazia
-=inselemapos	lista1	nome0 email0 cidade0 idade0	OK
+==Veririca Insercao de Elemento Apos em Lista Vazia
+=inselemapos	lista1	nome0 email0 cidade0 data0	OK
 
-==Verifica Inserção de Elemento Antes
-=inselemantes	lista0	nome1 email1 cidade1 idade1	OK
+==Verifica Insercao de Elemento Antes
+=inselemantes	lista0	nome1 email1 cidade1 data1	OK
 
-==Verifica Inserção de Elemento Após
-=inselemapos	lista1	nome1 email1 cidade1 idade1	OK
+==Verifica Insercao de Elemento Apos
+=inselemapos	lista1	nome1 email1 cidade1 data1	OK
 
-==Verifica Inserção de Elemento Após
-=inselemapos	lista0	nome2 email2 cidade2 idade2	OK
+==Verifica Insercao de Elemento Apos
+=inselemapos	lista0	nome2 email2 cidade2 data2	OK
 
-//	Testes de Percurso pela Lista (Avançar Elemento, Ir Fim e Ir Início) =======================
+//	Testes de Percurso pela Lista (Avancar Elemento, Ir Fim e Ir Inicio) =======================
 
-==Verifica Avançar Elemento Corrente para frente (direção do fim)
+==Verifica Avancar Elemento Corrente para frente (direcao do fim)
 =avancarelem	lista0	1	OK
 
-==Verifica Avançar Elemento Corrente para trás (direção início)
+==Verifica Avancar Elemento Corrente para tras (direcao inccio)
 =avancarelem	lista1	-1	OK
 
-==Verifica Avançar Elemento Final  (Retorno Fim de Lista)
+==Verifica Avancar Elemento Final  (Retorno Fim de Lista)
 =avancarelem	lista0	1	FimLista
 
-==Verifica Ir Início de Lista
+==Verifica Ir Inccio de Lista
 =irinicio		lista0
 
 ==Verifica Ir Final de Lista
 =irfinal		lista1
 
-//	Testes de Obtenção de Valor e Procura de Valor de um Elemento da Lista  ========================================
+//	Testes de Obtencao de Valor e Procura de Valor de um Elemento da Lista  ========================================
 
-==Verifica Obter valor de elemento , ponteiro não null
+==Verifica Obter valor de elemento , ponteiro nao null
 =obtervalorelem	lista0	email1	pNaoNULL
 
-==Verifica Obter valor de elemento , outro ponteiro não null
+==Verifica Obter valor de elemento , outro ponteiro nao null
 =obtervalorelem lista0	email0	pNaoNULL
 
-==Verifica Procurar valor de elemento que não existe na lista
+==Verifica Procurar valor de elemento que nao existe na lista
 =procurarvalor	lista0	email3	NaoAchou
 
 ==Verifica Procurar valor de elemento que existe na lista
 =procurarvalor	lista0	email2	OK
 
-// Teste de Exclusão de um Elemento da Lista  ==============================================
+// Teste de Exclusao de um Elemento da Lista  ==============================================
 
-==Verifica exclusão de elemento
+==Verifica exclusao de elemento
 =excluirelem	lista1	OK
 
 // Testes de Esvaziar e Destruir lista =====================================================
