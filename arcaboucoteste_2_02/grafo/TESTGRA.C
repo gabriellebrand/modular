@@ -38,7 +38,7 @@ static const char EXCLUIR_VERTICE_CMD        [ ] = "=excluirvertice";
 static const char EXCLUIR_GRAFO_CMD          [ ] = "=excluirgrafo";
 static const char CRIAR_ARESTA_CMD           [ ] = "=criararesta";
 static const char EXCLUIR_ARESTA_CMD         [ ] = "=excluiraresta";
-static const char IR_VIZINHO_CMD             [ ] = "=irviziho";
+static const char IR_VIZINHO_CMD             [ ] = "=irvizinho";
 static const char OBTER_VALOR_CMD            [ ] = "=obtervalor";
 
 #define TRUE  1
@@ -337,10 +337,11 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 *
 ***********************************************************************/
 
-   void DestruirValor( void * pValor )
+   void DestruirValor( void ** pValor )
    {
 
       free( pValor ) ;
+      pValor = NULL;
 
    } /* Fim função: TGRA -Destruir valor */
 
