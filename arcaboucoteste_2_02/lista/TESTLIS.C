@@ -13,14 +13,17 @@
 *
 *  $HA Histórico de evolução:
 *     Versão  Autor    Data     Observações
-*     6       gbc   14/out/2017 Alteração para usar módulo PERFIL como teste da Lista
-*	    5       gbc   10/out/2017 Adicionar comando de Procurar Valor
+*	  5       gbc   10/out/2017 Adicionar comando de Procurar Valor
 *     4       avs   01/fev/2006 criar linguagem script simbólica
 *     3       avs   08/dez/2004 uniformização dos exemplos
 *     2       avs   07/jul/2003 unificação de todos os módulos em um só projeto
 *     1       avs   16/abr/2003 início desenvolvimento
 *
 ***************************************************************************/
+
+#include    <stdlib.h>
+#include    <memory.h>
+#include    <assert.h>
 
 #include    <string.h>
 #include    <stdio.h>
@@ -32,21 +35,21 @@
 #include    "LerParm.h"
 
 #include    "Lista.h"
-#include	"PERFIL.h"
 
 
-static const char RESET_LISTA_CMD         [ ] = "=resetteste"     ;
-static const char CRIAR_LISTA_CMD         [ ] = "=criarlista"     ;
-static const char DESTRUIR_LISTA_CMD      [ ] = "=destruirlista"  ;
-static const char ESVAZIAR_LISTA_CMD      [ ] = "=esvaziarlista"  ;
-static const char INS_ELEM_ANTES_CMD      [ ] = "=inselemantes"   ;
-static const char INS_ELEM_APOS_CMD       [ ] = "=inselemapos"    ;
-static const char OBTER_VALOR_CMD         [ ] = "=obtervalorelem" ;
-static const char EXC_ELEM_CMD            [ ] = "=excluirelem"    ;
-static const char IR_INICIO_CMD           [ ] = "=irinicio"       ;
-static const char IR_FIM_CMD              [ ] = "=irfinal"        ;
-static const char AVANCAR_ELEM_CMD        [ ] = "=avancarelem"    ;
-static const char PROCURAR_VALOR_CMD	  [ ] = "=procurarvalor"  ;
+static const char RESET_LISTA_CMD         [ ] = "=resetteste"       ;
+static const char CRIAR_LISTA_CMD         [ ] = "=criarlista"       ;
+static const char DESTRUIR_LISTA_CMD      [ ] = "=destruirlista"    ;
+static const char ESVAZIAR_LISTA_CMD      [ ] = "=esvaziarlista"    ;
+static const char INS_ELEM_ANTES_CMD      [ ] = "=inselemantes"     ;
+static const char INS_ELEM_APOS_CMD       [ ] = "=inselemapos"      ;
+static const char OBTER_VALOR_CMD         [ ] = "=obtervalorelem"   ;
+static const char EXC_ELEM_CMD            [ ] = "=excluirelem"      ;
+static const char IR_INICIO_CMD           [ ] = "=irinicio"         ;
+static const char IR_FIM_CMD              [ ] = "=irfinal"          ;
+static const char AVANCAR_ELEM_CMD        [ ] = "=avancarelem"      ;
+static const char PROCURAR_CONTEUDO_CMD   [ ] = "=procurarconteudo" ;
+static const char PROCURAR_VALOR_CMD	  [ ] = "=procurarvalor"    ;
 
 
 #define TRUE  1
@@ -56,9 +59,15 @@ static const char PROCURAR_VALOR_CMD	  [ ] = "=procurarvalor"  ;
 #define NAO_VAZIO 1
 
 #define DIM_VT_LISTA   10
+#define DIM_VT_PERFIL   10
 #define DIM_VALOR     100
 
-LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
+/***********************************************************************
+ *
+ *  $TC Tipo de dados: PER Perfil
+ *
+ *
+ ***********************************************************************/
 
 typedef struct PER_tagPerfil {
 
@@ -71,13 +80,28 @@ typedef struct PER_tagPerfil {
     char cidade[20];
         /* Cidade do perfil */
     
-    int idade;
-        /* Idade do perfil */
+    char dataNasc[10];
+        /* Data de Nascimento do perfil */
 
 } PER_tpPerfil ;
 
 typedef struct PER_tagPerfil * PER_tppPerfil ;
 
+typedef enum {
+     
+ /* 0 */ PER_CondRetOK ,
+               /* Concluiu corretamente */
+
+ /* 1 */ PER_CondRetFaltouMemoria ,
+               /* Faltou memoria */
+
+ /* 2 */ PER_CondRetPonteiroNulo
+      /* Ponteiro Nulo */
+
+   } PER_tpCondRet ;
+
+LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
+PER_tppPerfil  vtPerfis[ DIM_VT_PERFIL] ;
 
 /***** Protótipos das funções encapuladas no módulo *****/
 
@@ -85,7 +109,11 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 
    static int ValidarInxLista( int inxLista , int Modo ) ;
 
-   static int CompararValor(void * pValor1, void * pValor2) ;
+   PER_tppPerfil  PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, char *pDataNasc );
+
+   PER_tpCondRet PER_DestruirPerfil(PER_tppPerfil pPerfil);
+
+   int PER_compararPerfil(void * pValor1, void * pValor2);
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -104,28 +132,24 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 *     =criarlista                   inxLista
 *     =destruirlista                inxLista
 *     =esvaziarlista                inxLista
-*     =inselemantes                 inxLista  string(nome) string(email) string(cidade) int(Idade)  CondRetEsp
-*     =inselemapos                  inxLista  string(nome) string(email) string(cidade) int(Idade)  CondRetEsp
+*     =inselemantes                 inxLista  string(nome) string(email) string(cidade) string(dataNasc)  CondRetEsp
+*     =inselemapos                  inxLista  string(nome) string(email) string(cidade) string(dataNasc)  CondRetEsp
 *     =obtervalorelem               inxLista  string(email)  CondretPonteiro
 *     =excluirelem                  inxLista  CondRetEsp
 *     =irinicio                     inxLista
 *     =irfinal                      inxLista
 *     =avancarelem                  inxLista  numElem CondRetEsp
-*	    =procurarvalor			         	inxLista  string(nome) string(email) string(cidade) int(Idade)  CondRetEsp
+*	    =procurarvalor				        inxLista  string(email)  CondRetEsp
 *
 ***********************************************************************/
 
    TST_tpCondRet TST_EfetuarComando( char * ComandoTeste )
    {
-      char nome[100],
-           email[100],
-           cidade[100] ;
 
       int inxLista  = -1 ,
           numLidos   = -1 ,
-          CondRetEsp = -1,
-          //indexPerfil = -1,
-          idade = -1 ;
+          CondRetEsp = -1  ,
+          inxPerfil = -1 ;
 
       TST_tpCondRet CondRet ;
       PER_tpCondRet CondRetPerfil;
@@ -133,11 +157,9 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
       char   StringDado[  DIM_VALOR ] ;
       char   StringDado2[  DIM_VALOR ] ;
       char   StringDado3[  DIM_VALOR ] ;
-      int    intDado4;
+      char   StringDado4[  DIM_VALOR ] ;
       char * pDado ;
       PER_tppPerfil	  perfil;
-
-      PER_tppPerfil pDado ;
 
       int ValEsp = -1 ;
 
@@ -176,7 +198,7 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
             } /* if */
 
             vtListas[ inxLista ] =
-                 LIS_CriarLista( DestruirValor , CompararValor ) ;
+                 LIS_CriarLista( DestruirValor, PER_compararPerfil ) ;
 
             return TST_CompararPonteiroNulo( 1 , vtListas[ inxLista ] ,
                "Erro em ponteiro de nova lista."  ) ;
@@ -229,26 +251,26 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
          else if ( strcmp( ComandoTeste , INS_ELEM_ANTES_CMD ) == 0 )
          {
 
-            numLidos = LER_LerParametros( "isssii" ,
-                       &inxLista , StringDado, StringDado2, StringDado3, &intDado4 , &CondRetEsp ) ;
+            numLidos = LER_LerParametros( "issssii" ,
+                       &inxLista , StringDado, StringDado2, StringDado3, StringDado4 , &inxPerfil, &CondRetEsp ) ;
 
-            if ( ( numLidos != 6 )
+            if ( ( numLidos != 7 )
               || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
             {
                return TST_CondRetParm ;
             } /* if */
 
 
-            perfil = PER_CriarPerfil(StringDado, StringDado2, StringDado3,  intDado4);
+            vtPerfis [ inxPerfil ] = PER_CriarPerfil(StringDado, StringDado2, StringDado3,  StringDado4);
 
-            if (perfil==NULL)
+            if (vtPerfis [ inxPerfil ]==NULL)
             	return TST_CondRetNaoConhec;
 
-            CondRet = LIS_InserirElementoAntes( vtListas[ inxLista ] , perfil ) ;
+            CondRet = LIS_InserirElementoAntes( vtListas[ inxLista ] , vtPerfis [ inxPerfil ] ) ;
 
             if ( CondRet != LIS_CondRetOK )
             {
-               PER_DestruirPerfil( perfil );
+               PER_DestruirPerfil( vtPerfis [ inxPerfil ] );
             } /* if */
 
             return TST_CompararInt( CondRetEsp , CondRet ,
@@ -256,30 +278,30 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 
          } /* fim ativa: Testar inserir elemento antes */
 
-         /* Testar inserir elemento apos */
+      /* Testar inserir elemento apos */
 
          else if ( strcmp( ComandoTeste , INS_ELEM_APOS_CMD ) == 0 )
          {
 
-            numLidos = LER_LerParametros( "isssii" ,
-                       &inxLista , StringDado , StringDado2, StringDado3, &intDado4, &CondRetEsp ) ;
+            numLidos = LER_LerParametros( "issssii" ,
+                       &inxLista , StringDado , StringDado2, StringDado3, StringDado4, &inxPerfil, &CondRetEsp ) ;
 
-            if ( ( numLidos != 6 )
+            if ( ( numLidos != 7 )
               || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
             {
                return TST_CondRetParm ;
             } /* if */
 
-             perfil = PER_CriarPerfil(StringDado, StringDado2, StringDado3,  intDado4);
+             vtPerfis [ inxPerfil ] = PER_CriarPerfil(StringDado, StringDado2, StringDado3,  StringDado4);
 
-            if (perfil==NULL)
+            if (vtPerfis [ inxPerfil ]==NULL)
             	return TST_CondRetNaoConhec;
 
-            CondRet = LIS_InserirElementoApos( vtListas[ inxLista ] , perfil ) ;
+            CondRet = LIS_InserirElementoApos( vtListas[ inxLista ] , vtPerfis [ inxPerfil ] ) ;
 
             if ( CondRet != LIS_CondRetOK )
             {
-               PER_DestruirPerfil ( perfil );
+               PER_DestruirPerfil ( vtPerfis [ inxPerfil ] );
             } /* if */
 
             return TST_CompararInt( CondRetEsp , CondRet ,
@@ -287,40 +309,7 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 
          } /* fim ativa: Testar inserir elemento apos */
 
-         /* Testar obter valor do elemento corrente */
-
-         else if ( strcmp( ComandoTeste , OBTER_VALOR_CMD ) == 0 )
-         {
-
-            numLidos = LER_LerParametros( "isi" ,
-                       &inxLista , StringDado , &ValEsp ) ;
-
-            if ( ( numLidos != 3 )
-              || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
-            {
-               return TST_CondRetParm ;
-            } /* if */
-
-            perfil =  (PER_tppPerfil) LIS_ObterValor( vtListas[ inxLista ] ) ;
-
-            if ( ValEsp == 0 )
-            {
-               return TST_CompararPonteiroNulo( 0 , perfil ,
-                         "Valor não deveria existir." ) ;
-            } /* if */
-
-			else
-            {
-               return TST_CompararPonteiroNulo( 1 , perfil ,
-                         "Dado tipo um deveria existir." ) ;
-            } /* if */
-
-/*            return TST_CompararString( StringDado , pDado ,
-                         "Valor do elemento errado." ) ;*/
-
-         } /* fim ativa: Testar obter valor do elemento corrente */
-
-         /* Testar excluir simbolo */
+      /* Testar excluir simbolo */
 
          else if ( strcmp( ComandoTeste , EXC_ELEM_CMD ) == 0 )
          {
@@ -340,7 +329,75 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 
          } /* fim ativa: Testar excluir simbolo */
 
-         /* LIS  &Avançar elemento */
+      /* Testar obter valor do elemento corrente */
+
+         else if ( strcmp( ComandoTeste , OBTER_VALOR_CMD ) == 0 )
+         {
+
+            numLidos = LER_LerParametros( "isi" ,
+                       &inxLista , StringDado , &ValEsp ) ;
+
+            if ( ( numLidos != 3 )
+              || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+            vtPerfis [ inxPerfil ] =  (PER_tppPerfil) LIS_ObterValor( vtListas[ inxLista ] ) ;
+
+            if ( ValEsp == 0 )
+            {
+               return TST_CompararPonteiroNulo( 0 , vtPerfis [ inxPerfil ] ,
+                         "Valor não deveria existir." ) ;
+            } /* if */
+
+			else
+            {
+               return TST_CompararPonteiroNulo( 1 , vtPerfis [ inxPerfil ] ,
+                         "Dado tipo um deveria existir." ) ;
+            } /* if */
+
+         } /* fim ativa: Testar obter valor do elemento corrente */
+
+      /* Testar ir para o elemento inicial */
+
+         else if ( strcmp( ComandoTeste , IR_INICIO_CMD ) == 0 )
+         {
+
+            numLidos = LER_LerParametros( "i" , &inxLista ) ;
+
+            if ( ( numLidos != 1 )
+              || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+            IrInicioLista( vtListas[ inxLista ] ) ;
+
+            return TST_CondRetOK ;
+
+         } /* fim ativa: Testar ir para o elemento inicial */
+
+      /* LIS  &Ir para o elemento final */
+
+         else if ( strcmp( ComandoTeste , IR_FIM_CMD ) == 0 )
+         {
+
+            numLidos = LER_LerParametros( "i" , &inxLista ) ;
+
+            if ( ( numLidos != 1 )
+              || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+            IrFinalLista( vtListas[ inxLista ] ) ;
+
+            return TST_CondRetOK ;
+
+         } /* fim ativa: LIS  &Ir para o elemento final */
+
+      /* LIS  &Avançar elemento */
 
          else if ( strcmp( ComandoTeste , AVANCAR_ELEM_CMD ) == 0 )
          {
@@ -360,28 +417,43 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 
          } /* fim ativa: LIS  &Avançar elemento */
 
-		  /* Testar procurar valor na lista */
+      /* Testar procurar valor na lista   */
 
-         else if ( strcmp( ComandoTeste , PROCURAR_VALOR_CMD ) == 0 )
+        else if ( strcmp( ComandoTeste , PROCURAR_VALOR_CMD ) == 0 )
          {
 
-            numLidos = LER_LerParametros( "isssii" ,
-                       &inxLista , StringDado , StringDado2, StringDado3, &intDado4, &CondRetEsp ) ;
+            numLidos = LER_LerParametros( "iii" ,
+                       &inxLista , &inxPerfil, &CondRetEsp ) ;
 
-            if ( ( numLidos != 6 )
+            if ( ( numLidos != 3 )
               || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
             {
                return TST_CondRetParm ;
             } /* if */
+            
+            CondRet = LIS_ProcurarValor( vtListas[ inxLista ] , vtPerfis[inxPerfil]);
+             
 
-			perfil = PER_CriarPerfil ( StringDado, StringDado2, StringDado3, intDado4);
+            return TST_CompararInt( CondRetEsp , CondRet ,
+                     "Condicao de retorno errada ao procurar valor."   ) ;
 
-            CondRet = LIS_ProcurarValor( vtListas[ inxLista ] , perfil ) ;
+         } /* fim ativa: Testar */
 
-//			if ( CondRet != LIS_CondRetOK )
-//           {
-               PER_DestruirPerfil ( perfil );
-//            } /* if */
+		  /* Testar procurar valor por conteudo na lista */
+
+         else if ( strcmp( ComandoTeste , PROCURAR_CONTEUDO_CMD ) == 0 )
+         {
+
+            numLidos = LER_LerParametros( "isi" ,
+                       &inxLista , StringDado, &CondRetEsp ) ;
+
+            if ( ( numLidos != 3 )
+              || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+				
+            CondRet = LIS_ProcurarPorConteudo( vtListas[ inxLista ] , StringDado ) ;
 
             return TST_CompararInt( CondRetEsp , CondRet ,
                      "Condicao de retorno errada ao procurar valor."   ) ;
@@ -408,24 +480,6 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
       PER_DestruirPerfil ( (PER_tppPerfil) pValor );
 
    } /* Fim função: TLIS -Destruir valor */
-
-/***********************************************************************
-*
-*  $FC Função: TLIS - Comparar valor
-*
-***********************************************************************/
-
-int CompararValor(void * pValor1, void * pValor2) {
-    
-    PER_tppPerfil pPerfil;
-    char *email;
-    pPerfil = (PER_tppPerfil) pValor1;
-    email = (char*) pValor2;
-
-    return strcmp(email,pPerfil->email);
-
-
-} /* Fim função: PER  Comparar Perfil */  
 
 
 /***********************************************************************
@@ -460,6 +514,66 @@ int CompararValor(void * pValor1, void * pValor2) {
       return TRUE ;
 
    } /* Fim função: TLIS -Validar indice de lista */
+
+
+  /************************* Funções de manipulação de perfil **********************************/
+
+
+/***************************************************************************
+ *
+ *  Função: PER &Criar Perfil
+ *****/
+
+PER_tppPerfil  PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, char *pDataNasc ) {
+    
+  PER_tppPerfil pPerfil = ( PER_tppPerfil ) malloc( sizeof( PER_tpPerfil ));
+  if( pPerfil == NULL ) {
+    return pPerfil ;
+  } /* if */
+    
+  strcpy(pPerfil->nome, pNome);
+  strcpy(pPerfil->email, pEmail);
+  strcpy(pPerfil->cidade, pCidade);
+  strcpy(pPerfil->dataNasc, pDataNasc);
+  
+
+  return pPerfil ;
+    
+} /* Fim função: PER  &Criar Perfil */
+
+/***************************************************************************
+ *
+ *  Função: PER &Destruir Perfil
+ *****/
+
+PER_tpCondRet PER_DestruirPerfil(PER_tppPerfil pPerfil) {
+
+    if(pPerfil == NULL) {
+        return PER_CondRetPonteiroNulo;
+    } /* if */
+
+    free(pPerfil);
+
+    return PER_CondRetOK;
+
+} /* Fim função: PER  &Destruir Perfil */
+
+
+/***************************************************************************
+ *
+ *  Função: PER Compara Perfil
+ *****/
+
+int PER_compararPerfil(void * pValor1, void * pValor2) {
+    PER_tppPerfil pPerfil;
+    char *email;
+    pPerfil = (PER_tppPerfil) pValor1;
+    email = (char*) pValor2;
+
+    return strcmp(email,pPerfil->email);
+
+} /* Fim função: PER  Comparar Perfil */  
+
 
 /********** Fim do módulo de implementação: TLIS Teste lista de símbolos **********/
 
