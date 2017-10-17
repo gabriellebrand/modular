@@ -1,25 +1,29 @@
 /***************************************************************************
-*  $MCI MÛdulo de implementaÁ„o: TLIS Teste lista de sÌmbolos
+*  $MCI M√≥dulo de implementa√ß√£o: TLIS Teste lista de s√≠mbolos
 *
 *  Arquivo gerado:              TestLIS.c
 *  Letras identificadoras:      TLIS
 *
-*  Nome da base de software:    ArcabouÁo para a automaÁ„o de testes de programas redigidos em C
+*  Nome da base de software:    Arcabou√ßo para a automa√ß√£o de testes de programas redigidos em C
 *  Arquivo da base de software: D:\AUTOTEST\PROJETOS\LISTA.BSW
 *
-*  Projeto: INF 1301 / 1628 AutomatizaÁ„o dos testes de mÛdulos C
+*  Projeto: INF 1301 / 1628 Automatiza√ß√£o dos testes de m√≥dulos C
 *  Gestor:  LES/DI/PUC-Rio
 *  Autores: avs
 *
-*  $HA HistÛrico de evoluÁ„o:
-*     Vers„o  Autor    Data     ObservaÁıes
+*  $HA Hist√≥rico de evolu√ß√£o:
+*     Vers√£o  Autor    Data     Observa√ß√µes
 *	  5       gbc   10/out/2017 Adicionar comando de Procurar Valor
-*     4       avs   01/fev/2006 criar linguagem script simbÛlica
-*     3       avs   08/dez/2004 uniformizaÁ„o dos exemplos
-*     2       avs   07/jul/2003 unificaÁ„o de todos os mÛdulos em um sÛ projeto
-*     1       avs   16/abr/2003 inÌcio desenvolvimento
+*     4       avs   01/fev/2006 criar linguagem script simb√≥lica
+*     3       avs   08/dez/2004 uniformiza√ß√£o dos exemplos
+*     2       avs   07/jul/2003 unifica√ß√£o de todos os m√≥dulos em um s√≥ projeto
+*     1       avs   16/abr/2003 in√≠cio desenvolvimento
 *
 ***************************************************************************/
+
+#include    <stdlib.h>
+#include    <memory.h>
+#include    <assert.h>
 
 #include    <string.h>
 #include    <stdio.h>
@@ -31,7 +35,6 @@
 #include    "LerParm.h"
 
 #include    "Lista.h"
-#include	"PERFIL.h"
 
 
 static const char RESET_LISTA_CMD         [ ] = "=resetteste"     ;
@@ -45,7 +48,7 @@ static const char EXC_ELEM_CMD            [ ] = "=excluirelem"    ;
 static const char IR_INICIO_CMD           [ ] = "=irinicio"       ;
 static const char IR_FIM_CMD              [ ] = "=irfinal"        ;
 static const char AVANCAR_ELEM_CMD        [ ] = "=avancarelem"    ;
-static const char PROCURAR_VALOR_CMD	  [ ] = "=procurarvalor"  ;
+static const char PROCURAR_CONTEUDO_CMD	  [ ] = "=procurarvalor"  ;
 
 
 #define TRUE  1
@@ -59,37 +62,81 @@ static const char PROCURAR_VALOR_CMD	  [ ] = "=procurarvalor"  ;
 
 LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
-/***** ProtÛtipos das funÁıes encapuladas no mÛdulo *****/
+/***********************************************************************
+ *
+ *  $TC Tipo de dados: PER Perfil
+ *
+ *
+ ***********************************************************************/
+
+typedef struct PER_tagPerfil {
+
+    char nome[100];
+        /* Nome do perfil */
+    
+    char email[20];
+        /* Email do perfil */
+    
+    char cidade[20];
+        /* Cidade do perfil */
+    
+    char dataNasc[10];
+        /* Data de Nascimento do perfil */
+
+} PER_tpPerfil ;
+
+typedef struct PER_tagPerfil * PER_tppPerfil ;
+
+typedef enum {
+     
+ /* 0 */ PER_CondRetOK ,
+               /* Concluiu corretamente */
+
+ /* 1 */ PER_CondRetFaltouMemoria ,
+               /* Faltou memoria */
+
+ /* 2 */ PER_CondRetPonteiroNulo
+      /* Ponteiro Nulo */
+
+   } PER_tpCondRet ;
+
+/***** Prot√≥tipos das fun√ß√µes encapuladas no m√≥dulo *****/
 
    static void DestruirValor( void * pValor ) ;
 
    static int ValidarInxLista( int inxLista , int Modo ) ;
 
-/*****  CÛdigo das funÁıes exportadas pelo mÛdulo  *****/
+   PER_tppPerfil  PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, char *pDataNasc );
+
+   PER_tpCondRet PER_DestruirPerfil(PER_tppPerfil pPerfil);
+
+   int PER_compararPerfil(void * pValor1, void * pValor2);
+
+/*****  C√≥digo das fun√ß√µes exportadas pelo m√≥dulo  *****/
 
 
 /***********************************************************************
 *
-*  $FC FunÁ„o: TLIS &Testar lista
+*  $FC Fun√ß√£o: TLIS &Testar lista
 *
-*  $ED DescriÁ„o da funÁ„o
-*     Podem ser criadas atÈ 10 listas, identificadas pelos Ìndices 0 a 10
+*  $ED Descri√ß√£o da fun√ß√£o
+*     Podem ser criadas at√© 10 listas, identificadas pelos √≠ndices 0 a 10
 *
-*     Comandos disponÌveis:
+*     Comandos dispon√≠veis:
 *
 *     =resetteste
-*           - anula o vetor de listas. Provoca vazamento de memÛria
+*           - anula o vetor de listas. Provoca vazamento de mem√≥ria
 *     =criarlista                   inxLista
 *     =destruirlista                inxLista
 *     =esvaziarlista                inxLista
-*     =inselemantes                 inxLista  string(nome) string(email) string(cidade) int(Idade)  CondRetEsp
-*     =inselemapos                  inxLista  string(nome) string(email) string(cidade) int(Idade)  CondRetEsp
+*     =inselemantes                 inxLista  string(nome) string(email) string(cidade) string(dataNasc)  CondRetEsp
+*     =inselemapos                  inxLista  string(nome) string(email) string(cidade) string(dataNasc)  CondRetEsp
 *     =obtervalorelem               inxLista  string(email)  CondretPonteiro
 *     =excluirelem                  inxLista  CondRetEsp
 *     =irinicio                     inxLista
 *     =irfinal                      inxLista
 *     =avancarelem                  inxLista  numElem CondRetEsp
-*	  =procurarvalor				inxLista  string(email)  CondRetEsp
+*	    =procurarvalor				        inxLista  string(email)  CondRetEsp
 *
 ***********************************************************************/
 
@@ -106,7 +153,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
       char   StringDado[  DIM_VALOR ] ;
       char   StringDado2[  DIM_VALOR ] ;
       char   StringDado3[  DIM_VALOR ] ;
-      int    intDado4;
+      char   StringDado4[  DIM_VALOR ] ;
       char * pDado ;
       PER_tppPerfil	  perfil;
 
@@ -200,8 +247,8 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
          else if ( strcmp( ComandoTeste , INS_ELEM_ANTES_CMD ) == 0 )
          {
 
-            numLidos = LER_LerParametros( "isssii" ,
-                       &inxLista , StringDado, StringDado2, StringDado3, &intDado4 , &CondRetEsp ) ;
+            numLidos = LER_LerParametros( "issssi" ,
+                       &inxLista , StringDado, StringDado2, StringDado3, StringDado4 , &CondRetEsp ) ;
 
             if ( ( numLidos != 6 )
               || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
@@ -210,7 +257,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
             } /* if */
 
 
-            perfil = PER_CriarPerfil(StringDado, StringDado2, StringDado3,  intDado4);
+            perfil = PER_CriarPerfil(StringDado, StringDado2, StringDado3,  StringDado4);
 
             if (perfil==NULL)
             	return TST_CondRetNaoConhec;
@@ -232,8 +279,8 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
          else if ( strcmp( ComandoTeste , INS_ELEM_APOS_CMD ) == 0 )
          {
 
-            numLidos = LER_LerParametros( "isssii" ,
-                       &inxLista , StringDado , StringDado2, StringDado3, &intDado4, &CondRetEsp ) ;
+            numLidos = LER_LerParametros( "issssi" ,
+                       &inxLista , StringDado , StringDado2, StringDado3, StringDado4, &CondRetEsp ) ;
 
             if ( ( numLidos != 6 )
               || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
@@ -241,7 +288,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
                return TST_CondRetParm ;
             } /* if */
 
-             perfil = PER_CriarPerfil(StringDado, StringDado2, StringDado3,  intDado4);
+             perfil = PER_CriarPerfil(StringDado, StringDado2, StringDado3,  StringDado4);
 
             if (perfil==NULL)
             	return TST_CondRetNaoConhec;
@@ -274,7 +321,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
             return TST_CompararInt( CondRetEsp ,
                       LIS_ExcluirElemento( vtListas[ inxLista ] ) ,
-                     "CondiÁ„o de retorno errada ao excluir."   ) ;
+                     "Condi√ß√£o de retorno errada ao excluir."   ) ;
 
          } /* fim ativa: Testar excluir simbolo */
 
@@ -297,7 +344,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
             if ( ValEsp == 0 )
             {
                return TST_CompararPonteiroNulo( 0 , perfil ,
-                         "Valor n„o deveria existir." ) ;
+                         "Valor n√£o deveria existir." ) ;
             } /* if */
 
 			else
@@ -346,7 +393,7 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
          } /* fim ativa: LIS  &Ir para o elemento final */
 
-      /* LIS  &AvanÁar elemento */
+      /* LIS  &Avan√ßar elemento */
 
          else if ( strcmp( ComandoTeste , AVANCAR_ELEM_CMD ) == 0 )
          {
@@ -364,11 +411,11 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
                       LIS_AvancarElementoCorrente( vtListas[ inxLista ] , numElem ) ,
                       "Condicao de retorno errada ao avancar" ) ;
 
-         } /* fim ativa: LIS  &AvanÁar elemento */
+         } /* fim ativa: LIS  &Avan√ßar elemento */
 
 		  /* Testar procurar valor na lista */
 
-         else if ( strcmp( ComandoTeste , PROCURAR_VALOR_CMD ) == 0 )
+         else if ( strcmp( ComandoTeste , PROCURAR_CONTEUDO_CMD ) == 0 )
          {
 
             numLidos = LER_LerParametros( "isi" ,
@@ -389,15 +436,15 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
       return TST_CondRetNaoConhec ;
 
-   } /* Fim funÁ„o: TLIS &Testar lista */
+   } /* Fim fun√ß√£o: TLIS &Testar lista */
 
 
-/*****  CÛdigo das funÁıes encapsuladas no mÛdulo  *****/
+/*****  C√≥digo das fun√ß√µes encapsuladas no m√≥dulo  *****/
 
 
 /***********************************************************************
 *
-*  $FC FunÁ„o: TLIS -Destruir valor
+*  $FC Fun√ß√£o: TLIS -Destruir valor
 *
 ***********************************************************************/
 
@@ -406,12 +453,12 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
 
       PER_DestruirPerfil ( (PER_tppPerfil) pValor );
 
-   } /* Fim funÁ„o: TLIS -Destruir valor */
+   } /* Fim fun√ß√£o: TLIS -Destruir valor */
 
 
 /***********************************************************************
 *
-*  $FC FunÁ„o: TLIS -Validar indice de lista
+*  $FC Fun√ß√£o: TLIS -Validar indice de lista
 *
 ***********************************************************************/
 
@@ -440,7 +487,67 @@ LIS_tppLista   vtListas[ DIM_VT_LISTA ] ;
          
       return TRUE ;
 
-   } /* Fim funÁ„o: TLIS -Validar indice de lista */
+   } /* Fim fun√ß√£o: TLIS -Validar indice de lista */
 
-/********** Fim do mÛdulo de implementaÁ„o: TLIS Teste lista de sÌmbolos **********/
+
+  /************************* Fun√ß√µes de manipula√ß√£o de perfil **********************************/
+
+
+/***************************************************************************
+ *
+ *  Fun√ß√£o: PER &Criar Perfil
+ *****/
+
+PER_tppPerfil  PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, char *pDataNasc ) {
+    
+  PER_tppPerfil pPerfil = ( PER_tppPerfil ) malloc( sizeof( PER_tpPerfil ));
+  if( pPerfil == NULL ) {
+    return pPerfil ;
+  } /* if */
+    
+  strcpy(pPerfil->nome, pNome);
+  strcpy(pPerfil->email, pEmail);
+  strcpy(pPerfil->cidade, pCidade);
+  strcpy(pPerfil->dataNasc, pDataNasc);
+  
+
+  return pPerfil ;
+    
+} /* Fim fun√ß√£o: PER  &Criar Perfil */
+
+/***************************************************************************
+ *
+ *  Fun√ß√£o: PER &Destruir Perfil
+ *****/
+
+PER_tpCondRet PER_DestruirPerfil(PER_tppPerfil pPerfil) {
+
+    if(pPerfil == NULL) {
+        return PER_CondRetPonteiroNulo;
+    } /* if */
+
+    free(pPerfil);
+
+    return PER_CondRetOK;
+
+} /* Fim fun√ß√£o: PER  &Destruir Perfil */
+
+
+/***************************************************************************
+ *
+ *  Fun√ß√£o: PER Compara Perfil
+ *****/
+
+int PER_compararPerfil(void * pValor1, void * pValor2) {
+    PER_tppPerfil pPerfil;
+    char *email;
+    pPerfil = (PER_tppPerfil) pValor1;
+    email = (char*) pValor2;
+
+    return strcmp(email,pPerfil->email);
+
+} /* Fim fun√ß√£o: PER  Comparar Perfil */  
+
+
+/********** Fim do m√≥dulo de implementa√ß√£o: TLIS Teste lista de s√≠mbolos **********/
 
