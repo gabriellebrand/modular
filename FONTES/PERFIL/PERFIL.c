@@ -51,8 +51,8 @@ typedef struct PER_tagPerfil {
     char genero;
     	/* Genero do perfil (M, F ou O) */
     
-    int idade;
-        /* Idade do perfil */
+    char dataNasc[11];
+        /* Data de nascimento do perfil XX/XX/XXXX */
     
     LIS_tppLista msgEnviadas;
     	/* Lista de mensagens enviadas pelo perfil */
@@ -69,7 +69,7 @@ typedef struct PER_tagPerfil {
  *  Função: PER &Criar Perfil
  *****/
 
-PER_tppPerfil PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, char genero, int idade ) {
+PER_tppPerfil PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, char genero, char dataNasc ) {
     
 	LIS_tppLista msgEnv, msgRec;
 	PER_tppPerfil pPerfil = ( PER_tppPerfil ) malloc( sizeof( PER_tpPerfil ));
@@ -89,7 +89,7 @@ PER_tppPerfil PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, char ge
 		PER_DestruirPerfil(pPerfil);
 		return NULL;
 	}
-	if (PER_AlterarIdade(pPerfil, idade) != PER_CondRetOK){
+	if (PER_AlterarDataNasc(pPerfil, dataNasc)  != PER_CondRetOK){
 		PER_DestruirPerfil(pPerfil);
 		return NULL;
 	}
@@ -182,13 +182,13 @@ char * PER_ObterEmail(PER_tppPerfil pPerfil) {
  *  Função: PER Alterar Nome
  *****/
 
-PER_tpCondRet PER_AlterarNome(PER_tppPerfil pPerfil, char *pNome) {
+PER_tpCondRet PER_AlterarNome(PER_tppPerfil pPerfil, char *nome) {
 	
-	if (pNome == NULL || pPerfil == NULL) return PER_CondRetPonteiroNulo;
-	if(strlen(pNome) == 0) return PER_CondRetStringVazia; //será que é necessário?
+	if (nome == NULL || pPerfil == NULL) return PER_CondRetPonteiroNulo;
+	if(strlen(nome) == 0) return PER_CondRetStringVazia; //será que é necessário?
 	//todo: verificar se precisa tratar caso em que o tamanho da string é maior que 100
 
-	strcpy(pPerfil->nome, pNome);
+	strcpy(pPerfil->nome, nome);
 	return PER_CondRetOK;
 }
 
@@ -197,26 +197,28 @@ PER_tpCondRet PER_AlterarNome(PER_tppPerfil pPerfil, char *pNome) {
  *  Função: PER Alterar Cidade
  *****/
 
-PER_tpCondRet PER_AlterarCidade(PER_tppPerfil pPerfil, char *pCidade) {
+PER_tpCondRet PER_AlterarCidade(PER_tppPerfil pPerfil, char *cidade) {
 	
-	if (pCidade == NULL || pPerfil == NULL) return PER_CondRetPonteiroNulo;
-	if(strlen(pCidade) == 0) return PER_CondRetStringVazia;
+	if (cidade == NULL || pPerfil == NULL) return PER_CondRetPonteiroNulo;
+	if(strlen(cidade) == 0) return PER_CondRetStringVazia;
 	//todo: verificar se precisa tratar caso em que o tamanho da string é maior que 100
 
-	strcpy(pPerfil->cidade, pCidade);
+	strcpy(pPerfil->cidade, cidade);
 	return PER_CondRetOK;
 }
 
 /***************************************************************************
  *
- *  Função: PER Alterar Idade
+ *  Função: PER Alterar Data de Nascimento
+ *	
  *****/
 
-PER_tpCondRet PER_AlterarIdade(PER_tppPerfil pPerfil, int idade) {
+PER_tpCondRet PER_AlterarDataNasc(PER_tppPerfil pPerfil, char * dataNasc) {
+	if (dataNasc == NULL || pPerfil == NULL) return PER_CondRetPonteiroNulo;
+	if(strlen(dataNasc) != 10 ) return PER_CondRetValorInvalido;
+	//todo: verificar se precisa tratar caso em que o tamanho da string é maior que 100
 
-	if (pPerfil == NULL) return PER_CondRetPonteiroNulo;
-	if (idade <= 0) return PER_CondRetValorInvalido;
-	pPerfil->idade = idade;
+	strcpy(pPerfil->dataNasc, dataNasc);
 	return PER_CondRetOK;
 }
 
@@ -242,12 +244,12 @@ PER_tpCondRet PER_AlterarGenero(PER_tppPerfil pPerfil, char genero) {
  *	OBS: Essa função não deve ser exportada
  *****/
 
-PER_tpCondRet PER_AlterarEmail(PER_tppPerfil pPerfil, char* pEmail) {
+PER_tpCondRet PER_AlterarEmail(PER_tppPerfil pPerfil, char* email) {
 
-	if (pEmail == NULL) return PER_CondRetPonteiroNulo;
-	if(strlen(pEmail) == 0) return PER_CondRetStringVazia;
+	if (email == NULL) return PER_CondRetPonteiroNulo;
+	if(strlen(email) == 0) return PER_CondRetStringVazia;
 
-	strcpy(pPerfil->email, pEmail);
+	strcpy(pPerfil->email, email);
 	return PER_CondRetOK;
 }
 

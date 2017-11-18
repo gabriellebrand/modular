@@ -62,6 +62,8 @@ MEN_tppMensagem MEN_CriarMensagem(PER_tppPerfil remetente, PER_tppPerfil destina
 		return NULL;
 
 	mensagem = (MEN_tpMensagem*)malloc(sizeof(MEN_tpMensagem));
+	if (mensagem == NULL) 
+		return NULL;
 
 	mensagem->remetente = remetente;
 	mensagem->destinatario = destinatario;
@@ -75,12 +77,23 @@ MEN_tppMensagem MEN_CriarMensagem(PER_tppPerfil remetente, PER_tppPerfil destina
 
 /***************************************************************************
  *
- *  Função: MEN &Recupera texto da mensagem
+ *  Função: MEN &Obter texto da mensagem
  *****/
 
-char * MEN_RecuperaTexto(MEN_tppMensagem mensagem) {
+char * MEN_ObterTexto(MEN_tppMensagem mensagem) {
 	if (mensagem == NULL) return NULL;
 
 	return mensagem->texto;
+}
+
+/***************************************************************************
+ *
+ *  Função: MEN &Obter numero identificador da mensagem
+ *****/
+
+int MEN_ObterID(MEN_tppMensagem mensagem) {
+	if (mensagem == NULL) return -1;
+
+	return mensagem->id;
 }
 

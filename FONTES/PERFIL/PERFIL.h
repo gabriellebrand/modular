@@ -1,27 +1,27 @@
 #if ! defined( PERFIL_ )
 #define PERFIL_
 /***************************************************************************
-*  $MCD MÛdulo de definiÁ„o: PER  MÛdulo Perfil
+*  $MCD M√≥dulo de defini√ß√£o: PER  M√≥dulo Perfil
 *
 *  Arquivo gerado:              PERFIL.h
 *  Letras identificadoras:      PER
 *
-*  Nome da base de software:    Arcabou¡o para a automa¡Ño de testes de programas redigidos em C
+*  Nome da base de software:    Arcabou√Åo para a automa√Å‚Äûo de testes de programas redigidos em C
 *  Arquivo da base de software: D:\AUTOTEST\PROJETOS\LISTA.BSW
 *
-*  Projeto: INF 1301 / 1628 Automatiza¡Ño dos testes de m€dulos C
+*  Projeto: INF 1301 / 1628 Automatiza√Å‚Äûo dos testes de m√õdulos C
 *  Gestor:  LES/DI/PUC-Rio
 *  Autores:    GB - Gabrielle Brandenburg
                 GC - Gabriel Cantergiani
                 WB - Wellingotn Bezerra
 *
-*  $HA HistÛrico de evoluÁ„o:
-*     Vers„o  Autor    Data     ObservaÁıess
-*     1.0       WB        02/out/2017       CriaÁ„o do mÛdulo
-*     1.1       WB        14/out/2017       AlteraÁ„o da funÁ„o criarPerfil
+*  $HA Hist√≥rico de evolu√ß√£o:
+*     Vers√£o  Autor    Data     Observa√ß√µess
+*     1.0       WB        02/out/2017       Cria√ß√£o do m√≥dulo
+*     1.1       WB        14/out/2017       Altera√ß√£o da fun√ß√£o criarPerfil
 *
-*  $ED DescriÁ„o do mÛdulo
-*     Implementa o mÛdulo usu·rio.
+*  $ED Descri√ß√£o do m√≥dulo
+*     Implementa o m√≥dulo usu√°rio.
 *     
 ***************************************************************************/
 
@@ -31,20 +31,22 @@
    #define PERFIL_EXT extern
 #endif
 
-/***** DeclaraÁıes exportadas pelo mÛdulo *****/
+#include "LISTA.H"
 
-/* Tipo referÍncia para um Perfil */
+/***** Declara√ß√µes exportadas pelo m√≥dulo *****/
+
+/* Tipo refer√™ncia para um Perfil */
 
 typedef struct PER_tagPerfil * PER_tppPerfil ;
 
 
 /***********************************************************************
 *
-*  $TC Tipo de dados: PER CondiÁıes de retorno
+*  $TC Tipo de dados: PER Condi√ß√µes de retorno
 *
 *
-*  $ED DescriÁ„o do tipo
-*     CondiÁıes de retorno das funÁıes do modulo Perfil
+*  $ED Descri√ß√£o do tipo
+*     Condi√ß√µes de retorno das fun√ß√µes do modulo Perfil
 *
 ***********************************************************************/
 
@@ -60,22 +62,22 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
    		/* Ponteiro Nulo */
 
  /* 3 */ PER_CondRetStringVazia ,
-      /* Ponteiro Nulo */
+      /* String vazia */
 
  /* 4 */ PER_CondRetValorInvalido
-      /* Ponteiro Nulo */
+      /* Valor de input invalido */
    } PER_tpCondRet ;
 
 
 /***********************************************************************
 *
-*  $FC FunÁ„o: PER  &Criar Perfil
+*  $FC Fun√ß√£o: PER  &Criar Perfil
 *
-*  $ED DescriÁ„o da funÁ„o
+*  $ED Descri√ß√£o da fun√ß√£o
 *     Cria um Perfil
 *
-*  $EP Par‚metros
-*     pPerfil  - ponteiro para o perfil que ser· criado
+*  $EP Par√¢metros
+*     pPerfil  - ponteiro para o perfil que ser√° criado
 *     pNome - nome do perfil a ser criado
 *     pEmail - email do perfil a ser criado
 *	  pCidade - cidade do perfil a ser criado 
@@ -93,13 +95,13 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 
 /***********************************************************************
  *
- *  $FC FunÁ„o: PER  &Destruir Perfil
+ *  $FC Fun√ß√£o: PER  &Destruir Perfil
  *
- *  $ED DescriÁ„o da funÁ„o
+ *  $ED Descri√ß√£o da fun√ß√£o
  *     Destroi um Perfil
  *
- *  $EP Par‚metros
- *     pPerfil  - ponteiro do o perfil que ser· destruido
+ *  $EP Par√¢metros
+ *     pPerfil  - ponteiro do o perfil que ser√° destruido
  *
  *  $FV Valor retornado
  *	    PER_CondRetOK  - destruicao do perfil com sucesso
@@ -111,46 +113,138 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 
 /***********************************************************************
  *
- *  $FC FunÁ„o: PER  &Comparar  Perfil
+ *  $FC Fun√ß√£o: PER  &Comparar  Perfil
  *
- *  $ED DescriÁ„o da funÁ„o
+ *  $ED Descri√ß√£o da fun√ß√£o
  *     Compara dois perfis
  *
- *  $EP Par‚metros
+ *  $EP Par√¢metros
  *     pValor1  - ponteiro do o perfil 1
  *     pValor2  - ponteiro do o perfil 2
  *
  *  $FV Valor retornado
- *	    igual a 0  - dois perfis s„o iguais
- *      diferente de 0 - dois perfis s„o diferentes
+ *	    igual a 0  - dois perfis s√£o iguais
+ *      diferente de 0 - dois perfis s√£o diferentes
  *
  ***********************************************************************/
 
-    int PER_compararPerfil(void * pValor1, void * pValor2);
+    int PER_CompararPerfil(void * pValor1, void * pValor2);
 
 /***********************************************************************
  *
- *  $FC FunÁ„o: PER  &Mostrar  Perfil
+ *  $FC Fun√ß√£o: PER  &Mostrar  Perfil
  *
- *  $ED DescriÁ„o da funÁ„o
- *     Mostra as informaÁıes de um perfil
+ *  $ED Descri√ß√£o da fun√ß√£o
+ *     Mostra as informa√ß√µes de um perfil
  *
- *  $EP Par‚metros
+ *  $EP Par√¢metros
  *     pPerfil  - ponteiro de um Perfil
  *
  *  $FV Valor retornado
- *      PER_CondRetOK  - insformaÁıes do perfil mostradas com sucesso
- *      PER_CondRetPonteiroNulo - valor do perfil È igual a NULL e nao mostra as inf do Perfil
+ *      PER_CondRetOK  - insforma√ß√µes do perfil mostradas com sucesso
+ *      PER_CondRetPonteiroNulo - valor do perfil √© igual a NULL e nao mostra as inf do Perfil
  *
  ***********************************************************************/
 
 PER_tpCondRet PER_MostrarPerfil(PER_tppPerfil pPerfil);
 
-char * PER_recuperaEmail(PER_tppPerfil pPerfil);
+/***********************************************************************
+ *
+ *  $FC Fun√ß√£o: PER  &Obter  Email
+ *
+ *  $ED Descri√ß√£o da fun√ß√£o
+ *     Recebe um perfil e obtem o email cadastrado neste perfil.
+ *
+ *  $EP Par√¢metros
+ *     pPerfil  - ponteiro de um Perfil
+ *
+ *  $FV Valor retornado
+ *      Cadeia de caracteres, caso o ponteiro para o perfil seja valido.
+ *      NULL, caso o ponteiro seja nulo.
+ *
+ ***********************************************************************/
+char * PER_ObterEmail(PER_tppPerfil pPerfil);
+
+/***********************************************************************
+ *
+ *  $FC Fun√ß√£o: PER  &Alterar Nome
+ *
+ *  $ED Descri√ß√£o da fun√ß√£o
+ *     Recebe um perfil e altera o nome desse perfil.
+ *
+ *  $EP Par√¢metros
+ *     pPerfil  - ponteiro de um Perfil
+ *     nome - novo valor que ir√° substituir o nome do perfil.
+ *
+ *  $FV Valor retornado
+ *      PER_CondRetPonteiroNulo, caso o ponteiro para o perfil ou para a string pNome sejam nulos.
+ *      PER_CondRetStringVazia, caso a string pNome esteja vazia.
+ *      PER_CondRetOk, caso a altera√ß√£o seja feita corretamente.
+ *
+ ***********************************************************************/
+PER_tpCondRet PER_AlterarNome(PER_tppPerfil pPerfil, char *nome);
+
+/***********************************************************************
+ *
+ *  $FC Fun√ß√£o: PER  &Alterar Cidade
+ *
+ *  $ED Descri√ß√£o da fun√ß√£o
+ *     Recebe um perfil e altera a cidade desse perfil.
+ *
+ *  $EP Par√¢metros
+ *     pPerfil  - ponteiro de um Perfil
+ *     cidade - novo valor que ir√° substituir a cidade do perfil.
+ *
+ *  $FV Valor retornado
+ *      PER_CondRetPonteiroNulo, caso o ponteiro para o perfil ou para a string pCidade sejam nulos.
+ *      PER_CondRetStringVazia, caso a string pCidade esteja vazia.
+ *      PER_CondRetOk, caso a altera√ß√£o seja feita corretamente.
+ *
+ ***********************************************************************/
+PER_tpCondRet PER_AlterarCidade(PER_tppPerfil pPerfil, char *cidade);
+
+/***********************************************************************
+ *
+ *  $FC Fun√ß√£o: PER  &Alterar data de nascimento
+ *
+ *  $ED Descri√ß√£o da fun√ß√£o
+ *     Recebe um perfil e altera a data de nascimento desse perfil.
+ *
+ *  $EP Par√¢metros
+ *     pPerfil  - ponteiro de um Perfil
+ *     dataNasc - novo valor que ir√° substituir a data de nascimento do perfil.
+ *
+ *  $FV Valor retornado
+ *      PER_CondRetPonteiroNulo, caso o ponteiro para o perfil seja nulo
+ *      PER_CondRetValorInvalido, caso a string da data de nascimento n√£o tenha o tamanho correto de 10 caracteres "XX/XX/XXXX".
+ *      PER_CondRetOk, caso a altera√ß√£o seja feita corretamente.
+ *
+ ***********************************************************************/
+PER_tpCondRet PER_AlterarDataNasc(PER_tppPerfil pPerfil, char * dataNasc);
+
+/***********************************************************************
+ *
+ *  $FC Fun√ß√£o: PER  &Alterar Genero
+ *
+ *  $ED Descri√ß√£o da fun√ß√£o
+ *     Recebe um perfil e altera a idade desse perfil.
+ *
+ *  $EP Par√¢metros
+ *     pPerfil  - ponteiro de um Perfil
+ *     genero - caractere com os poss√≠veis valores: 'M' - masculino, 'F' - feminino, 'O' - outro
+ *
+ *  $FV Valor retornado
+ *      PER_CondRetPonteiroNulo, caso o ponteiro para o perfil seja nulo
+ *      PER_CondRetValorInvalido, caso o valor do parametro genero seja diferente de "M', 'F' ou 'O'
+ *      PER_CondRetOk, caso a altera√ß√£o seja feita corretamente.
+ *
+ ***********************************************************************/
+PER_tpCondRet PER_AlterarGenero(PER_tppPerfil pPerfil, char genero);
+
 
 #undef PERFIL_EXT
 
-/********** Fim do mÛdulo de definiÁ„o: PER  Perfil **********/
+/********** Fim do m√≥dulo de defini√ß√£o: PER  Perfil **********/
 
 #else
 #endif
