@@ -15,6 +15,7 @@
  *     Versăo      Autor            Data                Observaçőes
  *     1.0          WB        02/out/2017       Criação do módulo
  *     1.1          WB        14/out/2017       Alteração da função criarPerfil
+ *	   1.2			GB 		  15/nov/2017		Inclusão das funções de edição
  *
  ***************************************************************************/
 
@@ -52,6 +53,12 @@ typedef struct PER_tagPerfil {
     
     int idade;
         /* Idade do perfil */
+    
+    LIS_tppLista msgEnviadas;
+    	/* Lista de mensagens enviadas pelo perfil */
+
+    LIS_tppLista msgRecebidas;
+    	/*Lista de mensagens recebidas pelo perfil */
 
 } PER_tpPerfil ;
 
@@ -64,6 +71,7 @@ typedef struct PER_tagPerfil {
 
 PER_tppPerfil PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, char genero, int idade ) {
     
+	LIS_tppLista msgEnv, msgRec;
 	PER_tppPerfil pPerfil = ( PER_tppPerfil ) malloc( sizeof( PER_tpPerfil ));
 	if( pPerfil == NULL ) {
 		return pPerfil ;
@@ -90,6 +98,20 @@ PER_tppPerfil PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, char ge
 		return NULL;
 	}
 
+	if ((msgEnv = (LIS_tppLista)malloc(sizeof(LIS_tppLista))) == NULL){
+		PER_DestruirPerfil(pPerfil);
+		return NULL;
+	}
+
+	if ((msgRec = (LIS_tppLista)malloc(sizeof(LIS_tppLista))) == NULL){
+		LIS_DestruirLista(msgRec);
+		PER_DestruirPerfil(pPerfil);
+		return NULL;
+	}
+
+	pPerfil->msgRecebidas = msgRec;
+	pPerfil->msgEnviadas = msgEnv;	
+
 	return pPerfil ;
     
 } /* Fim função: PER  &Criar Perfil */
@@ -114,7 +136,7 @@ void PER_DestruirPerfil(void * pPerfil) {
  *  Função: PER Compara Perfil
  *****/
 
-int PER_compararPerfil(void * pValor1, void * pValor2) {
+int PER_CompararPerfil(void * pValor1, void * pValor2) {
     PER_tppPerfil pPerfil;
     char *email;
     pPerfil = (PER_tppPerfil) pValor1;
@@ -150,7 +172,7 @@ PER_tpCondRet PER_MostrarPerfil(PER_tppPerfil pPerfil) {
  *  Função: PER Recuperar Email
  *****/
 
-char * PER_RecuperarEmail(PER_tppPerfil pPerfil) {
+char * PER_ObterEmail(PER_tppPerfil pPerfil) {
 	if (pPerfil == NULL) return NULL;
 	return pPerfil->email;
 }
@@ -162,7 +184,7 @@ char * PER_RecuperarEmail(PER_tppPerfil pPerfil) {
 
 PER_tpCondRet PER_AlterarNome(PER_tppPerfil pPerfil, char *pNome) {
 	
-	if (pNome == NULL) return PER_CondRetPonteiroNulo;
+	if (pNome == NULL || pPerfil == NULL) return PER_CondRetPonteiroNulo;
 	if(strlen(pNome) == 0) return PER_CondRetStringVazia; //será que é necessário?
 	//todo: verificar se precisa tratar caso em que o tamanho da string é maior que 100
 
@@ -177,7 +199,7 @@ PER_tpCondRet PER_AlterarNome(PER_tppPerfil pPerfil, char *pNome) {
 
 PER_tpCondRet PER_AlterarCidade(PER_tppPerfil pPerfil, char *pCidade) {
 	
-	if (pCidade == NULL) return PER_CondRetPonteiroNulo;
+	if (pCidade == NULL || pPerfil == NULL) return PER_CondRetPonteiroNulo;
 	if(strlen(pCidade) == 0) return PER_CondRetStringVazia;
 	//todo: verificar se precisa tratar caso em que o tamanho da string é maior que 100
 
@@ -192,6 +214,7 @@ PER_tpCondRet PER_AlterarCidade(PER_tppPerfil pPerfil, char *pCidade) {
 
 PER_tpCondRet PER_AlterarIdade(PER_tppPerfil pPerfil, int idade) {
 
+	if (pPerfil == NULL) return PER_CondRetPonteiroNulo;
 	if (idade <= 0) return PER_CondRetValorInvalido;
 	pPerfil->idade = idade;
 	return PER_CondRetOK;
@@ -203,6 +226,8 @@ PER_tpCondRet PER_AlterarIdade(PER_tppPerfil pPerfil, int idade) {
  *****/
 
 PER_tpCondRet PER_AlterarGenero(PER_tppPerfil pPerfil, char genero) {
+
+	if (pPerfil == NULL) return PER_CondRetPonteiroNulo;
 
 	if (genero != 'M' && genero != 'F' && genero != 'O')
 		return PER_CondRetValorInvalido;
@@ -225,6 +250,28 @@ PER_tpCondRet PER_AlterarEmail(PER_tppPerfil pPerfil, char* pEmail) {
 	strcpy(pPerfil->email, pEmail);
 	return PER_CondRetOK;
 }
+
+/***************************************************************************
+ *
+ *  Função: PER Enviar Mensagem
+ *****/
+PER_tpCondRet PER_EnviarMensagem(PER_tppPerfil remetente, void * mensagem, PER_tppPerfil destinatario) {
+	if (remetente == NULL || mensagem == NULL || destinatario == NULL)
+		return PER_CondRetPonteiroNulo;
+
+	if (LIS_InserirElementoApos(remetente->msgEnviadas, mensagem) == LIS_CondRetFaltouMemoria)
+		return PER_CondRetFaltouMemoria;
+
+	if (LIS_InserirElementoApos(destinatario->msgRecebidas, mensagem) == LIS_CondRetFaltouMemoria) {
+		//necessário excluir o ultimo elemento inserido na lista de enviados do remetente
+		LIS_ExcluirElemento(remetente->msgEnviadas);
+		return PER_CondRetFaltouMemoria;
+	}
+
+	return PER_CondRetOK;
+}
+
+
 
 
 
