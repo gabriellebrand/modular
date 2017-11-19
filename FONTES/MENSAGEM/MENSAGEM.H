@@ -33,6 +33,26 @@
 
 typedef struct MEN_tagMensagem * MEN_tppMensagem;
 
+/***********************************************************************
+*
+*  $TC Tipo de dados: MENCondições de retorno
+*
+*
+*  $ED Descrição do tipo
+*     Condições de retorno das funções do modulo Perfil
+*
+***********************************************************************/
+
+   typedef enum {
+	   
+ /* 0 */ MEN_CondRetOK ,
+               /* Concluiu corretamente */
+
+ /* 1 */ PER_CondRetPonteiroNulo ,
+   		/* Ponteiro Nulo */
+
+   } MEN_tpCondRet ;
+
 
 /***********************************************************************
 *
@@ -90,4 +110,64 @@ char * MEN_ObterTexto(MEN_tppMensagem mensagem);
 ***********************************************************************/
 
 int MEN_ObterID(MEN_tppMensagem mensagem);
+
+/***********************************************************************
+*
+*  $FC Função: MEN  &Comparar mensagem
+*
+*  $ED Descrição da função
+*     Essa funcao recebe dois ponteiros para o tipo mensagem e compara seus IDs.
+*
+*  $EP Parâmetros
+*     pValor1  - ponteiro para a mensagem 1
+*     pValor2  - ponteiro para a mensagem 2
+*
+*  $FV Valor retornado
+*		- 0, caso o número identificador das duas mensagens seja igual
+*		- 1, caso o número identificador da mensagem 1 seja maior que o da mensagem 2
+*		- (-1), caso o número identificador da mensagem 1 seja menor que o da mensagem 2
+*		- (-2), caso algum dos parametros seja nulo
+*
+***********************************************************************/
+int MEN_CompararMensagem(void * pValor1, void * pValor2);
+
+/***********************************************************************
+*
+*  $FC Função: MEN  &Desativar remetente
+*
+*  $ED Descrição da função
+*     Essa função deve ser chamada quando o perfil remetente for excluído.
+*	  Desativa o campo remetente da estrutura mensagem. 
+*	  O campo remetente passa a apontar para NULL. Caso o campo
+*	  destinatário também tenha valor NULL, a mensagem será excluída (free).
+*
+*  $EP Parâmetros
+*     mensagem  - ponteiro para a mensagem
+*
+*  $FV Valor retornado
+*		- CondRetOK, se executou corretamente
+*		- CondRetValorNulo, se o parametro da mensagem for nulo
+*
+***********************************************************************/
+MEN_tpCondRet MEN_DesativarRemetente(MEN_tppMensagem mensagem);
+
+/***********************************************************************
+*
+*  $FC Função: MEN  &Desativar destinatário
+*
+*  $ED Descrição da função
+*     Essa função deve ser chamada quando o perfil destinatário for excluído.
+*	  Desativa o campo remetente da estrutura mensagem. 
+*	  O campo remetente passa a apontar para NULL. Caso o campo
+*	  remetente também tenha valor NULL, a mensagem será excluída (free).
+*
+*  $EP Parâmetros
+*     mensagem  - ponteiro para a mensagem
+*
+*  $FV Valor retornado
+*		- CondRetOK, se executou corretamente
+*		- CondRetValorNulo, se o parametro da mensagem for nulo
+*
+***********************************************************************/
+MEN_tpCondRet MEN_DesativarDestinatario(MEN_tppMensagem mensagem);
 

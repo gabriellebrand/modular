@@ -32,7 +32,7 @@
 #endif
 
 #include "LISTA.H"
-
+#include "MENSAGEM.H"
 /***** Declarações exportadas pelo módulo *****/
 
 /* Tipo referência para um Perfil */

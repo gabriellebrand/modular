@@ -97,3 +97,61 @@ int MEN_ObterID(MEN_tppMensagem mensagem) {
 	return mensagem->id;
 }
 
+/***************************************************************************
+ *
+ *  Função: MEN &Comparar mensagens
+ *****/
+int MEN_CompararMensagem(void * pValor1, void * pValor2) {
+	MEN_tppMensagem msg1, msg2;
+	
+	if ((pValor1 == NULL) || (pValor2 == NULL)) {
+		return -2;
+	}
+
+	msg1 = (MEN_tppMensagem) pValor1;
+	msg2 = (MEN_tppMensagem) pValor2;
+
+	if (msg1->id == msg2->id)
+		return 0;
+	if (msg1->id > msg2->id)
+		return 1;
+
+	return -1;
+}
+
+/***************************************************************************
+ *
+ *  Função: MEN &Desativar o campo de perfil remetente
+ *			Essa funcao deve ser chamada quando o perfil remetente será excluído
+ *****/
+MEN_tpCondRet MEN_DesativarRemetente(MEN_tppMensagem mensagem) {
+	if (mensagem == NULL)
+		return MEN_tpCondRetValorNulo;
+
+	//faz o remetente apontar para NULL, pois ele será excluído
+	mensagem->remetente = NULL;
+
+	// se o destinatario for NULL, entao ambos perfis da mensagem foram excluidos -> mensagem pode ser excluída
+	if(mensagem->destinatario == NULL)
+		free(mensagem);
+}
+
+/***************************************************************************
+ *
+ *  Função: MEN &Desativar o campo de perfil remetente
+ *			Essa funcao deve ser chamada quando o perfil destinatário será excluído
+ *****/
+MEN_tpCondRet MEN_DesativarDestinatario(MEN_tppMensagem mensagem) {
+	if (mensagem == NULL)
+		return MEN_CondRetValorNulo;
+
+	//faz o destinatário apontar para NULL, pois ele será excluído
+	mensagem->destinatario = NULL;
+
+	// se o remetente for NULL, entao ambos perfis da mensagem foram excluidos -> mensagem pode ser excluída
+	if(mensagem->remetente == NULL)
+		free(mensagem);
+
+	return MEN_CondRetOK;
+}
+

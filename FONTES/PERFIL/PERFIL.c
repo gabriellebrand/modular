@@ -74,36 +74,36 @@ PER_tppPerfil PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, char ge
 	LIS_tppLista msgEnv, msgRec;
 	PER_tppPerfil pPerfil = ( PER_tppPerfil ) malloc( sizeof( PER_tpPerfil ));
 	if( pPerfil == NULL ) {
-		return pPerfil ;
+		return NULL ;
 	} /* if */
     
-	if (PER_AlterarNome(pPerfil, pNome) != PER_CondRetOK){
+	if (PER_AlterarNome(pPerfil, pNome) != PER_CondRetOK) {
 		PER_DestruirPerfil(pPerfil);
 		return NULL;
 	}
-	if (PER_AlterarCidade(pPerfil, pCidade) != PER_CondRetOK){
+	if (PER_AlterarCidade(pPerfil, pCidade) != PER_CondRetOK) {
 		PER_DestruirPerfil(pPerfil);
 		return NULL;
 	}
-	if (PER_AlterarGenero(pPerfil, genero) != PER_CondRetOK){
+	if (PER_AlterarGenero(pPerfil, genero) != PER_CondRetOK) {
 		PER_DestruirPerfil(pPerfil);
 		return NULL;
 	}
-	if (PER_AlterarDataNasc(pPerfil, dataNasc)  != PER_CondRetOK){
+	if (PER_AlterarDataNasc(pPerfil, dataNasc)  != PER_CondRetOK) {
 		PER_DestruirPerfil(pPerfil);
 		return NULL;
 	}
-	if (PER_AlterarEmail(pPerfil, pEmail) != PER_CondRetOK){
-		PER_DestruirPerfil(pPerfil);
-		return NULL;
-	}
-
-	if ((msgEnv = (LIS_tppLista)malloc(sizeof(LIS_tppLista))) == NULL){
+	if (PER_AlterarEmail(pPerfil, pEmail) != PER_CondRetOK) {
 		PER_DestruirPerfil(pPerfil);
 		return NULL;
 	}
 
-	if ((msgRec = (LIS_tppLista)malloc(sizeof(LIS_tppLista))) == NULL){
+	if ((msgEnv = LIS_CriarLista(NULL, MEN_CompararMensagem)) == NULL) {
+		PER_DestruirPerfil(pPerfil);
+		return NULL;
+	}
+
+	if ((msgRec = LIS_CriarLista(NULL, MEN_CompararMensagem)) == NULL) {
 		LIS_DestruirLista(msgRec);
 		PER_DestruirPerfil(pPerfil);
 		return NULL;
@@ -112,10 +112,9 @@ PER_tppPerfil PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, char ge
 	pPerfil->msgRecebidas = msgRec;
 	pPerfil->msgEnviadas = msgEnv;	
 
-	return pPerfil ;
+	return pPerfil;
     
 } /* Fim função: PER  &Criar Perfil */
-
 
 /***************************************************************************
  *
@@ -124,8 +123,41 @@ PER_tppPerfil PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, char ge
 
 void PER_DestruirPerfil(void * pPerfil) {
 
+	PER_tppPerfil perfil;
+	MEN_tppMensagem mensagem;
+    
     if(pPerfil != NULL) {
-        free(pPerfil);
+    	//faz um typecast para PER_tppPerfil
+    	perfil = (PER_tppPerfil) (pPerfil); 
+
+
+		//percorrer a lista de mensagens enviadas
+    	IrInicioLista(pPerfil->msgEnviadas);
+    	do {
+			//acessar a estrutura da mensagem e desativar o perfil remetente.
+    		mensagem = (MEN_tppMensagem) LIS_ObterValor(pPerfil->msgEnviadas);
+    		//se o ponteiro do destinatário também for NULL, a mensagem será excluída.
+    		MEN_DesativarRemetente(mensagem);
+    	} while (LIS_AvancarElementoCorrente(perfil->msgEnviadas,1) != LIS_CondRetFimLista);
+
+
+    	//percorrer a lista de mensagens recebidas
+    	IrInicioLista(pPerfil->msgRecebidas);
+    	do {
+			//acessar a estrutura da mensagem e desativar o perfil remetente.
+    		mensagem = (MEN_tppMensagem) LIS_ObterValor(pPerfil->msgRecebidas);
+    		//se o ponteiro do remetente também for NULL, a mensagem será excluída.
+    		MEN_DesativarDestinatario(mensagem);
+    	} while (LIS_AvancarElementoCorrente(perfil->msgRecebidas,1) != LIS_CondRetFimLista);
+
+
+		//excluir lista de enviadas
+		LIS_DestruirLista(pPerfil->msgEnviadas);
+		//excluir lista de recebidas
+		LIS_DestruirLista(pPerfil->msgRecebidas);
+
+		//excluir perfil
+        free(perfil);
     } /* if */
 
 } /* Fim função: PER  &Destruir Perfil */
