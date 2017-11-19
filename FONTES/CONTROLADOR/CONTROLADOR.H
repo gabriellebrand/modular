@@ -107,7 +107,6 @@ CON_tpCondRet CON_CriarPerfil(char *pNome, char *pEmail, char *pCidade, char gen
 *
 *  $ED Descrição da função
 *     
-*
 *  $EP Parâmetros
 *     email - email do perfil que será buscado (max 100 caracteres)
 *     pPerfil - ponteiro no qual será armazenado o endereço do perfil, caso seja encontrado
@@ -121,3 +120,5 @@ CON_tpCondRet CON_CriarPerfil(char *pNome, char *pEmail, char *pCidade, char gen
 *
 ***********************************************************************/
 CON_tpCondRet CON_BuscarPerfil(char *email, PER_tppPerfil pPerfil);
+
+CON_tpCondRet CON_CriarAmizade(char *email1, char *email2);
