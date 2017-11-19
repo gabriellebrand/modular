@@ -25,8 +25,6 @@
    #define MENSAGEM_EXT extern
 #endif
 
-#include "PERFIL.H"
-
 /***** Declarações exportadas pelo módulo *****/
 
 /* Tipo referência para uma Mensagem */
@@ -59,7 +57,7 @@ typedef struct MEN_tagMensagem * MEN_tppMensagem;
 *  $FC Função: MEN  &Criar Mensagem
 *
 *  $ED Descrição da função
-*     Cria uma estrutura do tipo Mensagem
+*     Cria uma estrutura do tipo Mensagem. O tipo do remetente/destinatário não precisa ser conhecido pela mensagem.
 *
 *  $EP Parâmetros
 *     remetente  - ponteiro para o perfil do remetente da mensagem
@@ -72,8 +70,7 @@ typedef struct MEN_tagMensagem * MEN_tppMensagem;
 *		a funcao retorna NULL.
 *
 ***********************************************************************/
-
-MEN_tppMensagem MEN_CriarMensagem(PER_tppPerfil remetente, PER_tppPerfil destinatario, char *texto);
+MEN_tppMensagem MEN_CriarMensagem(void * remetente, void * destinatario, char *texto);
 
 /***********************************************************************
 *
@@ -90,7 +87,6 @@ MEN_tppMensagem MEN_CriarMensagem(PER_tppPerfil remetente, PER_tppPerfil destina
 *		- Se a mensagem enviada como parâmetro não existe, retorna NULL.
 *
 ***********************************************************************/
-
 char * MEN_ObterTexto(MEN_tppMensagem mensagem);
 
 /***********************************************************************
@@ -108,8 +104,43 @@ char * MEN_ObterTexto(MEN_tppMensagem mensagem);
 *		- Se a mensagem enviada como parâmetro não existe, retorna -1.
 *
 ***********************************************************************/
-
 int MEN_ObterID(MEN_tppMensagem mensagem);
+
+/***********************************************************************
+*
+*  $FC Função: MEN  &Obter remetente
+*
+*  $ED Descrição da função
+*     Retorna o ponteiro para o remetente armazenado na mensagem.
+*	  É necessário fazer o typecast do remetente para o tipo conhecido pelo cliente.
+*
+*  $EP Parâmetros
+*     mensagem  - ponteiro para a mensagem
+*
+*  $FV Valor retornado
+*		- Se executou corretamente, retorna o remetente.
+*		- Se a mensagem enviada como parâmetro não existe, retorna NULL.
+*
+***********************************************************************/
+void * MEN_ObterRemetente(MEN_tppMensagem mensagem);
+
+/***********************************************************************
+*
+*  $FC Função: MEN  &Obter destinatário
+*
+*  $ED Descrição da função
+*     Retorna o ponteiro para o destinatário armazenado na mensagem.
+*	  É necessário fazer o typecast do destinatário para o tipo conhecido pelo cliente.
+*
+*  $EP Parâmetros
+*     mensagem  - ponteiro para a mensagem
+*
+*  $FV Valor retornado
+*		- Se executou corretamente, retorna o destinatário.
+*		- Se a mensagem enviada como parâmetro não existe, retorna NULL.
+*
+***********************************************************************/
+void * MEN_ObterDestinatario(MEN_tppMensagem mensagem)
 
 /***********************************************************************
 *

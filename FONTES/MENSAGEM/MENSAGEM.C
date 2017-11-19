@@ -36,11 +36,11 @@ static int contadorID = 0;
 
 typedef struct MEN_tagMensagem {
 
-    PER_tppPerfil remetente;
-        /* Ponteiro para o perfil remetente */
+    void * remetente;
+        /* Ponteiro para o remetente */
     
-    PER_tppPerfil destinatario;
-        /* Ponteiro para o perfil destinatario */
+    void * destinatario;
+        /* Ponteiro para o destinatario */
     
     char texto[250];
         /* Texto da mensagem */
@@ -55,7 +55,7 @@ typedef struct MEN_tagMensagem {
  *  Função: MEN &Criar Mensagem
  *****/
 
-MEN_tppMensagem MEN_CriarMensagem(PER_tppPerfil remetente, PER_tppPerfil destinatario, char *texto) {
+MEN_tppMensagem MEN_CriarMensagem(void * remetente, void * destinatario, char *texto) {
 
 	MEN_tppMensagem mensagem;
 	if (remente == NULL  || destinatario == NULL || texto == NULL || strlen(texto) == 0)
@@ -99,6 +99,29 @@ int MEN_ObterID(MEN_tppMensagem mensagem) {
 
 /***************************************************************************
  *
+ *  Função: MEN &Obter remetente
+ *****/
+void * MEN_ObterRemetente(MEN_tppMensagem mensagem) {
+ 	if (mensagem == NULL)
+ 		return NULL;
+
+ 	return mensagem->remetente;
+ }
+
+ /***************************************************************************
+ *
+ *  Função: MEN &Obter destinatario
+ *****/
+void * MEN_ObterRemetente(MEN_tppMensagem mensagem) {
+ 	if (mensagem == NULL)
+ 		return NULL;
+
+ 	return mensagem->destinatario;
+ }
+
+
+/***************************************************************************
+ *
  *  Função: MEN &Comparar mensagens
  *****/
 int MEN_CompararMensagem(void * pValor1, void * pValor2) {
@@ -126,7 +149,7 @@ int MEN_CompararMensagem(void * pValor1, void * pValor2) {
  *****/
 MEN_tpCondRet MEN_DesativarRemetente(MEN_tppMensagem mensagem) {
 	if (mensagem == NULL)
-		return MEN_tpCondRetValorNulo;
+		return MEN_CondRetValorNulo;
 
 	//faz o remetente apontar para NULL, pois ele será excluído
 	mensagem->remetente = NULL;
@@ -134,6 +157,8 @@ MEN_tpCondRet MEN_DesativarRemetente(MEN_tppMensagem mensagem) {
 	// se o destinatario for NULL, entao ambos perfis da mensagem foram excluidos -> mensagem pode ser excluída
 	if(mensagem->destinatario == NULL)
 		free(mensagem);
+
+	return MEN_CondRetOK;
 }
 
 /***************************************************************************
@@ -154,4 +179,3 @@ MEN_tpCondRet MEN_DesativarDestinatario(MEN_tppMensagem mensagem) {
 
 	return MEN_CondRetOK;
 }
-

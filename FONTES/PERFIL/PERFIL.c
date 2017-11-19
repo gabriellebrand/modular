@@ -289,14 +289,14 @@ PER_tpCondRet PER_AlterarEmail(PER_tppPerfil pPerfil, char* email) {
  *
  *  Função: PER Enviar Mensagem
  *****/
-PER_tpCondRet PER_EnviarMensagem(PER_tppPerfil remetente, void * mensagem, PER_tppPerfil destinatario) {
+PER_tpCondRet PER_EnviarMensagem(PER_tppPerfil remetente, MEN_tppMensagem mensagem, PER_tppPerfil destinatario) {
 	if (remetente == NULL || mensagem == NULL || destinatario == NULL)
 		return PER_CondRetPonteiroNulo;
 
-	if (LIS_InserirElementoApos(remetente->msgEnviadas, mensagem) == LIS_CondRetFaltouMemoria)
+	if (LIS_InserirElementoApos(remetente->msgEnviadas, (void*)mensagem) == LIS_CondRetFaltouMemoria)
 		return PER_CondRetFaltouMemoria;
 
-	if (LIS_InserirElementoApos(destinatario->msgRecebidas, mensagem) == LIS_CondRetFaltouMemoria) {
+	if (LIS_InserirElementoApos(destinatario->msgRecebidas, (void*)mensagem) == LIS_CondRetFaltouMemoria) {
 		//necessário excluir o ultimo elemento inserido na lista de enviados do remetente
 		LIS_ExcluirElemento(remetente->msgEnviadas);
 		return PER_CondRetFaltouMemoria;
