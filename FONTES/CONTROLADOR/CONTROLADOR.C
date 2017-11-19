@@ -33,7 +33,7 @@
 
 /************** Dados encapsulados no modulo   *********************************************************/
 
-static GRA_tppGrafo Grafo;			/* Ponteiro para o Grafo utilizado na rede de relacionamentos*/
+static GRA_tppGrafo Grafo = NULL; /* Ponteiro para o Grafo utilizado na rede de relacionamentos*/
 
 
 /*******  Código das Funções Exportadas pelo Módulo ***********************/
@@ -87,19 +87,82 @@ CON_tpCondRet CON_CriarPerfil(char *pNome, char *pEmail, char *pCidade, char gen
 
 }  /* Fim função: CON  &Criar Perfil */
 
+//CON_BuscarPerfil();
 
+/***********************************************************************
+*
+*  $FC Função: CON  &Buscar Perfil
+*
+***********************************************************************/
 
-/*  por fazer...
+CON_tpCondRet CON_BuscarPerfil(char *email, PER_tppPerfil perfil) {
 
-CON_BuscarPerfil();
+	GRA_tpCondRet ret;
 
-CON_CriarAmizade();
+	if (email == NULL)
+		return CON_CondRetValorNulo;
+	if (strlen(email) == 0)
+		return CON_CondRetStringVazia;
 
-CON_BuscarAmizade();
+	ret = GRA_IrVertice(Grafo, (void*)email);
 
-CON_EnviarMensagem();
+	if (ret != GRA_CondRetOK) 
+		return CON_CondRetRedeVazia;
+	
+	if (ret == GRA_CondRetVerticeNaoExiste)
+		return CON_CondRetNaoAchou;
 
-CON_CarregarHistorico();
-*/
+	perfil = (PER_tppPerfil) GRA_ObterValor(Grafo);
 
-/************************************************************************
+	if (perfil == NULL)
+		return CON_CondRetValorNulo;
+
+	return CON_CondRetOK
+}
+
+//TODO:
+
+//CON_CriarAmizade();
+
+CON_tpCondRet CON_CriarAmizade(char *email1, char *email2) {
+	GRA_tpCondRet ret;
+
+	if ((email1 == NULL) || (email2 == NULL))
+		return CON_CondRetValorNulo;
+	if ((strlen(email1) == 0) || (strlen(email2) == 0))
+		return CON_CondRetStringVazia;
+
+	ret = GRA_CriarAresta(Grafo,(void*)email1, (void*)email2);
+
+	switch (ret) {
+		case GRA_CondRetVerticeNaoExiste:
+		return CON_CondRetNaoAchou;
+
+		case GRA_CondRetFaltouMemoria:
+		//não sei o que precisa ser feito
+		//tentar de novo? reportar que faltou memoria?
+
+		case GRA_CondRetArestaJaExiste:
+		return CON_CondRetAmizadeJaExiste;
+
+		case GRA_CondRetArestaIlegal:
+		return CON_ConRetAmizadeInvalida;
+
+		case GRA_CondRetOK:
+		return CON_CondRetOK;
+
+		default:
+		return CON_CondRetRedeVazia;
+	}
+		
+}
+
+//CON_BuscarAmizade();
+
+//CON_EnviarMensagem();
+
+//CON_CarregarHistorico();
+
+//CON_ExcluirPerfil();
+
+//CON_ExcluirAmizade();

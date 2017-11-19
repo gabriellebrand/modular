@@ -33,6 +33,11 @@
    #define CONTROLADOR_EXT extern
 #endif
 
+#include "GRAFO.H"
+#include "PERFIL.H"
+#include "MENSAGEM.H"
+
+
 /***** Declarações exportadas pelo módulo *****/
 
 /***********************************************************************
@@ -58,6 +63,15 @@ typedef enum {
 
 	CON_CondRetErroCadastro,
 
+	CON_CondRetRedeVazia,
+
+	CON_CondRetNaoAchou,
+
+	CON_CondRetValorNulo,
+
+	CON_CondRetAmizadeJaExiste,
+
+	CON_ConRetAmizadeInvalida
 
 } CON_tpCondRet;
 
@@ -86,3 +100,24 @@ typedef enum {
 ***********************************************************************/
 
 CON_tpCondRet CON_CriarPerfil(char *pNome, char *pEmail, char *pCidade, char genero, char *pDataNasc);
+
+/***********************************************************************
+*
+*  $FC Função: CON  &Buscar Perfil
+*
+*  $ED Descrição da função
+*     
+*
+*  $EP Parâmetros
+*     email - email do perfil que será buscado (max 100 caracteres)
+*     pPerfil - ponteiro no qual será armazenado o endereço do perfil, caso seja encontrado
+*
+*  $FV Valor retornado
+*		- CON_CondRetValorNulo
+*		- CON_CondRetStringVazia
+*		- CON_CondRetRedeVazia
+*		- CON_CondRetNaoAchou
+*		- CON_CondRetOK
+*
+***********************************************************************/
+CON_tpCondRet CON_BuscarPerfil(char *email, PER_tppPerfil pPerfil);

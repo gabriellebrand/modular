@@ -170,7 +170,7 @@ GRA_tpCondRet GRA_DestruirGrafo(GRA_tppGrafo *pGrafo);
 /***************************************************************************
 *  Função: GRA  &Ir Vertice
 *  $ED Descrição da função
-*     Anda por todos os vértices do grafo até encontrar o vértice
+*     Anda por todos os vértices (do primeiro até o ultimo) do grafo até encontrar o vértice
 *     correspondente à chave identificadora passada como parâmetro.
 *     O vertice corrente do grafo passa a ser o vertice buscado, caso seja encontrado.
 *     Se não for encontrado, o vertice corrente continua o mesmo.
