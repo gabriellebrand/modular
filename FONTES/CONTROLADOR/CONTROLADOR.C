@@ -95,7 +95,7 @@ CON_tpCondRet CON_CriarPerfil(char *pNome, char *pEmail, char *pCidade, char gen
 *
 ***********************************************************************/
 
-CON_tpCondRet CON_BuscarPerfil(char *email, PER_tppPerfil perfil) {
+CON_tpCondRet CON_BuscarPerfil(char *email, PER_tppPerfil pPerfil) {
 
 	GRA_tpCondRet ret;
 
@@ -112,18 +112,19 @@ CON_tpCondRet CON_BuscarPerfil(char *email, PER_tppPerfil perfil) {
 	if (ret == GRA_CondRetVerticeNaoExiste)
 		return CON_CondRetNaoAchou;
 
-	perfil = (PER_tppPerfil) GRA_ObterValor(Grafo);
+	pPerfil = (PER_tppPerfil) GRA_ObterValor(Grafo);
 
-	if (perfil == NULL)
+	if (pPerfil == NULL)
 		return CON_CondRetValorNulo;
 
 	return CON_CondRetOK
 }
 
-//TODO:
-
-//CON_CriarAmizade();
-
+/***********************************************************************
+*
+*  $FC Função: CON  &Criar Amizade
+*
+***********************************************************************/
 CON_tpCondRet CON_CriarAmizade(char *email1, char *email2) {
 	GRA_tpCondRet ret;
 
@@ -157,7 +158,47 @@ CON_tpCondRet CON_CriarAmizade(char *email1, char *email2) {
 		
 }
 
+//TODO:
+
 //CON_BuscarAmizade();
+/***********************************************************************
+*
+*  $FC Função: CON  &Buscar Amizades
+*
+***********************************************************************/
+CON_tpCondRet CON_BuscarAmizades(char *email) {
+	GRA_tpCondRet ret;
+	int i = 0;
+	void * val;
+	PER_tppPerfil perAmigo;
+	//1. buscar o vertice relativo ao email passado
+	ret = GRA_IrVertice (Grafo, email);
+
+	if (ret == GRA_CondRetVerticeNaoExiste)
+		return CON_CondRetNaoAchou;
+	if (ret != GRA_CondRetOK)
+		return CON_CondRetRedeVazia;
+
+	//2. acessar a lista de arestas do vertice
+	//3. retornar o perfil de cada uma das arestas acessadas
+	while((ret = GRA_AvancarVizinho (Grafo, i, val)) == GRA_CondRetOK) {
+		perAmigo = (PER_tppPerfil)val;
+		//4. chamar aqui a funcao que imprime os valores do perfil
+		//TODO: trocar isso por obter campos do perfil e chamar a funcao da interface que imprime os campos!!
+		PER_MostrarPerfil(perAmigo);
+		i++;
+	}
+
+	switch (ret) {
+		case GRA_CondRetNaoPossuiAresta || GRA_CondRetFimArestas:
+			return CON_CondRetNaoAchou;
+		case GRA_CondRetValorNulo:
+			return CON_CondRetValorNulo;
+		default:
+			return CON_CondRetRedeVazia;
+	}
+	
+}
 
 //CON_EnviarMensagem();
 

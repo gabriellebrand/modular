@@ -71,7 +71,7 @@ typedef enum {
 
 	CON_CondRetAmizadeJaExiste,
 
-	CON_ConRetAmizadeInvalida
+	CON_ConRetAmizadeInvalida,
 
 } CON_tpCondRet;
 

@@ -112,8 +112,11 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo;
  /* 9 */ GRA_CondRetArestaIlegal,
         /* Aresta para o proprio vértice */
 
- /* 10 */  GRA_CondRetValorNulo
+ /* 10 */GRA_CondRetValorNulo,
         /* Ponteiro nulo */
+
+ /* 11 */GRA_CondRetFimArestas
+          /* Chegou ao fim das arestas do vertice */
 
    } GRA_tpCondRet ;
 
@@ -190,7 +193,7 @@ GRA_tpCondRet GRA_IrVertice (GRA_tppGrafo pGrafo, void *pChaveID);
 /***************************************************************************
 *  Função: GRA  &Ir Vizinho
 *  $ED Descrição da função
-*     Percore as arestas do vértice corrente até encontrar o vértice
+*     Percorre as arestas do vértice corrente até encontrar o vértice
 *     correspondente à chave identificadora passada como parâmetro.
 *     O vertice buscado passa a ser o vertice corrente do grafo , caso seja encontrado.
 *     Se não for encontrado, o vertice corrente continua o mesmo.
@@ -209,6 +212,16 @@ GRA_tpCondRet GRA_IrVertice (GRA_tppGrafo pGrafo, void *pChaveID);
 *     GRA_CondRetNaoPossuiAresta   - se o vértice corrente não possuir nenhuma aresta
 * **************************************************************************/
 GRA_tpCondRet GRA_IrVizinho (GRA_tppGrafo pGrafo, void *pChaveID);
+
+/***************************************************************************
+*  Função: GRA  Avançar Vizinho
+*  $ED Descrição da função
+*  Essa funcao avança na lista de arestas do vértice corrente a partir do primeiro elemento.
+*  O parametro numElem indica quantos elementos serão pulados, a partir do primeiro.
+*  O valor do elemento da aresta é armazenado no ponteiro pDado.
+*  Se numElem = 0, o primeiro elemento da lista de arestas é retornado.
+* **************************************************************************/
+GRA_tpCondRet GRA_AvancarVizinho (GRA_tppGrafo pGrafo, int numElem, void *pDado);
 
 /***********************************************************************
 *  $FC Função: GRA &Obter Valor

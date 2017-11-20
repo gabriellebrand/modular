@@ -334,6 +334,51 @@ GRA_tpCondRet GRA_IrVizinho (GRA_tppGrafo pGrafo, void *pChaveID) {
   return GRA_CondRetArestaNaoExiste;
 } /* Fim função: GRA  &Ir Vizinho */
 
+
+/***************************************************************************
+*  Função: GRA  Avançar Vizinho
+*  $ED Descrição da função
+*  Essa funcao avança na lista de arestas do vértice corrente a partir do primeiro elemento.
+*  O parametro numElem indica quantos elementos serão pulados, a partir do primeiro.
+*  O valor do elemento da aresta é armazenado no ponteiro pDado.
+*  Se numElem = 0, o primeiro elemento da lista de arestas é retornado.
+* **************************************************************************/
+GRA_tpCondRet GRA_AvancarVizinho (GRA_tppGrafo pGrafo, int numElem, void *pDado) {
+
+  LIS_tppLista pVerticeCorr, listaArestas;
+  GRA_tpConteudoVert *conteudoVert;
+
+  if (!pGrafo) {
+    return GRA_CondRetGrafoNaoExiste;
+  }
+
+  pVerticeCorr = pGrafo->pVertCorr;
+  if (!pVerticeCorr) {
+    return GRA_CondRetGrafoVazio;
+  }
+  
+  conteudoVert = (GRA_tpConteudoVert *) LIS_ObterValor(pVerticeCorr);
+  if (!conteudoVert) { return GRA_CondRetValorNulo; }
+
+  listaArestas = conteudoVert->pArestas;
+
+  if (LIS_ObterValor(listaArestas) == NULL) {
+    return GRA_CondRetNaoPossuiAresta;
+  } 
+
+  /* vai para o inicio da lista arestas */
+  IrInicioLista(listaArestas);
+
+  //avança elemento vizinho na lista de arestas
+  if (LIS_AvancarElementoCorrente(listaArestas,numElem) == LIS_CondRetOK) {
+    pDado = LIS_ObterValor(listaArestas);
+    return GRA_CondRetOK;
+  }
+
+  return GRA_CondRetFimArestas;
+
+} /* Fim função: GRA  &Avançar Vizinho */
+
 /***********************************************************************
 *  $FC Função: GRA - Obter Corrente
 *  $ED Descrição da função
