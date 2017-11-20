@@ -87,8 +87,6 @@ CON_tpCondRet CON_CriarPerfil(char *pNome, char *pEmail, char *pCidade, char gen
 
 }  /* Fim função: CON  &Criar Perfil */
 
-//CON_BuscarPerfil();
-
 /***********************************************************************
 *
 *  $FC Função: CON  &Buscar Perfil
@@ -117,8 +115,37 @@ CON_tpCondRet CON_BuscarPerfil(char *email, PER_tppPerfil pPerfil) {
 	if (pPerfil == NULL)
 		return CON_CondRetValorNulo;
 
-	return CON_CondRetOK
-}
+	return CON_CondRetOK;
+	
+}/* Fim função: CON  &Buscar Perfil */
+
+/***********************************************************************
+*
+*  $FC Função: CON  &Mostrar Perfil
+*
+***********************************************************************/
+
+CON_tpCondRet CON_MostrarPerfil (char *email) {
+
+	PER_tppPerfil pPerfil;
+	CON_tpCondRet ret;
+
+	/* Busca o perfil*/
+	ret = CON_BuscarPerfil (email, pPerfil);
+
+	if (ret!=CON_CondRetOK)
+		return ret;
+
+	/* Mostra o perfil, caso encontrado*/
+
+	ret = PER_MostrarPerfil (pPerfil);
+
+	if(ret!=PER_CondRetOK)
+		return CON_CondRetValorNulo;
+
+	return CON_CondRetOK;
+	
+} /* Fim função: CON  &Mostrar Perfil */
 
 /***********************************************************************
 *
@@ -156,11 +183,9 @@ CON_tpCondRet CON_CriarAmizade(char *email1, char *email2) {
 		return CON_CondRetRedeVazia;
 	}
 		
-}
+} /* Fim função: CON  &Criar Amizade */
 
-//TODO:
 
-//CON_BuscarAmizade();
 /***********************************************************************
 *
 *  $FC Função: CON  &Buscar Amizades
@@ -198,7 +223,9 @@ CON_tpCondRet CON_BuscarAmizades(char *email) {
 			return CON_CondRetRedeVazia;
 	}
 	
-}
+} /* Fim função: CON  &Buscar Amizades */
+
+//TODO:
 
 //CON_EnviarMensagem();
 

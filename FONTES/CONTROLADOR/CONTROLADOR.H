@@ -53,25 +53,25 @@
 
 typedef enum {
 	
-	CON_CondRetOK,
+	CON_CondRetOK,					/* Concluiu corretamente */		
 
-	CON_CondRetLimiteString,
+	CON_CondRetLimiteString, 		/* String passada é maior que o limite de 100 caracteres */
 
-	CON_CondRetStringVazia,
+	CON_CondRetStringVazia,			/* String passada é vazia (nula */
 
-	CON_CondRetErroFormato,
+	CON_CondRetErroFormato,			/* Genero passado esta fora do formato aceito */
 
-	CON_CondRetErroCadastro,
+	CON_CondRetErroCadastro,		/* Ocorreu um erro ao cadastrar um novo Perfil */
 
-	CON_CondRetRedeVazia,
+	CON_CondRetRedeVazia,			/* A rede de relacionamentos está vazia (não possui nenhum perfil) */
 
-	CON_CondRetNaoAchou,
+	CON_CondRetNaoAchou,			/* Não achou o perfil procurado */
 
-	CON_CondRetValorNulo,
+	CON_CondRetValorNulo,			/* Ponteiro procurado têm valor nulo */
 
-	CON_CondRetAmizadeJaExiste,
+	CON_CondRetAmizadeJaExiste,		/* Amizade que tentou ser criada já existe */
 
-	CON_ConRetAmizadeInvalida,
+	CON_ConRetAmizadeInvalida,		/* Amizade que tentou ser criada é invalida (ilegal) */
 
 } CON_tpCondRet;
 
@@ -81,7 +81,7 @@ typedef enum {
 *  $FC Função: CON  &Criar Perfil
 *
 *  $ED Descrição da função
-*     Checa se parametros estão OK, cria o Perfil, insere como um vertice no Grafo e, se tudo estiver ok, mostra as informações do Perfil na tela.
+*     Checa se parametros estão OK, cria o Perfil, e se tudo estiver ok, mostra as informações do Perfil na tela.
 *
 *  $EP Parâmetros
 *     pNome - nome do perfil a ser criado (max 100 caracteres)
@@ -98,15 +98,15 @@ typedef enum {
 *		- Se ocorreu algum outro erro no Cadastro do perfil, retorna CON_CondRetErroCadastro
 *
 ***********************************************************************/
-
 CON_tpCondRet CON_CriarPerfil(char *pNome, char *pEmail, char *pCidade, char genero, char *pDataNasc);
+
 
 /***********************************************************************
 *
 *  $FC Função: CON  &Buscar Perfil
 *
 *  $ED Descrição da função
-*     
+*     Recebe um email e retorna (por referência) um ponteiro para oPerfil associado à este email.
 *  $EP Parâmetros
 *     email - email do perfil que será buscado (max 100 caracteres)
 *     pPerfil - ponteiro no qual será armazenado o endereço do perfil, caso seja encontrado
@@ -121,4 +121,67 @@ CON_tpCondRet CON_CriarPerfil(char *pNome, char *pEmail, char *pCidade, char gen
 ***********************************************************************/
 CON_tpCondRet CON_BuscarPerfil(char *email, PER_tppPerfil pPerfil);
 
+
+/***********************************************************************
+*
+*  $FC Função: CON  &Mostrar Perfil
+*
+*  $ED Descrição da função
+*     Recebe um email e mostra as informações do perfil associado na tela.
+*  $EP Parâmetros
+*     email - email do perfil que será mostrado (max 100 caracteres)
+*
+*  $FV Valor retornado
+*		- CON_CondRetValorNulo
+*		- CON_CondRetStringVazia
+*		- CON_CondRetRedeVazia
+*		- CON_CondRetNaoAchou
+*		- CON_CondRetOK
+*
+***********************************************************************/
+CON_tpCondRet CON_MostrarPerfil (char *email);
+
+
+/***********************************************************************
+*
+*  $FC Função: CON  &Criar Amizade
+*
+*  $ED Descrição da função
+*		Recebe dois emails, busca os perfis associados a estes emails e cria uma amizade entre eles.     
+*
+*  $EP Parâmetros
+*     email1 - email do perfil 1 (max 100 caracteres)
+*     email2 - email do perfil 2 (max 100 caracteres)
+*
+*  $FV Valor retornado
+*		- CON_CondRetValorNulo
+*		- CON_CondRetStringVazia
+*		- CON_CondRetRedeVazia
+*		- CON_CondRetNaoAchou
+*		- CON_CondRetAmizadeJaExiste
+*		- CON_ConRetAmizadeInvalida
+*		- CON_CondRetOK
+*
+***********************************************************************/
 CON_tpCondRet CON_CriarAmizade(char *email1, char *email2);
+
+
+/***********************************************************************
+*
+*  $FC Função: CON  &Buscar Amizade
+*
+*  $ED Descrição da função
+*		Busca e mostra todas as amizades de um perfil    
+*
+*  $EP Parâmetros
+*     email - email do perfil no qual serão buscadas as amizades (max 100 caracteres)
+*
+*  $FV Valor retornado
+*		- CON_CondRetValorNulo
+*		- CON_CondRetRedeVazia
+*		- CON_CondRetNaoAchou
+*		- CON_CondRetOK
+*
+***********************************************************************/
+
+CON_tpCondRet CON_BuscarAmizades(char *email);
