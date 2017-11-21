@@ -289,8 +289,12 @@ PER_tpCondRet PER_AlterarEmail(PER_tppPerfil pPerfil, char* email) {
  *
  *  Função: PER Enviar Mensagem
  *****/
-PER_tpCondRet PER_EnviarMensagem(PER_tppPerfil remetente, MEN_tppMensagem mensagem, PER_tppPerfil destinatario) {
-	if (remetente == NULL || mensagem == NULL || destinatario == NULL)
+PER_tpCondRet PER_EnviarMensagem(PER_tppPerfil remetente, char *texto, PER_tppPerfil destinatario) {
+	MEN_tppMensagem mensagem;
+
+	mensagem = MEN_CriarMensagem((void*)remetente, (void*)destinatario, texto);
+
+	if (mensagem == NULL)
 		return PER_CondRetPonteiroNulo;
 
 	if (LIS_InserirElementoApos(remetente->msgEnviadas, (void*)mensagem) == LIS_CondRetFaltouMemoria)

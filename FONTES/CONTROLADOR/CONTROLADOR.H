@@ -73,6 +73,10 @@ typedef enum {
 
 	CON_ConRetAmizadeInvalida,		/* Amizade que tentou ser criada é invalida (ilegal) */
 
+	CON_CondRetAmizadeNaoExiste,
+
+	CON_CondRetFaltouMemoria
+
 } CON_tpCondRet;
 
 
@@ -100,7 +104,6 @@ typedef enum {
 ***********************************************************************/
 CON_tpCondRet CON_CriarPerfil(char *pNome, char *pEmail, char *pCidade, char genero, char *pDataNasc);
 
-
 /***********************************************************************
 *
 *  $FC Função: CON  &Buscar Perfil
@@ -120,7 +123,6 @@ CON_tpCondRet CON_CriarPerfil(char *pNome, char *pEmail, char *pCidade, char gen
 *
 ***********************************************************************/
 CON_tpCondRet CON_BuscarPerfil(char *email, PER_tppPerfil pPerfil);
-
 
 /***********************************************************************
 *
@@ -165,7 +167,6 @@ CON_tpCondRet CON_MostrarPerfil (char *email);
 ***********************************************************************/
 CON_tpCondRet CON_CriarAmizade(char *email1, char *email2);
 
-
 /***********************************************************************
 *
 *  $FC Função: CON  &Buscar Amizade
@@ -185,3 +186,27 @@ CON_tpCondRet CON_CriarAmizade(char *email1, char *email2);
 ***********************************************************************/
 
 CON_tpCondRet CON_BuscarAmizades(char *email);
+
+/***********************************************************************
+*
+*  $FC Função: CON  &Buscar Amizade
+*
+*  $ED Descrição da função
+*		Envia uma mensagem de um perfil para outro. 
+*		Não é possível enviar mensagem de um perfil para si mesmo.
+*
+*  $EP Parâmetros
+*     email1 - email do perfil remetente
+*     email2 - email do perfil destinatario
+*	  texto - cadeia de caracteres do texto da mensagem
+*
+*  $FV Valor retornado
+*		- CON_CondRetValorNulo
+*		- CON_CondRetRedeVazia
+*		- CON_CondRetNaoAchou
+*		- CON_AmizadeNaoExiste
+*		- CON_CondRetFaltouMemoria
+*		- CON_CondRetOK
+*
+***********************************************************************/
+CON_tpCondRet CON_EnviarMensagem(char *email1, char *email2, char *texto);

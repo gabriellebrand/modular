@@ -167,20 +167,17 @@ CON_tpCondRet CON_CriarAmizade(char *email1, char *email2) {
 		return CON_CondRetNaoAchou;
 
 		case GRA_CondRetFaltouMemoria:
-		//não sei o que precisa ser feito
+		//TODO: não sei o que precisa ser feito
 		//tentar de novo? reportar que faltou memoria?
 
 		case GRA_CondRetArestaJaExiste:
-		return CON_CondRetAmizadeJaExiste;
-
+			return CON_CondRetAmizadeJaExiste;
 		case GRA_CondRetArestaIlegal:
-		return CON_ConRetAmizadeInvalida;
-
+			return CON_ConRetAmizadeInvalida;
 		case GRA_CondRetOK:
-		return CON_CondRetOK;
-
+			return CON_CondRetOK;
 		default:
-		return CON_CondRetRedeVazia;
+			return CON_CondRetRedeVazia;
 	}
 		
 } /* Fim função: CON  &Criar Amizade */
@@ -191,7 +188,7 @@ CON_tpCondRet CON_CriarAmizade(char *email1, char *email2) {
 *  $FC Função: CON  &Buscar Amizades
 *
 ***********************************************************************/
-CON_tpCondRet CON_BuscarAmizades(char *email) {
+CON_tpCondRet CON_BuscarAmizades(char *email) { /*Talvez seja melhor mudar o nome dessa funcao pra ListarAmizades */
 	GRA_tpCondRet ret;
 	int i = 0;
 	void * val;
@@ -217,8 +214,10 @@ CON_tpCondRet CON_BuscarAmizades(char *email) {
 	switch (ret) {
 		case GRA_CondRetNaoPossuiAresta || GRA_CondRetFimArestas:
 			return CON_CondRetNaoAchou;
+		
 		case GRA_CondRetValorNulo:
 			return CON_CondRetValorNulo;
+		
 		default:
 			return CON_CondRetRedeVazia;
 	}
@@ -227,13 +226,47 @@ CON_tpCondRet CON_BuscarAmizades(char *email) {
 
 //TODO:
 
-//CON_EnviarMensagem();
-
-CON_tpCondRet CON_EnviarMensagem(char *email1, char *email2) {
+/***********************************************************************
+*
+*  $FC Função: CON  &Enviar Mensagem
+*
+***********************************************************************/
+CON_tpCondRet CON_EnviarMensagem(char *email1, char *email2, char *texto) {
+	GRA_tpCondRet ret;
+	PER_tpCondRet pRet;
+	PER_tppPerfil remetente, destinatario;
 	//1. verificar se os dois perfis sao amigos
-	GRA_IrVizinho (GRA_tppGrafo pGrafo, void *pChaveID);
+	if ((ret = CON_BuscarPerfil(email1, remetente)) != CON_CondRetOK) {
+		return ret;
+	}
+
+	ret = GRA_IrVizinho(Grafo, email);
+
+	switch (ret) {
+		case GRA_CondRetGrafoNaoExiste || GRA_CondRetGrafoVazio:
+			return CON_CondRetRedeVazia;
+		case GRA_CondRetArestaNaoExiste || GRA_CondRetNaoPossuiAresta:
+			return CON_AmizadeNaoExiste;
+		case GRA_CondRetValorNulo:
+			return CON_CondRetValorNulo;
+	}
 	//2. acessar as referencias para o perfil1 e perfil 2
+	destinatario = (PER_tppPerfil) GRA_ObterValor(Grafo);
+
+	if (perfil1 || perfil2 == NULL)
+		return CON_CondRetValorNulo;
+
 	//3. chamar a funcao enviar mensagem do modulo perfil
+	pRet = PER_EnviarMensagem(remetente, texto, destinatario);
+
+	switch (pRet) {
+		case PER_CondRetPonteiroNulo:
+			return CON_CondRetValorNulo;
+		case PER_CondRetFaltouMemoria:
+			return CON_CondRetFaltouMemoria; //nao sei se precisa fazer uma nova tentativa nesse caso.
+	}
+
+	return CON_CondRetOK;
 }
 
 

@@ -241,6 +241,27 @@ PER_tpCondRet PER_AlterarDataNasc(PER_tppPerfil pPerfil, char * dataNasc);
  ***********************************************************************/
 PER_tpCondRet PER_AlterarGenero(PER_tppPerfil pPerfil, char genero);
 
+/***********************************************************************
+ *
+ *  $FC Função: PER  &Enviar Mensagem
+ *
+ *  $ED Descrição da função
+ *     Envia uma mensagem do perfil remetente para o perfil destinatário.
+ *     Armazena a mensagem na lista de mensagens enviadas do remetente e
+ *     na lista de mensagens recebidas do destinatario.
+ *
+ *  $EP Parâmetros
+ *     remetente  - ponteiro do tipo Perfil do remetente
+ *     destinatario  - ponteiro do tipo Perfil do destinatario
+ *
+ *  $FV Valor retornado
+ *      PER_CondRetPonteiroNulo, caso algum dos parametros seja nulo
+ *      PER_CondRetFaltouMemoria, caso não consiga adicionar a mensagem na lista
+ *      PER_CondRetOk, caso a alteração seja feita corretamente.
+ *
+ ***********************************************************************/
+PER_tpCondRet PER_EnviarMensagem(PER_tppPerfil remetente, char * texto, PER_tppPerfil destinatario);
+
 
 #undef PERFIL_EXT
 
