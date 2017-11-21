@@ -112,7 +112,7 @@ void * MEN_ObterRemetente(MEN_tppMensagem mensagem) {
  *
  *  Função: MEN &Obter destinatario
  *****/
-void * MEN_ObterRemetente(MEN_tppMensagem mensagem) {
+void * MEN_ObterDestinatario(MEN_tppMensagem mensagem) {
  	if (mensagem == NULL)
  		return NULL;
 

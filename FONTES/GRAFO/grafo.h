@@ -213,13 +213,25 @@ GRA_tpCondRet GRA_IrVertice (GRA_tppGrafo pGrafo, void *pChaveID);
 * **************************************************************************/
 GRA_tpCondRet GRA_IrVizinho (GRA_tppGrafo pGrafo, void *pChaveID);
 
+
 /***************************************************************************
-*  Função: GRA  Avançar Vizinho
+*  Função: GRA  &Avançar Vizinho
 *  $ED Descrição da função
-*  Essa funcao avança na lista de arestas do vértice corrente a partir do primeiro elemento.
-*  O parametro numElem indica quantos elementos serão pulados, a partir do primeiro.
-*  O valor do elemento da aresta é armazenado no ponteiro pDado.
-*  Se numElem = 0, o primeiro elemento da lista de arestas é retornado.
+*     Essa funcao avança na lista de arestas do vértice corrente a partir do primeiro elemento.
+*     Se numElem = 0, o primeiro elemento da lista de arestas é retornado.
+*
+*  $EP Parâmetros
+*     pGrafo - ponteiro para o grafo
+*     numElem - inteiro que indica quantos elementos serão pulados, a partir do primeiro
+*     pDado - ponteiro no qual será armazenado o endereço do pDado do vertice vizinho
+*
+*  $FV Valor retornado
+*     GRA_CondRetOK                - encontrou um novo vizinho e retornou pelo pDado
+*     GRA_CondRetGrafoNaoExiste    - ponteiro para o grafo é nulo
+*     GRA_CondRetGrafoVazio        - caso o grafo esteja vazio (vertice corrente nulo)
+*     GRA_CondRetValorNulo         - se o conteúdo do vértice corrente for nulo
+*     GRA_CondRetNaoPossuiAresta   - se o vértice corrente não possuir nenhuma aresta
+*     GRA_CondRetFimArestas        - chegou ao fim da lista de arestas do vertice corrente
 * **************************************************************************/
 GRA_tpCondRet GRA_AvancarVizinho (GRA_tppGrafo pGrafo, int numElem, void *pDado);
 

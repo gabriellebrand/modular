@@ -229,6 +229,14 @@ CON_tpCondRet CON_BuscarAmizades(char *email) {
 
 //CON_EnviarMensagem();
 
+CON_tpCondRet CON_EnviarMensagem(char *email1, char *email2) {
+	//1. verificar se os dois perfis sao amigos
+	GRA_IrVizinho (GRA_tppGrafo pGrafo, void *pChaveID);
+	//2. acessar as referencias para o perfil1 e perfil 2
+	//3. chamar a funcao enviar mensagem do modulo perfil
+}
+
+
 //CON_CarregarHistorico();
 
 //CON_ExcluirPerfil();

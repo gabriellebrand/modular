@@ -46,7 +46,7 @@ typedef struct MEN_tagMensagem * MEN_tppMensagem;
  /* 0 */ MEN_CondRetOK ,
                /* Concluiu corretamente */
 
- /* 1 */ PER_CondRetPonteiroNulo ,
+ /* 1 */ PER_CondRetPonteiroNulo
    		/* Ponteiro Nulo */
 
    } MEN_tpCondRet ;
