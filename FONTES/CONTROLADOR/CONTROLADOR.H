@@ -71,7 +71,7 @@ typedef enum {
 
 	CON_CondRetAmizadeJaExiste,		/* Amizade que tentou ser criada já existe */
 
-	CON_ConRetAmizadeInvalida,		/* Amizade que tentou ser criada é invalida (ilegal) */
+	CON_CondRetAmizadeInvalida,		/* Amizade que tentou ser criada é invalida (ilegal) */
 
 	CON_CondRetAmizadeNaoExiste,
 
@@ -146,6 +146,26 @@ CON_tpCondRet CON_MostrarPerfil (char *email);
 
 /***********************************************************************
 *
+*  $FC Função: CON  &Excluir Perfil
+*
+*  $ED Descrição da função
+*     Recebe um email exclui o perfil correspondente da rede de relacionamentos
+*  $EP Parâmetros
+*     email - email do perfil que será excluido (max 100 caracteres)
+*
+*  $FV Valor retornado
+*		- CON_CondRetValorNulo
+*		- CON_CondRetStringVazia
+*		- CON_CondRetRedeVazia
+*		- CON_CondRetNaoAchou
+*		- CON_CondRetOK
+*
+***********************************************************************/
+CON_tpCondRet CON_ExcluirPerfil (char *pEmail);
+
+
+/***********************************************************************
+*
 *  $FC Função: CON  &Criar Amizade
 *
 *  $ED Descrição da função
@@ -167,6 +187,29 @@ CON_tpCondRet CON_MostrarPerfil (char *email);
 ***********************************************************************/
 CON_tpCondRet CON_CriarAmizade(char *email1, char *email2);
 
+
+/***********************************************************************
+*
+*  $FC Função: CON  &Excluir Amizade
+*
+*  $ED Descrição da função
+*		Recebe dois emails, busca os perfis associados a estes emails e exclui a amizade entre eles (se existir).     
+*
+*  $EP Parâmetros
+*     email1 - email do perfil 1 (max 100 caracteres)
+*     email2 - email do perfil 2 (max 100 caracteres)
+*
+*  $FV Valor retornado
+*		- CON_CondRetStringVazia
+*		- CON_CondRetRedeVazia
+*		- CON_CondRetNaoAchou
+*		- CON_ConRetAmizadeInvalida
+*		- CON_CondRetOK
+*
+***********************************************************************/
+CON_tpCondRet CON_ExcluirAmizade (char *email1, char *email2);
+
+
 /***********************************************************************
 *
 *  $FC Função: CON  &Buscar Amizade
@@ -184,12 +227,11 @@ CON_tpCondRet CON_CriarAmizade(char *email1, char *email2);
 *		- CON_CondRetOK
 *
 ***********************************************************************/
-
 CON_tpCondRet CON_BuscarAmizades(char *email);
 
 /***********************************************************************
 *
-*  $FC Função: CON  &Buscar Amizade
+*  $FC Função: CON  &Enviar Mensagem
 *
 *  $ED Descrição da função
 *		Envia uma mensagem de um perfil para outro. 
