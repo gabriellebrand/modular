@@ -210,3 +210,10 @@ CON_tpCondRet CON_BuscarAmizades(char *email);
 *
 ***********************************************************************/
 CON_tpCondRet CON_EnviarMensagem(char *email1, char *email2, char *texto);
+
+/***********************************************************************
+*
+*  $FC Função: CON  &Carregar Histórico
+*
+***********************************************************************/
+CON_tpCondRet CON_CarregarHistorico(char *pEmail1, char *pEmail2);

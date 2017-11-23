@@ -25,7 +25,7 @@
 #include   <assert.h>
 #include   "PERFIL.H"
 
-static int contadorID = 0;
+static int contadorID = 1;
 
 /***********************************************************************
  *

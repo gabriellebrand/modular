@@ -64,8 +64,11 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
  /* 3 */ PER_CondRetStringVazia ,
       /* String vazia */
 
- /* 4 */ PER_CondRetValorInvalido
+ /* 4 */ PER_CondRetValorInvalido,
       /* Valor de input invalido */
+
+/* 5 */  PER_CondRetNaoAchou
+      /* Nao encontrou mensagem para o perfil solicitado */    
    } PER_tpCondRet ;
 
 
@@ -261,6 +264,20 @@ PER_tpCondRet PER_AlterarGenero(PER_tppPerfil pPerfil, char genero);
  *
  ***********************************************************************/
 PER_tpCondRet PER_EnviarMensagem(PER_tppPerfil remetente, char * texto, PER_tppPerfil destinatario);
+
+/***********************************************************************
+*
+*  $FC Função: PER  &Buscar Mensagem Enviada
+*
+***********************************************************************/
+PER_tpCondRet PER_BuscarMsgEnviada(PER_tppPerfil pPerfil, char * pEmail, int inicio, char * textoMsg, int * idMsg);
+
+/***********************************************************************
+*
+*  $FC Função: PER  &Buscar Mensagem Recebida
+*
+***********************************************************************/
+PER_tpCondRet PER_BuscarMsgRecebida(PER_tppPerfil pPerfil, char * pEmail, int inicio, char * textoMsg, int * idMsg);
 
 
 #undef PERFIL_EXT

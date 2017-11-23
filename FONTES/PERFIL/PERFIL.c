@@ -214,7 +214,7 @@ char * PER_ObterEmail(PER_tppPerfil pPerfil) {
  *  Função: PER Alterar Nome
  *****/
 
-PER_tpCondRet PER_AlterarNome(PER_tppPerfil pPerfil, char *nome) {
+PER_tpCondRet PER_AlterarNome(PER_tppPerfil pPerfil, char * nome) {
 	
 	if (nome == NULL || pPerfil == NULL) return PER_CondRetPonteiroNulo;
 	if(strlen(nome) == 0) return PER_CondRetStringVazia; //será que é necessário?
@@ -229,7 +229,7 @@ PER_tpCondRet PER_AlterarNome(PER_tppPerfil pPerfil, char *nome) {
  *  Função: PER Alterar Cidade
  *****/
 
-PER_tpCondRet PER_AlterarCidade(PER_tppPerfil pPerfil, char *cidade) {
+PER_tpCondRet PER_AlterarCidade(PER_tppPerfil pPerfil, char * cidade) {
 	
 	if (cidade == NULL || pPerfil == NULL) return PER_CondRetPonteiroNulo;
 	if(strlen(cidade) == 0) return PER_CondRetStringVazia;
@@ -297,10 +297,10 @@ PER_tpCondRet PER_EnviarMensagem(PER_tppPerfil remetente, char *texto, PER_tppPe
 	if (mensagem == NULL)
 		return PER_CondRetPonteiroNulo;
 
-	if (LIS_InserirElementoApos(remetente->msgEnviadas, (void*)mensagem) == LIS_CondRetFaltouMemoria)
+	if (LIS_InserirElementoApos(remetente->msgEnviadas, (void *)mensagem) == LIS_CondRetFaltouMemoria)
 		return PER_CondRetFaltouMemoria;
 
-	if (LIS_InserirElementoApos(destinatario->msgRecebidas, (void*)mensagem) == LIS_CondRetFaltouMemoria) {
+	if (LIS_InserirElementoApos(destinatario->msgRecebidas, (void *)mensagem) == LIS_CondRetFaltouMemoria) {
 		//necessário excluir o ultimo elemento inserido na lista de enviados do remetente
 		LIS_ExcluirElemento(remetente->msgEnviadas);
 		return PER_CondRetFaltouMemoria;
@@ -309,8 +309,86 @@ PER_tpCondRet PER_EnviarMensagem(PER_tppPerfil remetente, char *texto, PER_tppPe
 	return PER_CondRetOK;
 }
 
+/***************************************************************************
+ *
+ *  Função: PER Buscar Mensagem 
+ *			Funciona como um "iterador". se parametro inicio == 0, entao vai pro inicio da lista.
+ *****/
+PER_tpCondRet PER_BuscarMsgEnviada(PER_tppPerfil pPerfil, char * pEmail, int inicio, char * textoMsg, int * idMsg) {
+	MEN_tppMensagem msg;
+	PER_tppPerfil destinatario;
 
+	if ((pPerfil == NULL) || (pEmail == NULL))
+		PER_CondRetPonteiroNulo;
 
+	if (inicio == 0)
+		IrInicioLista(pPerfil->msgEnviadas);
 
+	//acessa elemento por elemento da lista de mensagens, buscando a mensagem cujo destinatário possui o email requerido
+	while (LIS_AvancarElementoCorrente(pPerfil->enviadas,1) == LIS_CondRetOK) {
+
+		msg = (MEN_tppMensagem) LIS_ObterValor(pPerfil->enviadas);
+		if (msg == NULL)
+			return PER_CondRetPonteiroNulo;
+
+		destinatario = MEN_ObterDestinatario(msg);
+		if (destinatario == NULL)
+			return PER_CondRetPonteiroNulo;
+
+		if (PER_CompararPerfil(destinatario, (void *) pEmail) == 0) {
+			//encontrou uma mensagem cujo destinatario possui o email requerido
+			
+			//copia o id da msg pro parametro idMsg para ser acessado pelo cliente
+			*idMsg = MEN_ObterID(msg);
+			//copia o texto da msg pro parametro do textoMsg
+			textoMsg = MEN_ObterTexto(msg);
+
+			return PER_CondRetOK;
+		}
+	}
+
+	return PER_CondRetNaoAchou;
+}
+
+/***************************************************************************
+ *
+ *  Função: PER Buscar Mensagem 
+ *			Funciona como um "iterador". se parametro inicio == 0, entao vai pro inicio da lista.
+ *****/
+PER_tpCondRet PER_BuscarMsgRecebida(PER_tppPerfil pPerfil, char * pEmail, int inicio, char * textoMsg, int * idMsg) {
+	MEN_tppMensagem msg;
+	PER_tppPerfil remetente;
+
+	if ((pPerfil == NULL) || (pEmail == NULL))
+		PER_CondRetPonteiroNulo;
+
+	if (inicio == 0)
+		IrInicioLista(pPerfil->msgRecebidas);
+
+	//acessa elemento por elemento da lista de mensagens, buscando a mensagem cujo remetente possui o email requerido
+	while (LIS_AvancarElementoCorrente(pPerfil->msgRecebidas,1) == LIS_CondRetOK) {
+
+		msg = (MEN_tppMensagem) LIS_ObterValor(pPerfil->msgRecebidas);
+		if (msg == NULL)
+			return PER_CondRetPonteiroNulo;
+
+		remetente = MEN_ObterRemetente(msg);
+		if (remetente == NULL)
+			return PER_CondRetPonteiroNulo;
+
+		if (PER_CompararPerfil(remetente, (void *) pEmail) == 0) {
+			//encontrou uma mensagem cujo remetente possui o email requerido
+			
+			//copia o id da msg pro parametro idMsg para ser acessado pelo cliente
+			*idMsg = MEN_ObterID(msg);
+			//copia o texto da msg pro parametro do textoMsg
+			textoMsg = MEN_ObterTexto(msg);
+
+			return PER_CondRetOK;
+		}
+	}
+
+	return PER_CondRetNaoAchou;
+}
 
 /********** Fim do módulo de implementação: PER  Perfil  **********/
