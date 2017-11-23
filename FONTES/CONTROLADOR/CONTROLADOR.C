@@ -72,7 +72,7 @@ CON_tpCondRet CON_CriarPerfil(char *pNome, char *pEmail, char *pCidade, char gen
 		Grafo = GRA_CriarGrafo (PER_DestruirPerfil, PER_CompararPerfil);
 
 	/*Adiciona o Perfil como um vertice do grafo*/
-	retornoGrafo = GRA_CriarVertice (Grafo, perfil, pEmail);
+	retornoGrafo = GRA_CriarVertice (Grafo, perfil, (void *)pEmail);
 
 	if (retornoGrafo != GRA_CondRetOK)
 		return CON_CondRetErroCadastro;
@@ -147,6 +147,55 @@ CON_tpCondRet CON_MostrarPerfil (char *email) {
 	
 } /* Fim função: CON  &Mostrar Perfil */
 
+
+/***********************************************************************
+*
+*  $FC Função: CON  &Excluir Perfil
+*
+***********************************************************************/
+CON_tpCondRet CON_ExcluirPerfil (char *pEmail) {
+
+	PER_tppPerfil pPerfil;
+	CON_tpCondRet retCON;
+	GRA_tpCondRet retGrafo;
+
+	/*Buscar perfil*/
+	retCON = CON_BuscarPerfil (pEmail, pPerfil);
+
+	if (retCON!= CON_CondRetOK)
+		return retCON;
+
+	/*Remove perfil do grafo*/
+		/*Vai até o vertice*/
+	retGrafo = GRA_IrVertice (Grafo, (void *)pEmail);
+
+	switch (retornoGrafo) {
+
+		case GRA_CondRetGrafoNaoExiste || GRA_CondRetGrafoVazio:
+			return CON_CondRetRedeVazia;
+
+		case GRA_CondRetVerticeNaoExiste:
+			return CON_CondRetNaoAchou;
+		default:
+	}
+		/*Remove vertice*/
+	retGrafo = GRA_ExcluirVertCorr(Grafo);
+
+	switch (retornoGrafo) {
+
+		case GRA_CondRetGrafoNaoExiste || GRA_CondRetGrafoVazio:
+			return CON_CondRetRedeVazia;
+
+		case GRA_CondRetVerticeNaoExiste:
+			return CON_CondRetNaoAchou;
+		default:
+	}
+
+	return CON_CondRetOK;
+
+}	 /* Fim função: CON  &Excluir Perfil */
+
+
 /***********************************************************************
 *
 *  $FC Função: CON  &Criar Amizade
@@ -182,6 +231,40 @@ CON_tpCondRet CON_CriarAmizade(char *email1, char *email2) {
 		
 } /* Fim função: CON  &Criar Amizade */
 
+/***********************************************************************
+*
+*  $FC Função: CON  &Excluir Amizade
+*
+***********************************************************************/
+
+CON_tpCondRet CON_ExcluirAmizade (char *email1, char *email2) {
+
+	GRA_tpCondRet retornoGrafo;
+
+	/*Testa se valores sao validos*/
+	if ( email1 == NULL || email2 == NULL)
+		return CON_CondRetStringVazia;
+
+	/*Chama função de excluir aresta*/
+	retornoGrafo = GRA_ExcluirAresta (Grafo, (void *)email1, (void *)email2);
+
+	/*Testa retorno*/
+	switch (retornoGrafo) {
+
+		case GRA_CondRetGrafoNaoExiste || GRA_CondRetGrafoVazio:
+			return CON_CondRetRedeVazia;
+
+		case GRA_CondRetVerticeNaoExiste:
+			return CON_CondRetNaoAchou;
+
+		case GRA_CondRetArestaNaoExiste:
+			return CON_CondRetAmizadeInvalida;
+
+		default:
+			return CON_CondRetOK;
+	}
+
+} /* Fim função: CON  &Excluir Amizade */
 
 /***********************************************************************
 *
@@ -224,7 +307,6 @@ CON_tpCondRet CON_BuscarAmizades(char *email) { /*Talvez seja melhor mudar o nom
 	
 } /* Fim função: CON  &Buscar Amizades */
 
-//TODO:
 
 /***********************************************************************
 *
@@ -269,9 +351,8 @@ CON_tpCondRet CON_EnviarMensagem(char *email1, char *email2, char *texto) {
 	return CON_CondRetOK;
 }
 
+//TODO:
 
 //CON_CarregarHistorico();
-
-//CON_ExcluirPerfil();
 
 //CON_ExcluirAmizade();
