@@ -80,11 +80,11 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 *     Cria um Perfil
 *
 *  $EP Parâmetros
-*     pPerfil  - ponteiro para o perfil que será criado
 *     pNome - nome do perfil a ser criado
 *     pEmail - email do perfil a ser criado
-*	  pCidade - cidade do perfil a ser criado 
-*	  pIdade - idade do perfil a ser criado
+*     pCidade - cidade do perfil a ser criado
+*     genero  - genero do perfil a ser criado
+*     pDataNasc - Data de Nascimento do perfil a ser criado
 *
 *  $FV Valor retornado
 *		Se executou corretamente retorna o ponteiro para um Perfil.
@@ -94,7 +94,7 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 *
 ***********************************************************************/
 
-    PER_tppPerfil  PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, int pIdade );
+   PER_tppPerfil PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, char genero, char *pDataNasc );
 
 /***********************************************************************
  *
