@@ -69,7 +69,7 @@ typedef struct PER_tagPerfil {
  *  Função: PER &Criar Perfil
  *****/
 
-PER_tppPerfil PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, char genero, char dataNasc ) {
+PER_tppPerfil PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, char genero, char *pDataNasc ) {
     
 	LIS_tppLista msgEnv, msgRec;
 	PER_tppPerfil pPerfil = ( PER_tppPerfil ) malloc( sizeof( PER_tpPerfil ));
@@ -89,7 +89,7 @@ PER_tppPerfil PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, char ge
 		PER_DestruirPerfil(pPerfil);
 		return NULL;
 	}
-	if (PER_AlterarDataNasc(pPerfil, dataNasc)  != PER_CondRetOK) {
+	if (PER_AlterarDataNasc(pPerfil, pDataNasc)  != PER_CondRetOK) {
 		PER_DestruirPerfil(pPerfil);
 		return NULL;
 	}
