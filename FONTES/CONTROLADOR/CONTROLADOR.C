@@ -355,4 +355,66 @@ CON_tpCondRet CON_EnviarMensagem(char *email1, char *email2, char *texto) {
 
 //CON_CarregarHistorico();
 
+CON_tpCondRet CON_CarregarHistorico(char *pEmail1, char *pEmail2) {
+	int i = 0, idMsg1, idMsg2;
+	char *textoMsg1, *textoMsg2;
+	CON_tpCondRet ret;
+	PER_tppPerfil perfil1;
+
+	/*
+		Se idMsg == 0, entao está liberado procurar uma nova mensagem da lista
+		Se idMsg > 0, entao a mensagem ainda nao foi impressa na tela, nao pode ser descartada (nao pode procurar a proxima da lista)
+		Se idMsg < 0, entao todas as mensagens da lista ja foram encontradas, nao precisa procurar uma nova
+	*/
+
+	if ((ret = CON_BuscarPerfil(pEmail1, perfil1)) != CON_CondRetOK)
+		return ret;
+
+	while (idMsg1 >= 0 || idMsg2 >= 0) {
+
+		//busca uma mensagem enviada para o perfil2 na lista de mensagens enviadas pelo perfil1
+		if (idMsg1 == 0) { //mensagem anterior já foi impressa, pode procurar a proxima
+			if (PER_BuscarMsgEnviada(perfil1, pEmail2, i, textoMsg1, idMsg1) != PER_CondRetOK) {
+				//nao encontrou mais nenhuma mensagem ou entao deu algum erro
+				idMsg1 = -1;
+			}
+		}
+
+		//busca uma mensagem enviada pelo perfil2 na lista de mensagens recebidas pelo perfil1
+		if (idMsg1 == 0) { //mensagem anterior já foi impressa, pode procurar a proxima
+			if (PER_BuscarMsgRecebida(perfil1, pEmail2, i, textoMsg2, idMsg2) != PER_CondRetOK) {
+				//nao encontrou mais nenhuma mensagem ou entao deu algum erro
+				idMsg2 = -1;
+			}
+		}
+
+		//neste ponto nenhum dos idMsg's pode ter valor 0 (ou é < 0 ou é > 0)
+
+		i++; //necessario para que nao volte para o inicio da lista de mensagens
+
+		if (msg1 < 0) { // chegou ao fim da lista de msgs enviadas -> só resta imprimir as mensagens recebidas
+			if (msg2 > 0) {
+				//mensagem 2 ainda nao foi impressa -> chama funcao q imprime a mensagem (interface)
+				msg2 = 0; // marca mensagem 2 como impressa -> pode buscar a proxima
+			}
+		}
+
+		else if (msg2 < 0) { // chegou ao fim da lista de msgs recebidas -> só resta imprimir as mensagens enviadas
+			if (msg1 > 0) {
+				//mensagem 1 ainda nao foi impressa -> chama funcao q imprime a mensagem (interface)
+				msg1 = 0; // marca mensagem 1 como impressa -> pode buscar a proxima
+			}
+		}
+
+		else if (msg1 > 0 && msg2 > 0) { //as duas mensagens estao aguardando impressao
+			if (msg1 < msg2) {
+				//chama funcao q imprime a mensagem 1 (interface)
+				msg1 = 0; // marca mensagem 1 como impressa -> pode buscar a proxima
+			} else {
+				//chama funcao q imprime a mensagem 2 (interface)
+				msg2 = 0; // marca mensagem 2 como impressa -> pode buscar a proxima
+			}
+		}
+	}
+}
 //CON_ExcluirAmizade();
