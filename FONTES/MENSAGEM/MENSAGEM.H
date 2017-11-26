@@ -46,7 +46,7 @@ typedef struct MEN_tagMensagem * MEN_tppMensagem;
  /* 0 */ MEN_CondRetOK ,
                /* Concluiu corretamente */
 
- /* 1 */ PER_CondRetPonteiroNulo
+ /* 1 */ MEN_CondRetValorNulo
    		/* Ponteiro Nulo */
 
    } MEN_tpCondRet ;
@@ -140,7 +140,7 @@ void * MEN_ObterRemetente(MEN_tppMensagem mensagem);
 *		- Se a mensagem enviada como parâmetro não existe, retorna NULL.
 *
 ***********************************************************************/
-void * MEN_ObterDestinatario(MEN_tppMensagem mensagem)
+void * MEN_ObterDestinatario(MEN_tppMensagem mensagem);
 
 /***********************************************************************
 *
@@ -202,3 +202,9 @@ MEN_tpCondRet MEN_DesativarRemetente(MEN_tppMensagem mensagem);
 ***********************************************************************/
 MEN_tpCondRet MEN_DesativarDestinatario(MEN_tppMensagem mensagem);
 
+#undef MENSAGEM_EXT
+
+/********** Fim do módulo de definição: MEN Mensagem **********/
+
+#else
+#endif
