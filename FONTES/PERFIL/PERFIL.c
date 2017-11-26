@@ -62,6 +62,9 @@ typedef struct PER_tagPerfil {
 
 } PER_tpPerfil ;
 
+/***** Protótipo de funcoes encapsuladas pelo módulo *****/
+PER_tpCondRet PER_AlterarEmail(PER_tppPerfil pPerfil, char* email);
+
 /*****  Código das funções exportadas pelo módulo  *****/
 
 /***************************************************************************
@@ -132,29 +135,29 @@ void PER_DestruirPerfil(void * pPerfil) {
 
 
 		//percorrer a lista de mensagens enviadas
-    	IrInicioLista(pPerfil->msgEnviadas);
+    	IrInicioLista(perfil->msgEnviadas);
     	do {
 			//acessar a estrutura da mensagem e desativar o perfil remetente.
-    		mensagem = (MEN_tppMensagem) LIS_ObterValor(pPerfil->msgEnviadas);
+    		mensagem = (MEN_tppMensagem) LIS_ObterValor(perfil->msgEnviadas);
     		//se o ponteiro do destinatário também for NULL, a mensagem será excluída.
     		MEN_DesativarRemetente(mensagem);
     	} while (LIS_AvancarElementoCorrente(perfil->msgEnviadas,1) != LIS_CondRetFimLista);
 
 
     	//percorrer a lista de mensagens recebidas
-    	IrInicioLista(pPerfil->msgRecebidas);
+    	IrInicioLista(perfil->msgRecebidas);
     	do {
 			//acessar a estrutura da mensagem e desativar o perfil remetente.
-    		mensagem = (MEN_tppMensagem) LIS_ObterValor(pPerfil->msgRecebidas);
+    		mensagem = (MEN_tppMensagem) LIS_ObterValor(perfil->msgRecebidas);
     		//se o ponteiro do remetente também for NULL, a mensagem será excluída.
     		MEN_DesativarDestinatario(mensagem);
     	} while (LIS_AvancarElementoCorrente(perfil->msgRecebidas,1) != LIS_CondRetFimLista);
 
 
 		//excluir lista de enviadas
-		LIS_DestruirLista(pPerfil->msgEnviadas);
+		LIS_DestruirLista(perfil->msgEnviadas);
 		//excluir lista de recebidas
-		LIS_DestruirLista(pPerfil->msgRecebidas);
+		LIS_DestruirLista(perfil->msgRecebidas);
 
 		//excluir perfil
         free(perfil);
@@ -193,7 +196,7 @@ PER_tpCondRet PER_MostrarPerfil(PER_tppPerfil pPerfil) {
     printf("\n\t  Nome: %s\n", pPerfil->nome );
     printf("\t  Email: %s\n", pPerfil->email);
     printf("\t  Cidade: %s\n", pPerfil->cidade);
-    printf("\t  Idade: %d\n", pPerfil->idade);
+    printf("\t  Data Nascimento: %s\n", pPerfil->dataNasc);
 
     return PER_CondRetOK;
 
@@ -325,13 +328,13 @@ PER_tpCondRet PER_BuscarMsgEnviada(PER_tppPerfil pPerfil, char * pEmail, int ini
 		IrInicioLista(pPerfil->msgEnviadas);
 
 	//acessa elemento por elemento da lista de mensagens, buscando a mensagem cujo destinatário possui o email requerido
-	while (LIS_AvancarElementoCorrente(pPerfil->enviadas,1) == LIS_CondRetOK) {
+	while (LIS_AvancarElementoCorrente(pPerfil->msgEnviadas,1) == LIS_CondRetOK) {
 
-		msg = (MEN_tppMensagem) LIS_ObterValor(pPerfil->enviadas);
+		msg = (MEN_tppMensagem) LIS_ObterValor(pPerfil->msgEnviadas);
 		if (msg == NULL)
 			return PER_CondRetPonteiroNulo;
 
-		destinatario = MEN_ObterDestinatario(msg);
+		destinatario = (PER_tppPerfil) MEN_ObterDestinatario(msg);
 		if (destinatario == NULL)
 			return PER_CondRetPonteiroNulo;
 
@@ -372,7 +375,7 @@ PER_tpCondRet PER_BuscarMsgRecebida(PER_tppPerfil pPerfil, char * pEmail, int in
 		if (msg == NULL)
 			return PER_CondRetPonteiroNulo;
 
-		remetente = MEN_ObterRemetente(msg);
+		remetente = (PER_tppPerfil) MEN_ObterRemetente(msg);
 		if (remetente == NULL)
 			return PER_CondRetPonteiroNulo;
 

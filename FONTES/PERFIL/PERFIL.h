@@ -33,11 +33,13 @@
 
 #include "LISTA.H"
 #include "MENSAGEM.H"
+
+
 /***** Declarações exportadas pelo módulo *****/
 
 /* Tipo referência para um Perfil */
 
-typedef struct PER_tagPerfil * PER_tppPerfil ;
+typedef struct PER_tagPerfil * PER_tppPerfil;
 
 
 /***********************************************************************
@@ -51,17 +53,17 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 ***********************************************************************/
 
    typedef enum {
-	   
- /* 0 */ PER_CondRetOK ,
+     
+ /* 0 */ PER_CondRetOK,
                /* Concluiu corretamente */
 
- /* 1 */ PER_CondRetFaltouMemoria ,
+ /* 1 */ PER_CondRetFaltouMemoria,
                /* Faltou memoria */
 
- /* 2 */ PER_CondRetPonteiroNulo ,
-   		/* Ponteiro Nulo */
+ /* 2 */ PER_CondRetPonteiroNulo,
+      /* Ponteiro Nulo */
 
- /* 3 */ PER_CondRetStringVazia ,
+ /* 3 */ PER_CondRetStringVazia,
       /* String vazia */
 
  /* 4 */ PER_CondRetValorInvalido,
@@ -87,10 +89,10 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 *     pDataNasc - Data de Nascimento do perfil a ser criado
 *
 *  $FV Valor retornado
-*		Se executou corretamente retorna o ponteiro para um Perfil.
+*   Se executou corretamente retorna o ponteiro para um Perfil.
 *
-*		Se ocorreu algum erro, por exemplo falta de memoria ou dados errados,
-*		a funcao retorna NULL.
+*   Se ocorreu algum erro, por exemplo falta de memoria ou dados errados,
+*   a funcao retorna NULL.
 *
 ***********************************************************************/
 
@@ -107,7 +109,7 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
  *     pPerfil  - ponteiro do o perfil que será destruido
  *
  *  $FV Valor retornado
- *	    PER_CondRetOK  - destruicao do perfil com sucesso
+ *      PER_CondRetOK  - destruicao do perfil com sucesso
  *      PER_CondRetPonteiroNulo - se o valor do perfil for NULL
  *
  ***********************************************************************/
@@ -126,7 +128,7 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
  *     pValor2  - ponteiro do o perfil 2
  *
  *  $FV Valor retornado
- *	    igual a 0  - dois perfis são iguais
+ *      igual a 0  - dois perfis são iguais
  *      diferente de 0 - dois perfis são diferentes
  *
  ***********************************************************************/
