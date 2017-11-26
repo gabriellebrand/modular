@@ -314,40 +314,117 @@ PER_tpCondRet PER_EnviarMensagem(PER_tppPerfil remetente, char *texto, PER_tppPe
 
 /***************************************************************************
  *
+ *  Função: PER Verifica Mensagem Enviada
+ *
+ *  Função de apoio à PER_BuscarMsgEnviada
+ *
+ *  Retorno:
+ *		PER_CondRetPonteiroNulo - erro na estrutura
+ *		PER_CondRetOK - encontrou uma mensagem
+ *		PER_CondRetNaoAchoou - nao encontrou mensagem
+ ***************************************************************************/
+
+PER_tpCondRet PER_VerificaMsgEnviada(char *pEmail, char * textoMsg, int * idMsg) {
+	MEN_tppMensagem msg;
+	PER_tppPerfil destinatario;
+
+	msg = (MEN_tppMensagem) LIS_ObterValor(pPerfil->msgEnviadas);
+	if (msg == NULL)
+		return PER_CondRetPonteiroNulo;
+
+	destinatario = (PER_tppPerfil) MEN_ObterDestinatario(msg);
+	if (destinatario == NULL)
+		return PER_CondRetPonteiroNulo;
+
+	if (PER_CompararPerfil(destinatario, (void *) pEmail) == 0) {
+		//encontrou uma mensagem cujo destinatario possui o email requerido
+		
+		//copia o id da msg pro parametro idMsg para ser acessado pelo cliente
+		*idMsg = MEN_ObterID(msg);
+		//copia o texto da msg pro parametro do textoMsg
+		textoMsg = MEN_ObterTexto(msg);
+
+		return PER_CondRetOK;
+	}
+
+	return PER_CondRetNaoAchou;
+}
+
+/***************************************************************************
+ *
  *  Função: PER Buscar Mensagem 
  *			Funciona como um "iterador". se parametro inicio == 0, entao vai pro inicio da lista.
  *****/
 PER_tpCondRet PER_BuscarMsgEnviada(PER_tppPerfil pPerfil, char * pEmail, int inicio, char * textoMsg, int * idMsg) {
-	MEN_tppMensagem msg;
-	PER_tppPerfil destinatario;
+	PER_CondRet ret;
 
 	if ((pPerfil == NULL) || (pEmail == NULL))
 		PER_CondRetPonteiroNulo;
 
-	if (inicio == 0)
+	if (inicio == 0) { //primeira iteracao
 		IrInicioLista(pPerfil->msgEnviadas);
+
+		ret = PER_VerificaMsgEnviada(pEmail,textoMsg, idMsg);
+
+		switch (ret) {
+		case PER_CondRetOK:
+			return PER_CondRetOK; //encontrou a mensagem já no primeiro elemento
+		case PER_CondRetPonteiroNulo:
+			return PER_CondRetPonteiroNulo; //erro na estrutura -> mensagem acessada é nula ou destinatario é nulo
+		}
+		//se ret = CondRetNaoAchou -> entao continua buscando
+	}
 
 	//acessa elemento por elemento da lista de mensagens, buscando a mensagem cujo destinatário possui o email requerido
 	while (LIS_AvancarElementoCorrente(pPerfil->msgEnviadas,1) == LIS_CondRetOK) {
 
-		msg = (MEN_tppMensagem) LIS_ObterValor(pPerfil->msgEnviadas);
-		if (msg == NULL)
-			return PER_CondRetPonteiroNulo;
+		ret = PER_VerificaMsgEnviada(pEmail,textoMsg, idMsg);
 
-		destinatario = (PER_tppPerfil) MEN_ObterDestinatario(msg);
-		if (destinatario == NULL)
-			return PER_CondRetPonteiroNulo;
-
-		if (PER_CompararPerfil(destinatario, (void *) pEmail) == 0) {
-			//encontrou uma mensagem cujo destinatario possui o email requerido
-			
-			//copia o id da msg pro parametro idMsg para ser acessado pelo cliente
-			*idMsg = MEN_ObterID(msg);
-			//copia o texto da msg pro parametro do textoMsg
-			textoMsg = MEN_ObterTexto(msg);
-
-			return PER_CondRetOK;
+		switch (ret) {
+		case PER_CondRetOK:
+			return PER_CondRetOK; //encontrou a mensagem entao retorna
+		case PER_CondRetPonteiroNulo:
+			return PER_CondRetPonteiroNulo; //erro na estrutura -> mensagem acessada é nula ou destinatario é nulo
 		}
+		//se ret = CondRetNaoAchou -> entao continua buscando
+	}
+
+	return PER_CondRetNaoAchou; //chegou ao fim das mensagens e nao encontrou mais nenhuma
+}
+
+/***************************************************************************
+ *
+ *  Função: PER Verifica Mensagem Recebida
+ *
+ *  Função de apoio à PER_BuscarMsgEnviada
+ *
+ *  Retorno:
+ *		PER_CondRetPonteiroNulo - erro na estrutura
+ *		PER_CondRetOK - encontrou uma mensagem
+ *		PER_CondRetNaoAchoou - nao encontrou mensagem
+ ***************************************************************************/
+
+PER_tpCondRet PER_VerificaMsgRecebida(char *pEmail, char * textoMsg, int * idMsg) {
+	MEN_tppMensagem msg;
+	PER_tppPerfil destinatario;
+
+	msg = (MEN_tppMensagem) LIS_ObterValor(pPerfil->msgRecebidas);
+	if (msg == NULL)
+		return PER_CondRetPonteiroNulo;
+
+	destinatario = (PER_tppPerfil) MEN_ObterDestinatario(msg);
+	if (destinatario == NULL)
+		return PER_CondRetPonteiroNulo;
+
+	if (PER_CompararPerfil(destinatario, (void *) pEmail) == 0) {
+		//encontrou uma mensagem cujo destinatario possui o email requerido
+		
+		//copia o id da msg pro parametro idMsg para ser acessado pelo cliente
+		*idMsg = MEN_ObterID(msg);
+		//copia o texto da msg pro parametro do textoMsg
+		textoMsg = MEN_ObterTexto(msg);
+
+		return PER_CondRetOK;
 	}
 
 	return PER_CondRetNaoAchou;
@@ -365,33 +442,35 @@ PER_tpCondRet PER_BuscarMsgRecebida(PER_tppPerfil pPerfil, char * pEmail, int in
 	if ((pPerfil == NULL) || (pEmail == NULL))
 		PER_CondRetPonteiroNulo;
 
-	if (inicio == 0)
+	if (inicio == 0) { //primeira iteracao
 		IrInicioLista(pPerfil->msgRecebidas);
+
+		ret = PER_VerificaMsgRecebida(pEmail,textoMsg, idMsg);
+
+		switch (ret) {
+		case PER_CondRetOK:
+			return PER_CondRetOK; //encontrou a mensagem já no primeiro elemento
+		case PER_CondRetPonteiroNulo:
+			return PER_CondRetPonteiroNulo; //erro na estrutura -> mensagem acessada é nula ou remetente é nulo
+		}
+		//se ret = CondRetNaoAchou -> entao continua buscando
+	}
 
 	//acessa elemento por elemento da lista de mensagens, buscando a mensagem cujo remetente possui o email requerido
 	while (LIS_AvancarElementoCorrente(pPerfil->msgRecebidas,1) == LIS_CondRetOK) {
 
-		msg = (MEN_tppMensagem) LIS_ObterValor(pPerfil->msgRecebidas);
-		if (msg == NULL)
-			return PER_CondRetPonteiroNulo;
-
-		remetente = (PER_tppPerfil) MEN_ObterRemetente(msg);
-		if (remetente == NULL)
-			return PER_CondRetPonteiroNulo;
-
-		if (PER_CompararPerfil(remetente, (void *) pEmail) == 0) {
-			//encontrou uma mensagem cujo remetente possui o email requerido
-			
-			//copia o id da msg pro parametro idMsg para ser acessado pelo cliente
-			*idMsg = MEN_ObterID(msg);
-			//copia o texto da msg pro parametro do textoMsg
-			textoMsg = MEN_ObterTexto(msg);
-
-			return PER_CondRetOK;
+		ret = PER_VerificaMsgRecebida(pEmail,textoMsg, idMsg);
+		
+		switch (ret) {
+		case PER_CondRetOK:
+			return PER_CondRetOK; //encontrou a mensagem entao retorna
+		case PER_CondRetPonteiroNulo:
+			return PER_CondRetPonteiroNulo; //erro na estrutura -> mensagem acessada é nula ou destinatario é nulo
 		}
+		//se ret = CondRetNaoAchou -> entao continua buscando
 	}
 
-	return PER_CondRetNaoAchou;
+	return PER_CondRetNaoAchou; //chegou ao fim das mensagens e nao encontrou mais nenhuma
 }
 
 /********** Fim do módulo de implementação: PER  Perfil  **********/
