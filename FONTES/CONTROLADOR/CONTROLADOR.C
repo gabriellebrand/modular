@@ -30,7 +30,6 @@
 /*******   Protótipo das Funções Encapsuladas no Módulo *********************/
 
 
-
 /************** Dados encapsulados no modulo   *********************************************************/
 
 static GRA_tppGrafo Grafo = NULL; /* Ponteiro para o Grafo utilizado na rede de relacionamentos*/
@@ -129,6 +128,7 @@ CON_tpCondRet CON_MostrarPerfil (char *email) {
 
 	PER_tppPerfil pPerfil;
 	CON_tpCondRet ret;
+	PER_tpCondRet pRet;
 
 	/* Busca o perfil*/
 	ret = CON_BuscarPerfil (email, pPerfil);
@@ -138,9 +138,9 @@ CON_tpCondRet CON_MostrarPerfil (char *email) {
 
 	/* Mostra o perfil, caso encontrado*/
 
-	ret = PER_MostrarPerfil (pPerfil);
+	pRet = PER_MostrarPerfil (pPerfil);
 
-	if(ret!=PER_CondRetOK)
+	if(pRet!=PER_CondRetOK)
 		return CON_CondRetValorNulo;
 
 	return CON_CondRetOK;
@@ -169,29 +169,23 @@ CON_tpCondRet CON_ExcluirPerfil (char *pEmail) {
 		/*Vai até o vertice*/
 	retGrafo = GRA_IrVertice (Grafo, (void *)pEmail);
 
-	switch (retornoGrafo) {
-
-		case GRA_CondRetGrafoNaoExiste || GRA_CondRetGrafoVazio:
-			return CON_CondRetRedeVazia;
-
-		case GRA_CondRetVerticeNaoExiste:
-			return CON_CondRetNaoAchou;
-		default:
+	switch (retGrafo) {
+	case GRA_CondRetGrafoNaoExiste:
+		return CON_CondRetRedeVazia;
+	case GRA_CondRetGrafoVazio:
+		return CON_CondRetRedeVazia;
+	case GRA_CondRetVerticeNaoExiste:
+		return CON_CondRetNaoAchou;
 	}
 		/*Remove vertice*/
 	retGrafo = GRA_ExcluirVertCorr(Grafo);
 
-	switch (retornoGrafo) {
-
-		case GRA_CondRetGrafoNaoExiste || GRA_CondRetGrafoVazio:
-			return CON_CondRetRedeVazia;
-
-		case GRA_CondRetVerticeNaoExiste:
-			return CON_CondRetNaoAchou;
-		default:
+	switch (retGrafo) {
+	case GRA_CondRetOK:
+		return CON_CondRetOK;
+	default:
+		return CON_CondRetRedeVazia;
 	}
-
-	return CON_CondRetOK;
 
 }	 /* Fim função: CON  &Excluir Perfil */
 
@@ -212,21 +206,20 @@ CON_tpCondRet CON_CriarAmizade(char *email1, char *email2) {
 	ret = GRA_CriarAresta(Grafo,(void*)email1, (void*)email2);
 
 	switch (ret) {
-		case GRA_CondRetVerticeNaoExiste:
+	case GRA_CondRetVerticeNaoExiste:
 		return CON_CondRetNaoAchou;
-
-		case GRA_CondRetFaltouMemoria:
+	case GRA_CondRetFaltouMemoria:
 		//TODO: não sei o que precisa ser feito
 		//tentar de novo? reportar que faltou memoria?
-
-		case GRA_CondRetArestaJaExiste:
-			return CON_CondRetAmizadeJaExiste;
-		case GRA_CondRetArestaIlegal:
-			return CON_ConRetAmizadeInvalida;
-		case GRA_CondRetOK:
-			return CON_CondRetOK;
-		default:
-			return CON_CondRetRedeVazia;
+		return CON_CondRetFaltouMemoria;
+	case GRA_CondRetArestaJaExiste:
+		return CON_CondRetAmizadeJaExiste;
+	case GRA_CondRetArestaIlegal:
+		return CON_CondRetAmizadeInvalida;
+	case GRA_CondRetOK:
+		return CON_CondRetOK;
+	default:
+		return CON_CondRetRedeVazia;
 	}
 		
 } /* Fim função: CON  &Criar Amizade */
@@ -239,32 +232,27 @@ CON_tpCondRet CON_CriarAmizade(char *email1, char *email2) {
 
 CON_tpCondRet CON_ExcluirAmizade (char *email1, char *email2) {
 
-	GRA_tpCondRet retornoGrafo;
+	GRA_tpCondRet retGrafo;
 
 	/*Testa se valores sao validos*/
 	if ( email1 == NULL || email2 == NULL)
 		return CON_CondRetStringVazia;
 
 	/*Chama função de excluir aresta*/
-	retornoGrafo = GRA_ExcluirAresta (Grafo, (void *)email1, (void *)email2);
+	retGrafo = GRA_ExcluirAresta (Grafo, (void *)email1, (void *)email2);
 
 	/*Testa retorno*/
-	switch (retornoGrafo) {
+	if ((retGrafo == GRA_CondRetGrafoNaoExiste) || (retGrafo == GRA_CondRetGrafoVazio))
+		return CON_CondRetRedeVazia;
 
-		case GRA_CondRetGrafoNaoExiste || GRA_CondRetGrafoVazio:
-			return CON_CondRetRedeVazia;
+	if (retGrafo == GRA_CondRetVerticeNaoExiste)
+		return CON_CondRetNaoAchou;
 
-		case GRA_CondRetVerticeNaoExiste:
-			return CON_CondRetNaoAchou;
+	if (retGrafo == GRA_CondRetArestaNaoExiste)
+		return CON_CondRetAmizadeInvalida;
 
-		case GRA_CondRetArestaNaoExiste:
-			return CON_CondRetAmizadeInvalida;
-
-		default:
-			return CON_CondRetOK;
-	}
-
-} /* Fim função: CON  &Excluir Amizade */
+	return CON_CondRetOK;
+}/* Fim função: CON  &Excluir Amizade */
 
 /***********************************************************************
 *
@@ -295,14 +283,14 @@ CON_tpCondRet CON_BuscarAmizades(char *email) { /*Talvez seja melhor mudar o nom
 	}
 
 	switch (ret) {
-		case GRA_CondRetNaoPossuiAresta || GRA_CondRetFimArestas:
-			return CON_CondRetNaoAchou;
-		
-		case GRA_CondRetValorNulo:
-			return CON_CondRetValorNulo;
-		
-		default:
-			return CON_CondRetRedeVazia;
+	case GRA_CondRetNaoPossuiAresta:
+		return CON_CondRetNaoAchou;
+	case GRA_CondRetFimArestas:
+		return CON_CondRetOK;
+	case GRA_CondRetValorNulo:
+		return CON_CondRetValorNulo;
+	default:
+		return CON_CondRetRedeVazia;
 	}
 	
 } /* Fim função: CON  &Buscar Amizades */
@@ -316,50 +304,47 @@ CON_tpCondRet CON_BuscarAmizades(char *email) { /*Talvez seja melhor mudar o nom
 CON_tpCondRet CON_EnviarMensagem(char *email1, char *email2, char *texto) {
 	GRA_tpCondRet ret;
 	PER_tpCondRet pRet;
+	CON_tpCondRet cRet;
 	PER_tppPerfil remetente, destinatario;
 	//1. verificar se os dois perfis sao amigos
-	if ((ret = CON_BuscarPerfil(email1, remetente)) != CON_CondRetOK) {
-		return ret;
+	if ((cRet = CON_BuscarPerfil(email1, remetente)) != CON_CondRetOK) {
+		return cRet;
 	}
 
-	ret = GRA_IrVizinho(Grafo, email);
+	ret = GRA_IrVizinho(Grafo, email2);
 
-	switch (ret) {
-		case GRA_CondRetGrafoNaoExiste || GRA_CondRetGrafoVazio:
-			return CON_CondRetRedeVazia;
-		case GRA_CondRetArestaNaoExiste || GRA_CondRetNaoPossuiAresta:
-			return CON_AmizadeNaoExiste;
-		case GRA_CondRetValorNulo:
-			return CON_CondRetValorNulo;
-	}
+	if ((ret == GRA_CondRetGrafoNaoExiste)||(ret == GRA_CondRetGrafoVazio))
+		return CON_CondRetRedeVazia;
+	if ((ret == GRA_CondRetArestaNaoExiste)||(ret == GRA_CondRetNaoPossuiAresta))
+		return CON_CondRetAmizadeNaoExiste;
+	if (ret == GRA_CondRetValorNulo)
+		return CON_CondRetValorNulo;
+	//if ret == GRA_CondRetOK ---> continua
+
 	//2. acessar as referencias para o perfil1 e perfil 2
 	destinatario = (PER_tppPerfil) GRA_ObterValor(Grafo);
 
-	if (perfil1 || perfil2 == NULL)
+	if (remetente || destinatario == NULL)
 		return CON_CondRetValorNulo;
 
 	//3. chamar a funcao enviar mensagem do modulo perfil
 	pRet = PER_EnviarMensagem(remetente, texto, destinatario);
 
 	switch (pRet) {
-		case PER_CondRetPonteiroNulo:
-			return CON_CondRetValorNulo;
-		case PER_CondRetFaltouMemoria:
-			return CON_CondRetFaltouMemoria; //nao sei se precisa fazer uma nova tentativa nesse caso.
+	case PER_CondRetPonteiroNulo:
+		return CON_CondRetValorNulo;
+	case PER_CondRetFaltouMemoria:
+		return CON_CondRetFaltouMemoria; //nao sei se precisa fazer uma nova tentativa nesse caso.
+	default:
+		return CON_CondRetOK;
 	}
-
-	return CON_CondRetOK;
 }
-
-//TODO:
-
-//CON_CarregarHistorico();
 
 CON_tpCondRet CON_CarregarHistorico(char *pEmail1, char *pEmail2) {
 	int i = 0, idMsg1, idMsg2;
 	char *textoMsg1, *textoMsg2;
 	CON_tpCondRet ret;
-	PER_tppPerfil perfil1;
+	PER_tppPerfil perfil1, perfil2;
 
 	/*
 		Se idMsg == 0, entao está liberado procurar uma nova mensagem da lista
@@ -367,14 +352,21 @@ CON_tpCondRet CON_CarregarHistorico(char *pEmail1, char *pEmail2) {
 		Se idMsg < 0, entao todas as mensagens da lista ja foram encontradas, nao precisa procurar uma nova
 	*/
 
+	//busca perfil 1
 	if ((ret = CON_BuscarPerfil(pEmail1, perfil1)) != CON_CondRetOK)
 		return ret;
 
-	while (idMsg1 >= 0 || idMsg2 >= 0) {
+	//busca perfil 2 (necessario verificar se ele existe)
+	if ((ret = CON_BuscarPerfil(pEmail2, perfil2)) != CON_CondRetOK)
+		return ret;
+
+	//acho que nao eh necessário verificar se os dois sao amigos, pois excluir amizade nao implica em excluir msgs trocadas
+
+	while ((idMsg1 >= 0) || (idMsg2 >= 0)) {
 
 		//busca uma mensagem enviada para o perfil2 na lista de mensagens enviadas pelo perfil1
 		if (idMsg1 == 0) { //mensagem anterior já foi impressa, pode procurar a proxima
-			if (PER_BuscarMsgEnviada(perfil1, pEmail2, i, textoMsg1, idMsg1) != PER_CondRetOK) {
+			if (PER_BuscarMsgEnviada(perfil1, pEmail2, i, textoMsg1, &idMsg1) != PER_CondRetOK) {
 				//nao encontrou mais nenhuma mensagem ou entao deu algum erro
 				idMsg1 = -1;
 			}
@@ -382,7 +374,7 @@ CON_tpCondRet CON_CarregarHistorico(char *pEmail1, char *pEmail2) {
 
 		//busca uma mensagem enviada pelo perfil2 na lista de mensagens recebidas pelo perfil1
 		if (idMsg1 == 0) { //mensagem anterior já foi impressa, pode procurar a proxima
-			if (PER_BuscarMsgRecebida(perfil1, pEmail2, i, textoMsg2, idMsg2) != PER_CondRetOK) {
+			if (PER_BuscarMsgRecebida(perfil1, pEmail2, i, textoMsg2, &idMsg2) != PER_CondRetOK) {
 				//nao encontrou mais nenhuma mensagem ou entao deu algum erro
 				idMsg2 = -1;
 			}
@@ -392,29 +384,30 @@ CON_tpCondRet CON_CarregarHistorico(char *pEmail1, char *pEmail2) {
 
 		i++; //necessario para que nao volte para o inicio da lista de mensagens
 
-		if (msg1 < 0) { // chegou ao fim da lista de msgs enviadas -> só resta imprimir as mensagens recebidas
-			if (msg2 > 0) {
+		if (idMsg1 < 0) { // chegou ao fim da lista de msgs enviadas -> só resta imprimir as mensagens recebidas
+			if (idMsg2 > 0) {
 				//mensagem 2 ainda nao foi impressa -> chama funcao q imprime a mensagem (interface)
-				msg2 = 0; // marca mensagem 2 como impressa -> pode buscar a proxima
+				idMsg2 = 0; // marca mensagem 2 como impressa -> pode buscar a proxima
 			}
 		}
 
-		else if (msg2 < 0) { // chegou ao fim da lista de msgs recebidas -> só resta imprimir as mensagens enviadas
-			if (msg1 > 0) {
+		else if (idMsg2 < 0) { // chegou ao fim da lista de msgs recebidas -> só resta imprimir as mensagens enviadas
+			if (idMsg1 > 0) {
 				//mensagem 1 ainda nao foi impressa -> chama funcao q imprime a mensagem (interface)
-				msg1 = 0; // marca mensagem 1 como impressa -> pode buscar a proxima
+				idMsg1 = 0; // marca mensagem 1 como impressa -> pode buscar a proxima
 			}
 		}
 
-		else if (msg1 > 0 && msg2 > 0) { //as duas mensagens estao aguardando impressao
-			if (msg1 < msg2) {
+		else if ((idMsg1 > 0) && (idMsg2 > 0)) { //as duas mensagens estao aguardando impressao
+			if (idMsg1 < idMsg2) {
 				//chama funcao q imprime a mensagem 1 (interface)
-				msg1 = 0; // marca mensagem 1 como impressa -> pode buscar a proxima
+				idMsg1 = 0; // marca mensagem 1 como impressa -> pode buscar a proxima
 			} else {
 				//chama funcao q imprime a mensagem 2 (interface)
-				msg2 = 0; // marca mensagem 2 como impressa -> pode buscar a proxima
+				idMsg2 = 0; // marca mensagem 2 como impressa -> pode buscar a proxima
 			}
 		}
 	}
+
+	return CON_CondRetOK; //imprimiu todas as mensagens
 }
-//CON_ExcluirAmizade();

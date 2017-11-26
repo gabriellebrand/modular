@@ -259,3 +259,10 @@ CON_tpCondRet CON_EnviarMensagem(char *email1, char *email2, char *texto);
 *
 ***********************************************************************/
 CON_tpCondRet CON_CarregarHistorico(char *pEmail1, char *pEmail2);
+
+#undef CONTROLADOR_EXT
+
+/********** Fim do módulo de definição: CON Controlador **********/
+
+#else
+#endif
