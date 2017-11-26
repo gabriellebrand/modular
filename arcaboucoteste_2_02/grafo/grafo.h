@@ -117,6 +117,53 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo;
 
    } GRA_tpCondRet ;
 
+
+/***********************************************************************
+*
+*  $TC Tipo de dados: ARV Modos de deturpar
+*
+*
+***********************************************************************/
+
+#ifdef _DEBUG
+
+   typedef enum {
+
+         DeturpaTipoGrafo                 =  1 ,
+               /* Modifica o tipo do grafo */
+
+         DeturpaTipoVerticeCorrente       =  2 ,
+               /* Modifica o tipo do vertice corrente */
+
+         DeturpaTipoCabecaVertices        =  3 ,
+               /* Modifica o tipo da cabeca da lista de vertices */
+
+         DeturpaVerticeCorrenteNulo       =  4 ,
+               /* Anula ponteiro do vertice corrente */
+
+         DeturpaCabecaVerticesNulo        =  5 ,
+               /* Anula ponteiro para a cabeça da lista de vertices */
+
+         DeturpaVerticeCorrenteLixo       =  6 ,
+               /* Faz vertice corrente apontar para lixo */
+
+         DeturpaCabecaVerticesLixo        =  7 ,
+               /* Faz cabeca da lista de vertices apontar para lixo */
+
+         DeturpaTipoAresta                =  8 ,
+               /* Modifica tipo da aresta */
+
+         DeturpaCabecaArestasNulo         =  9 ,
+               /* Anula ponteiro da cabeca da lista de arestas */
+
+         DeturpaCabecaArestasLixo         = 10 ,
+               /* Faz cabeca da lista de aresta apontar para lixo */
+
+   } ARV_tpModosDeturpacao ;
+
+#endif
+
+
  /***********************************************************************
 *  $FC Função: GRA  &Criar grafo
 *
