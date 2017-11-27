@@ -1,475 +1,310 @@
+#if ! defined( PERFIL_ )
+#define PERFIL_
 /***************************************************************************
- *  $MCI Módulo de implementaçăo: PER  Perfil
- *
- *  Arquivo gerado:              PERFIL.c
- *  Letras identificadoras:      PER
- *
- *  Nome da base de software:    Arcabouço para a automaçăo de testes de programas redigidos em C
- *
- *  Projeto:    Trabalho 2 - Programaçăo Modular
- *  Autores:    GB - Gabrielle Brandenburg
+*  $MCD Módulo de definição: PER  Módulo Perfil
+*
+*  Arquivo gerado:              PERFIL.h
+*  Letras identificadoras:      PER
+*
+*  Nome da base de software:    ArcabouÁo para a automaÁ„o de testes de programas redigidos em C
+*  Arquivo da base de software: D:\AUTOTEST\PROJETOS\LISTA.BSW
+*
+*  Projeto: INF 1301 / 1628 AutomatizaÁ„o dos testes de mÛdulos C
+*  Gestor:  LES/DI/PUC-Rio
+*  Autores:    GB - Gabrielle Brandenburg
                 GC - Gabriel Cantergiani
                 WB - Wellingotn Bezerra
- *
- *  $HA Histórico de evoluçăo:
- *     Versăo      Autor            Data                Observaçőes
- *     1.0          WB        02/out/2017       Criação do módulo
- *     1.1          WB        14/out/2017       Alteração da função criarPerfil
- *     1.2      GB      15/nov/2017   Inclusão das funções de edição
- *
- ***************************************************************************/
+*
+*  $HA Histórico de evolução:
+*     Versão  Autor    Data     Observaçõess
+*     1.0       WB        02/out/2017       Criação do módulo
+*     1.1       WB        14/out/2017       Alteração da função criarPerfil
+*
+*  $ED Descrição do módulo
+*     Implementa o módulo usuário.
+*     
+***************************************************************************/
 
-#include   <stdio.h>
-#include   <stdlib.h>
-#include   <string.h>
-#include   <memory.h>
-#include   <malloc.h>
-#include   <assert.h>
+#if defined( PERFIL_OWN )
+   #define PERFIL_EXT
+#else
+   #define PERFIL_EXT extern
+#endif
 
-#define PERFIL_OWN
-#include "PERFIL.h"
-#undef PERFIL_OWN
+#include "LISTA.H"
+#include "MENSAGEM.H"
+
+
+/***** Declarações exportadas pelo módulo *****/
+
+/* Tipo referência para um Perfil */
+
+typedef struct PER_tagPerfil * PER_tppPerfil;
+
+
+/***********************************************************************
+*
+*  $TC Tipo de dados: PER Condições de retorno
+*
+*
+*  $ED Descrição do tipo
+*     Condições de retorno das funções do modulo Perfil
+*
+***********************************************************************/
+
+   typedef enum {
+     
+ /* 0 */ PER_CondRetOK,
+               /* Concluiu corretamente */
+
+ /* 1 */ PER_CondRetFaltouMemoria,
+               /* Faltou memoria */
+
+ /* 2 */ PER_CondRetPonteiroNulo,
+      /* Ponteiro Nulo */
+
+ /* 3 */ PER_CondRetStringVazia,
+      /* String vazia */
+
+ /* 4 */ PER_CondRetValorInvalido,
+      /* Valor de input invalido */
+
+/* 5 */  PER_CondRetNaoAchou
+      /* Nao encontrou mensagem para o perfil solicitado */    
+   } PER_tpCondRet ;
+
+
+/***********************************************************************
+*
+*  $FC Função: PER  &Criar Perfil
+*
+*  $ED Descrição da função
+*     Cria um Perfil
+*
+*  $EP Parâmetros
+*     pNome - nome do perfil a ser criado
+*     pEmail - email do perfil a ser criado
+*     pCidade - cidade do perfil a ser criado
+*     genero  - genero do perfil a ser criado
+*     pDataNasc - Data de Nascimento do perfil a ser criado
+*
+*  $FV Valor retornado
+*   Se executou corretamente retorna o ponteiro para um Perfil.
+*
+*   Se ocorreu algum erro, por exemplo falta de memoria ou dados errados,
+*   a funcao retorna NULL.
+*
+***********************************************************************/
+
+   PER_tppPerfil PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, char genero, char *pDataNasc );
 
 /***********************************************************************
  *
- *  $TC Tipo de dados: PER Perfil
+ *  $FC Função: PER  &Destruir Perfil
  *
+ *  $ED Descrição da função
+ *     Destroi um Perfil
+ *
+ *  $EP Parâmetros
+ *     pPerfil  - ponteiro do o perfil que será destruido
+ *
+ *  $FV Valor retornado
+ *      PER_CondRetOK  - destruicao do perfil com sucesso
+ *      PER_CondRetPonteiroNulo - se o valor do perfil for NULL
  *
  ***********************************************************************/
 
-typedef struct PER_tagPerfil {
+    void PER_DestruirPerfil(void * pPerfil);
 
-    char nome[100];
-        /* Nome do perfil */
-    
-    char email[100];
-        /* Email do perfil */
-    
-    char cidade[100];
-        /* Cidade do perfil */
-
-    char genero;
-      /* Genero do perfil (M, F ou O) */
-    
-    char dataNasc[11];
-        /* Data de nascimento do perfil XX/XX/XXXX */
-    
-    LIS_tppLista msgEnviadas;
-      /* Lista de mensagens enviadas pelo perfil */
-
-    LIS_tppLista msgRecebidas;
-      /*Lista de mensagens recebidas pelo perfil */
-
-} PER_tpPerfil ;
-
-/***** Protótipo de funcoes encapsuladas pelo módulo *****/
-PER_tpCondRet PER_AlterarEmail(PER_tppPerfil pPerfil, char* email);
-
-/*****  Código das funções exportadas pelo módulo  *****/
-
-/***************************************************************************
+/***********************************************************************
  *
- *  Função: PER &Criar Perfil
- *****/
-
-PER_tppPerfil PER_CriarPerfil( char *pNome, char *pEmail, char *pCidade, char genero, char *pDataNasc ) {
-    
-  LIS_tppLista msgEnv, msgRec;
-  PER_tppPerfil pPerfil = ( PER_tppPerfil ) malloc( sizeof( PER_tpPerfil ));
-  if( pPerfil == NULL ) {
-    return NULL ;
-  } /* if */
-    
-  if (PER_AlterarNome(pPerfil, pNome) != PER_CondRetOK) {
-    PER_DestruirPerfil(pPerfil);
-    return NULL;
-  }
-  if (PER_AlterarCidade(pPerfil, pCidade) != PER_CondRetOK) {
-    PER_DestruirPerfil(pPerfil);
-    return NULL;
-  }
-  if (PER_AlterarGenero(pPerfil, genero) != PER_CondRetOK) {
-    PER_DestruirPerfil(pPerfil);
-    return NULL;
-  }
-  if (PER_AlterarDataNasc(pPerfil, pDataNasc)  != PER_CondRetOK) {
-    PER_DestruirPerfil(pPerfil);
-    return NULL;
-  }
-  if (PER_AlterarEmail(pPerfil, pEmail) != PER_CondRetOK) {
-    PER_DestruirPerfil(pPerfil);
-    return NULL;
-  }
-
-  if ((msgEnv = LIS_CriarLista(NULL, MEN_CompararMensagem)) == NULL) {
-    PER_DestruirPerfil(pPerfil);
-    return NULL;
-  }
-
-  if ((msgRec = LIS_CriarLista(NULL, MEN_CompararMensagem)) == NULL) {
-    LIS_DestruirLista(msgRec);
-    PER_DestruirPerfil(pPerfil);
-    return NULL;
-  }
-
-  pPerfil->msgRecebidas = msgRec;
-  pPerfil->msgEnviadas = msgEnv;  
-
-  return pPerfil;
-    
-} /* Fim função: PER  &Criar Perfil */
-
-/***************************************************************************
+ *  $FC Função: PER  &Comparar  Perfil
  *
- *  Função: PER &Destruir Perfil
- *****/
-
-void PER_DestruirPerfil(void * pPerfil) {
-
-  PER_tppPerfil perfil;
-  MEN_tppMensagem mensagem;
-    
-    if(pPerfil != NULL) {
-      //faz um typecast para PER_tppPerfil
-      perfil = (PER_tppPerfil) (pPerfil); 
-
-
-    //percorrer a lista de mensagens enviadas
-      IrInicioLista(perfil->msgEnviadas);
-      do {
-      //acessar a estrutura da mensagem e desativar o perfil remetente.
-        mensagem = (MEN_tppMensagem) LIS_ObterValor(perfil->msgEnviadas);
-        //se o ponteiro do destinatário também for NULL, a mensagem será excluída.
-        MEN_DesativarRemetente(mensagem);
-      } while (LIS_AvancarElementoCorrente(perfil->msgEnviadas,1) != LIS_CondRetFimLista);
-
-
-      //percorrer a lista de mensagens recebidas
-      IrInicioLista(perfil->msgRecebidas);
-      do {
-      //acessar a estrutura da mensagem e desativar o perfil remetente.
-        mensagem = (MEN_tppMensagem) LIS_ObterValor(perfil->msgRecebidas);
-        //se o ponteiro do remetente também for NULL, a mensagem será excluída.
-        MEN_DesativarDestinatario(mensagem);
-      } while (LIS_AvancarElementoCorrente(perfil->msgRecebidas,1) != LIS_CondRetFimLista);
-
-
-    //excluir lista de enviadas
-    LIS_DestruirLista(perfil->msgEnviadas);
-    //excluir lista de recebidas
-    LIS_DestruirLista(perfil->msgRecebidas);
-
-    //excluir perfil
-        free(perfil);
-    } /* if */
-
-} /* Fim função: PER  &Destruir Perfil */
-
-
-/***************************************************************************
+ *  $ED Descrição da função
+ *     Compara dois perfis
  *
- *  Função: PER Compara Perfil
- *****/
-
-int PER_CompararPerfil(void * pValor1, void * pValor2) {
-    PER_tppPerfil pPerfil;
-    char *email;
-    pPerfil = (PER_tppPerfil) pValor1;
-    email = (char*) pValor2;
-
-    return strcmp(pPerfil->email, email);
-
-} /* Fim função: PER  Comparar Perfil */  
-
-
-/***************************************************************************
+ *  $EP Parâmetros
+ *     pValor1  - ponteiro do o perfil 1
+ *     pValor2  - ponteiro do o perfil 2
  *
- *  Função: PER Mostrar Perfil
- *****/
-
-PER_tpCondRet PER_MostrarPerfil(PER_tppPerfil pPerfil) {
-
-    if(pPerfil == NULL) {
-        return PER_CondRetPonteiroNulo;
-    } /* if */
-
-    printf("\n\t  Nome: %s\n", pPerfil->nome );
-    printf("\t  Email: %s\n", pPerfil->email);
-    printf("\t  Cidade: %s\n", pPerfil->cidade);
-    printf("\t  Data Nascimento: %s\n", pPerfil->dataNasc);
-
-    return PER_CondRetOK;
-
-} /* Fim função: PER  Mostrar Perfil */
-
-/***************************************************************************
+ *  $FV Valor retornado
+ *      igual a 0  - dois perfis são iguais
+ *      diferente de 0 - dois perfis são diferentes
  *
- *  Função: PER Recuperar Email
- *****/
+ ***********************************************************************/
 
-char * PER_ObterEmail(PER_tppPerfil pPerfil) {
-  if (pPerfil == NULL) return NULL;
-  return pPerfil->email;
-}
+    int PER_CompararPerfil(void * pValor1, void * pValor2);
 
-/***************************************************************************
+/***********************************************************************
  *
- *  Função: PER Alterar Nome
- *****/
-
-PER_tpCondRet PER_AlterarNome(PER_tppPerfil pPerfil, char * nome) {
-  
-  if (nome == NULL || pPerfil == NULL) return PER_CondRetPonteiroNulo;
-  if(strlen(nome) == 0) return PER_CondRetStringVazia; //será que é necessário?
-  //todo: verificar se precisa tratar caso em que o tamanho da string é maior que 100
-
-  strcpy(pPerfil->nome, nome);
-  return PER_CondRetOK;
-}
-
-/***************************************************************************
+ *  $FC Função: PER  &Mostrar  Perfil
  *
- *  Função: PER Alterar Cidade
- *****/
-
-PER_tpCondRet PER_AlterarCidade(PER_tppPerfil pPerfil, char * cidade) {
-  
-  if (cidade == NULL || pPerfil == NULL) return PER_CondRetPonteiroNulo;
-  if(strlen(cidade) == 0) return PER_CondRetStringVazia;
-  //todo: verificar se precisa tratar caso em que o tamanho da string é maior que 100
-
-  strcpy(pPerfil->cidade, cidade);
-  return PER_CondRetOK;
-}
-
-/***************************************************************************
+ *  $ED Descrição da função
+ *     Mostra as informações de um perfil
  *
- *  Função: PER Alterar Data de Nascimento
- *  
- *****/
-
-PER_tpCondRet PER_AlterarDataNasc(PER_tppPerfil pPerfil, char * dataNasc) {
-  if (dataNasc == NULL || pPerfil == NULL) return PER_CondRetPonteiroNulo;
-  if(strlen(dataNasc) != 10 ) return PER_CondRetValorInvalido;
-  //todo: verificar se precisa tratar caso em que o tamanho da string é maior que 100
-
-  strcpy(pPerfil->dataNasc, dataNasc);
-  return PER_CondRetOK;
-}
-
-/***************************************************************************
+ *  $EP Parâmetros
+ *     pPerfil  - ponteiro de um Perfil
  *
- *  Função: PER Alterar Genero
- *****/
-
-PER_tpCondRet PER_AlterarGenero(PER_tppPerfil pPerfil, char genero) {
-
-  if (pPerfil == NULL) return PER_CondRetPonteiroNulo;
-
-  if (genero != 'M' && genero != 'F' && genero != 'O')
-    return PER_CondRetValorInvalido;
-
-  pPerfil->genero = genero;
-  return PER_CondRetOK;
-}
-
-/***************************************************************************
+ *  $FV Valor retornado
+ *      PER_CondRetOK  - insformações do perfil mostradas com sucesso
+ *      PER_CondRetPonteiroNulo - valor do perfil é igual a NULL e nao mostra as inf do Perfil
  *
- *  Função: PER Alterar Email
- *  OBS: Essa função não deve ser exportada
- *****/
+ ***********************************************************************/
 
-PER_tpCondRet PER_AlterarEmail(PER_tppPerfil pPerfil, char* email) {
+PER_tpCondRet PER_MostrarPerfil(PER_tppPerfil pPerfil);
 
-  if (email == NULL) return PER_CondRetPonteiroNulo;
-  if(strlen(email) == 0) return PER_CondRetStringVazia;
-
-  strcpy(pPerfil->email, email);
-  return PER_CondRetOK;
-}
-
-/***************************************************************************
+/***********************************************************************
  *
- *  Função: PER Enviar Mensagem
- *****/
-PER_tpCondRet PER_EnviarMensagem(PER_tppPerfil remetente, char *texto, PER_tppPerfil destinatario) {
-  MEN_tppMensagem mensagem;
-
-  mensagem = MEN_CriarMensagem((void*)remetente, (void*)destinatario, texto);
-
-  if (mensagem == NULL)
-    return PER_CondRetPonteiroNulo;
-
-  if (LIS_InserirElementoApos(remetente->msgEnviadas, (void *)mensagem) == LIS_CondRetFaltouMemoria)
-    return PER_CondRetFaltouMemoria;
-
-  if (LIS_InserirElementoApos(destinatario->msgRecebidas, (void *)mensagem) == LIS_CondRetFaltouMemoria) {
-    //necessário excluir o ultimo elemento inserido na lista de enviados do remetente
-    LIS_ExcluirElemento(remetente->msgEnviadas);
-    return PER_CondRetFaltouMemoria;
-  }
-
-  return PER_CondRetOK;
-}
-
-/***************************************************************************
+ *  $FC Função: PER  &Obter  Email
  *
- *  Função: PER Verifica Mensagem Enviada
+ *  $ED Descrição da função
+ *     Recebe um perfil e obtem o email cadastrado neste perfil.
  *
- *  Função de apoio à PER_BuscarMsgEnviada
+ *  $EP Parâmetros
+ *     pPerfil  - ponteiro de um Perfil
  *
- *  Retorno:
- *    PER_CondRetPonteiroNulo - erro na estrutura
- *    PER_CondRetOK - encontrou uma mensagem
- *    PER_CondRetNaoAchoou - nao encontrou mensagem
- ***************************************************************************/
-
-PER_tpCondRet PER_VerificaMsgEnviada(PER_tppPerfil pPerfil, char *pEmail, char * textoMsg, int * idMsg) {
-  MEN_tppMensagem msg;
-  PER_tppPerfil destinatario;
-
-  msg = (MEN_tppMensagem) LIS_ObterValor(pPerfil->msgEnviadas);
-  if (msg == NULL)
-    return PER_CondRetPonteiroNulo;
-
-  destinatario = (PER_tppPerfil) MEN_ObterDestinatario(msg);
-  if (destinatario == NULL)
-    return PER_CondRetPonteiroNulo;
-
-  if (PER_CompararPerfil(destinatario, (void *) pEmail) == 0) {
-    //encontrou uma mensagem cujo destinatario possui o email requerido
-    
-    //copia o id da msg pro parametro idMsg para ser acessado pelo cliente
-    *idMsg = MEN_ObterID(msg);
-    //copia o texto da msg pro parametro do textoMsg
-    textoMsg = MEN_ObterTexto(msg);
-
-    return PER_CondRetOK;
-  }
-
-  return PER_CondRetNaoAchou;
-}
-
-/***************************************************************************
+ *  $FV Valor retornado
+ *      Cadeia de caracteres, caso o ponteiro para o perfil seja valido.
+ *      NULL, caso o ponteiro seja nulo.
  *
- *  Função: PER Buscar Mensagem 
- *      Funciona como um "iterador". se parametro inicio == 0, entao vai pro inicio da lista.
- *****/
-PER_tpCondRet PER_BuscarMsgEnviada(PER_tppPerfil pPerfil, char * pEmail, int inicio, char * textoMsg, int * idMsg) {
-  PER_tpCondRet ret;
+ ***********************************************************************/
+char * PER_ObterEmail(PER_tppPerfil pPerfil);
 
-  if ((pPerfil == NULL) || (pEmail == NULL))
-    PER_CondRetPonteiroNulo;
-
-  if (inicio == 0) { //primeira iteracao
-    IrInicioLista(pPerfil->msgEnviadas);
-
-    ret = PER_VerificaMsgEnviada(pPerfil, pEmail,textoMsg, idMsg);
-
-    switch (ret) {
-    case PER_CondRetOK:
-      return PER_CondRetOK; //encontrou a mensagem já no primeiro elemento
-    case PER_CondRetPonteiroNulo:
-      return PER_CondRetPonteiroNulo; //erro na estrutura -> mensagem acessada é nula ou destinatario é nulo
-    }
-    //se ret = CondRetNaoAchou -> entao continua buscando
-  }
-
-  //acessa elemento por elemento da lista de mensagens, buscando a mensagem cujo destinatário possui o email requerido
-  while (LIS_AvancarElementoCorrente(pPerfil->msgEnviadas,1) == LIS_CondRetOK) {
-
-    ret = PER_VerificaMsgEnviada(pPerfil, pEmail,textoMsg, idMsg);
-
-    switch (ret) {
-    case PER_CondRetOK:
-      return PER_CondRetOK; //encontrou a mensagem entao retorna
-    case PER_CondRetPonteiroNulo:
-      return PER_CondRetPonteiroNulo; //erro na estrutura -> mensagem acessada é nula ou destinatario é nulo
-    }
-    //se ret = CondRetNaoAchou -> entao continua buscando
-  }
-
-  return PER_CondRetNaoAchou; //chegou ao fim das mensagens e nao encontrou mais nenhuma
-}
-
-/***************************************************************************
+/***********************************************************************
  *
- *  Função: PER Verifica Mensagem Recebida
+ *  $FC Função: PER  &Alterar Nome
  *
- *  Função de apoio à PER_BuscarMsgEnviada
+ *  $ED Descrição da função
+ *     Recebe um perfil e altera o nome desse perfil.
  *
- *  Retorno:
- *    PER_CondRetPonteiroNulo - erro na estrutura
- *    PER_CondRetOK - encontrou uma mensagem
- *    PER_CondRetNaoAchoou - nao encontrou mensagem
- ***************************************************************************/
-
-PER_tpCondRet PER_VerificaMsgRecebida(PER_tppPerfil pPerfil, char *pEmail, char * textoMsg, int * idMsg) {
-  MEN_tppMensagem msg;
-  PER_tppPerfil destinatario;
-
-  msg = (MEN_tppMensagem) LIS_ObterValor(pPerfil->msgRecebidas);
-  if (msg == NULL)
-    return PER_CondRetPonteiroNulo;
-
-  destinatario = (PER_tppPerfil) MEN_ObterDestinatario(msg);
-  if (destinatario == NULL)
-    return PER_CondRetPonteiroNulo;
-
-  if (PER_CompararPerfil(destinatario, (void *) pEmail) == 0) {
-    //encontrou uma mensagem cujo destinatario possui o email requerido
-    
-    //copia o id da msg pro parametro idMsg para ser acessado pelo cliente
-    *idMsg = MEN_ObterID(msg);
-    //copia o texto da msg pro parametro do textoMsg
-    textoMsg = MEN_ObterTexto(msg);
-
-    return PER_CondRetOK;
-  }
-
-  return PER_CondRetNaoAchou;
-}
-
-/***************************************************************************
+ *  $EP Parâmetros
+ *     pPerfil  - ponteiro de um Perfil
+ *     nome - novo valor que irá substituir o nome do perfil.
  *
- *  Função: PER Buscar Mensagem 
- *      Funciona como um "iterador". se parametro inicio == 0, entao vai pro inicio da lista.
- *****/
-PER_tpCondRet PER_BuscarMsgRecebida(PER_tppPerfil pPerfil, char * pEmail, int inicio, char * textoMsg, int * idMsg) {
-  PER_tpCondRet ret;
+ *  $FV Valor retornado
+ *      PER_CondRetPonteiroNulo, caso o ponteiro para o perfil ou para a string pNome sejam nulos.
+ *      PER_CondRetStringVazia, caso a string pNome esteja vazia.
+ *      PER_CondRetOk, caso a alteração seja feita corretamente.
+ *
+ ***********************************************************************/
+PER_tpCondRet PER_AlterarNome(PER_tppPerfil pPerfil, char *nome);
 
-  if ((pPerfil == NULL) || (pEmail == NULL))
-    PER_CondRetPonteiroNulo;
+/***********************************************************************
+ *
+ *  $FC Função: PER  &Alterar Cidade
+ *
+ *  $ED Descrição da função
+ *     Recebe um perfil e altera a cidade desse perfil.
+ *
+ *  $EP Parâmetros
+ *     pPerfil  - ponteiro de um Perfil
+ *     cidade - novo valor que irá substituir a cidade do perfil.
+ *
+ *  $FV Valor retornado
+ *      PER_CondRetPonteiroNulo, caso o ponteiro para o perfil ou para a string pCidade sejam nulos.
+ *      PER_CondRetStringVazia, caso a string pCidade esteja vazia.
+ *      PER_CondRetOk, caso a alteração seja feita corretamente.
+ *
+ ***********************************************************************/
+PER_tpCondRet PER_AlterarCidade(PER_tppPerfil pPerfil, char *cidade);
 
-  if (inicio == 0) { //primeira iteracao
-    IrInicioLista(pPerfil->msgRecebidas);
+/***********************************************************************
+ *
+ *  $FC Função: PER  &Alterar data de nascimento
+ *
+ *  $ED Descrição da função
+ *     Recebe um perfil e altera a data de nascimento desse perfil.
+ *
+ *  $EP Parâmetros
+ *     pPerfil  - ponteiro de um Perfil
+ *     dataNasc - novo valor que irá substituir a data de nascimento do perfil.
+ *
+ *  $FV Valor retornado
+ *      PER_CondRetPonteiroNulo - caso o ponteiro para o perfil seja nulo
+ *      PER_CondRetValorInvalido - caso a string da data de nascimento não tenha o tamanho correto de 10 caracteres "XX/XX/XXXX".
+ *      PER_CondRetOk - caso a alteração seja feita corretamente.
+ *
+ ***********************************************************************/
+PER_tpCondRet PER_AlterarDataNasc(PER_tppPerfil pPerfil, char * dataNasc);
 
-    ret = PER_VerificaMsgRecebida(pPerfil, pEmail,textoMsg, idMsg);
+/***********************************************************************
+ *
+ *  $FC Função: PER  &Alterar Genero
+ *
+ *  $ED Descrição da função
+ *     Recebe um perfil e altera a idade desse perfil.
+ *
+ *  $EP Parâmetros
+ *     pPerfil  - ponteiro de um Perfil
+ *     genero - caractere com os possíveis valores: 'M' - masculino, 'F' - feminino, 'O' - outro
+ *
+ *  $FV Valor retornado
+ *      PER_CondRetPonteiroNulo - caso o ponteiro para o perfil seja nulo
+ *      PER_CondRetValorInvalido - caso o valor do parametro genero seja diferente de "M', 'F' ou 'O'
+ *      PER_CondRetOk - caso a alteração seja feita corretamente.
+ *
+ ***********************************************************************/
+PER_tpCondRet PER_AlterarGenero(PER_tppPerfil pPerfil, char genero);
 
-    switch (ret) {
-    case PER_CondRetOK:
-      return PER_CondRetOK; //encontrou a mensagem já no primeiro elemento
-    case PER_CondRetPonteiroNulo:
-      return PER_CondRetPonteiroNulo; //erro na estrutura -> mensagem acessada é nula ou remetente é nulo
-    }
-    //se ret = CondRetNaoAchou -> entao continua buscando
-  }
+/***********************************************************************
+ *
+ *  $FC Função: PER  &Enviar Mensagem
+ *
+ *  $ED Descrição da função
+ *     Envia uma mensagem do perfil remetente para o perfil destinatário.
+ *     Armazena a mensagem na lista de mensagens enviadas do remetente e
+ *     na lista de mensagens recebidas do destinatario.
+ *
+ *  $EP Parâmetros
+ *     remetente  - ponteiro do tipo Perfil do remetente
+ *     destinatario  - ponteiro do tipo Perfil do destinatario
+ *
+ *  $FV Valor retornado
+ *      PER_CondRetPonteiroNulo - caso algum dos parametros seja nulo
+ *      PER_CondRetFaltouMemoria - caso não consiga adicionar a mensagem na lista
+ *      PER_CondRetOk - caso a alteração seja feita corretamente.
+ *
+ ***********************************************************************/
+PER_tpCondRet PER_EnviarMensagem(PER_tppPerfil remetente, char * texto, PER_tppPerfil destinatario);
 
-  //acessa elemento por elemento da lista de mensagens, buscando a mensagem cujo remetente possui o email requerido
-  while (LIS_AvancarElementoCorrente(pPerfil->msgRecebidas,1) == LIS_CondRetOK) {
+/***********************************************************************
+*
+*  $FC Função: PER  &Buscar Mensagem Enviada
+*
+*  $ED Descrição da função
+*      Busca uma mensagem na lista de mensagens enviadas por um perfil para um outro perfil em específico.
+*      Por exemplo: buscar as mensagens que o perfil A enviou para o perfil B: o primeiro parâmetro é o perfil A,
+*      o segundo parâmetro é o e-mail do perfil B.
+*      Funciona como um iterador através do parâmetro inicio. Se inicio = 0, o elemento corrente da lista
+*      de mensagens vai para o primeiro elemento da lista. O texto da mensagem e o identificador da mensagem
+*      são retornados por referência. Se inicio > 0, o elemento corrente vai avançando até retornar todas as
+*      mensagens encontradas.
+*
+*  $EP Parâmetros
+*     pPerfil  - Perfil onde será buscada a mensagem de outro perfil em específico.
+*     pEmail  - email do perfil que será buscado na lista de mensagens
+*     inicio - colocar 0 na primeira iteração (vai para o inicio da lista) e > 0 nas proximas iterações
+*     textoMsg - parametro pelo qual o texto da mensagem encontrada será retornado
+*     idMsg - parametro pelo qual o identificado da mensagem encontrada será retornado
+*
+*  $FV Valor retornado
+*     PER_CondRetPonteiroNulo - caso o parametro pPerfil, parametro pEmail, mensagem encontrada ou remetente encontrado sejam NULL (erro)
+*     
+*
+***********************************************************************/
+PER_tpCondRet PER_BuscarMsgEnviada(PER_tppPerfil pPerfil, char * pEmail, int inicio, char * textoMsg, int * idMsg);
 
-    ret = PER_VerificaMsgRecebida(pPerfil, pEmail,textoMsg, idMsg);
-    
-    switch (ret) {
-    case PER_CondRetOK:
-      return PER_CondRetOK; //encontrou a mensagem entao retorna
-    case PER_CondRetPonteiroNulo:
-      return PER_CondRetPonteiroNulo; //erro na estrutura -> mensagem acessada é nula ou destinatario é nulo
-    }
-    //se ret = CondRetNaoAchou -> entao continua buscando
-  }
+/***********************************************************************
+*
+*  $FC Função: PER  &Buscar Mensagem Recebida
+*
+***********************************************************************/
+PER_tpCondRet PER_BuscarMsgRecebida(PER_tppPerfil pPerfil, char * pEmail, int inicio, char * textoMsg, int * idMsg);
 
-  return PER_CondRetNaoAchou; //chegou ao fim das mensagens e nao encontrou mais nenhuma
-}
 
-/********** Fim do módulo de implementação: PER  Perfil  **********/
+#undef PERFIL_EXT
+
+/********** Fim do módulo de definição: PER  Perfil **********/
+
+#else
+#endif

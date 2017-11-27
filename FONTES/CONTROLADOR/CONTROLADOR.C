@@ -30,6 +30,7 @@
 /*******   Protótipo das Funções Encapsuladas no Módulo *********************/
 
 
+
 /************** Dados encapsulados no modulo   *********************************************************/
 
 static GRA_tppGrafo Grafo = NULL; /* Ponteiro para o Grafo utilizado na rede de relacionamentos*/
@@ -46,7 +47,7 @@ static GRA_tppGrafo Grafo = NULL; /* Ponteiro para o Grafo utilizado na rede de 
 
 CON_tpCondRet CON_CriarPerfil(char *pNome, char *pEmail, char *pCidade, char genero, char *pDataNasc) {
 
-	PER_tppPerfil perfil;
+	PER_tppPerfil perfil = NULL;
 	PER_tpCondRet retornoPerfil;
 	GRA_tpCondRet retornoGrafo;
 
@@ -60,15 +61,19 @@ CON_tpCondRet CON_CriarPerfil(char *pNome, char *pEmail, char *pCidade, char gen
 	if (genero!='M' && genero!='F' && genero!='O')
 		return CON_CondRetErroFormato;
 
-	/* Cria um ponteiro para o perfil*/
+	/* Caso o Grafo ainda não exista, cria um Grafo*/
+	if(Grafo==NULL)
+		Grafo = GRA_CriarGrafo (PER_DestruirPerfil, PER_CompararPerfil);
+
+	//TODO: verificar se o perfil ja existe na rede!!
+	if (CON_BuscarPerfil(pEmail, perfil) == CON_CondRetOK)
+		return CON_PerfilJaExiste;
+
+		/* Cria um ponteiro para o perfil*/
 	perfil = PER_CriarPerfil (pNome, pEmail, pCidade, genero, pDataNasc);
 
 	if (perfil==NULL)
 		return CON_CondRetErroCadastro;
-
-	/* Caso o Grafo ainda não exista, cria um Grafo*/
-	if(Grafo==NULL)
-		Grafo = GRA_CriarGrafo (PER_DestruirPerfil, PER_CompararPerfil);
 
 	/*Adiciona o Perfil como um vertice do grafo*/
 	retornoGrafo = GRA_CriarVertice (Grafo, perfil, (void *)pEmail);

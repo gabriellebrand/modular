@@ -75,7 +75,9 @@ typedef enum {
 
 	CON_CondRetAmizadeNaoExiste,
 
-	CON_CondRetFaltouMemoria
+	CON_CondRetFaltouMemoria,
+
+	CON_PerfilJaExiste
 
 } CON_tpCondRet;
 

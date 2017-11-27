@@ -202,9 +202,5 @@ MEN_tpCondRet MEN_DesativarRemetente(MEN_tppMensagem mensagem);
 ***********************************************************************/
 MEN_tpCondRet MEN_DesativarDestinatario(MEN_tppMensagem mensagem);
 
-#undef MENSAGEM_EXT
-
-/********** Fim do módulo de definição: MEN Mensagem **********/
-
 #else
 #endif

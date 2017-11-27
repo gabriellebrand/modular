@@ -39,13 +39,13 @@
 
 typedef struct PER_tagPerfil {
 
-    char nome[100];
+    char nome[101];
         /* Nome do perfil */
     
-    char email[100];
+    char email[101];
         /* Email do perfil */
     
-    char cidade[100];
+    char cidade[101];
         /* Cidade do perfil */
 
     char genero;
@@ -324,7 +324,7 @@ PER_tpCondRet PER_EnviarMensagem(PER_tppPerfil remetente, char *texto, PER_tppPe
  *		PER_CondRetNaoAchoou - nao encontrou mensagem
  ***************************************************************************/
 
-PER_tpCondRet PER_VerificaMsgEnviada(char *pEmail, char * textoMsg, int * idMsg) {
+PER_tpCondRet PER_VerificaMsgEnviada(PER_tppPerfil pPerfil, char *pEmail, char * textoMsg, int * idMsg) {
 	MEN_tppMensagem msg;
 	PER_tppPerfil destinatario;
 
@@ -356,7 +356,7 @@ PER_tpCondRet PER_VerificaMsgEnviada(char *pEmail, char * textoMsg, int * idMsg)
  *			Funciona como um "iterador". se parametro inicio == 0, entao vai pro inicio da lista.
  *****/
 PER_tpCondRet PER_BuscarMsgEnviada(PER_tppPerfil pPerfil, char * pEmail, int inicio, char * textoMsg, int * idMsg) {
-	PER_CondRet ret;
+	PER_tpCondRet ret;
 
 	if ((pPerfil == NULL) || (pEmail == NULL))
 		PER_CondRetPonteiroNulo;
@@ -364,7 +364,7 @@ PER_tpCondRet PER_BuscarMsgEnviada(PER_tppPerfil pPerfil, char * pEmail, int ini
 	if (inicio == 0) { //primeira iteracao
 		IrInicioLista(pPerfil->msgEnviadas);
 
-		ret = PER_VerificaMsgEnviada(pEmail,textoMsg, idMsg);
+		ret = PER_VerificaMsgEnviada(pPerfil, pEmail,textoMsg, idMsg);
 
 		switch (ret) {
 		case PER_CondRetOK:
@@ -378,7 +378,7 @@ PER_tpCondRet PER_BuscarMsgEnviada(PER_tppPerfil pPerfil, char * pEmail, int ini
 	//acessa elemento por elemento da lista de mensagens, buscando a mensagem cujo destinatário possui o email requerido
 	while (LIS_AvancarElementoCorrente(pPerfil->msgEnviadas,1) == LIS_CondRetOK) {
 
-		ret = PER_VerificaMsgEnviada(pEmail,textoMsg, idMsg);
+		ret = PER_VerificaMsgEnviada(pPerfil, pEmail,textoMsg, idMsg);
 
 		switch (ret) {
 		case PER_CondRetOK:
@@ -404,7 +404,7 @@ PER_tpCondRet PER_BuscarMsgEnviada(PER_tppPerfil pPerfil, char * pEmail, int ini
  *		PER_CondRetNaoAchoou - nao encontrou mensagem
  ***************************************************************************/
 
-PER_tpCondRet PER_VerificaMsgRecebida(char *pEmail, char * textoMsg, int * idMsg) {
+PER_tpCondRet PER_VerificaMsgRecebida(PER_tppPerfil pPerfil, char *pEmail, char * textoMsg, int * idMsg) {
 	MEN_tppMensagem msg;
 	PER_tppPerfil destinatario;
 
@@ -436,8 +436,7 @@ PER_tpCondRet PER_VerificaMsgRecebida(char *pEmail, char * textoMsg, int * idMsg
  *			Funciona como um "iterador". se parametro inicio == 0, entao vai pro inicio da lista.
  *****/
 PER_tpCondRet PER_BuscarMsgRecebida(PER_tppPerfil pPerfil, char * pEmail, int inicio, char * textoMsg, int * idMsg) {
-	MEN_tppMensagem msg;
-	PER_tppPerfil remetente;
+	PER_tpCondRet ret;
 
 	if ((pPerfil == NULL) || (pEmail == NULL))
 		PER_CondRetPonteiroNulo;
@@ -445,7 +444,7 @@ PER_tpCondRet PER_BuscarMsgRecebida(PER_tppPerfil pPerfil, char * pEmail, int in
 	if (inicio == 0) { //primeira iteracao
 		IrInicioLista(pPerfil->msgRecebidas);
 
-		ret = PER_VerificaMsgRecebida(pEmail,textoMsg, idMsg);
+		ret = PER_VerificaMsgRecebida(pPerfil, pEmail,textoMsg, idMsg);
 
 		switch (ret) {
 		case PER_CondRetOK:
@@ -459,7 +458,7 @@ PER_tpCondRet PER_BuscarMsgRecebida(PER_tppPerfil pPerfil, char * pEmail, int in
 	//acessa elemento por elemento da lista de mensagens, buscando a mensagem cujo remetente possui o email requerido
 	while (LIS_AvancarElementoCorrente(pPerfil->msgRecebidas,1) == LIS_CondRetOK) {
 
-		ret = PER_VerificaMsgRecebida(pEmail,textoMsg, idMsg);
+		ret = PER_VerificaMsgRecebida(pPerfil, pEmail,textoMsg, idMsg);
 		
 		switch (ret) {
 		case PER_CondRetOK:
