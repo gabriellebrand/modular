@@ -41,13 +41,18 @@ typedef struct MEN_tagMensagem * MEN_tppMensagem;
 *
 ***********************************************************************/
 
-   typedef enum {
+typedef enum {
 	   
  /* 0 */ MEN_CondRetOK ,
                /* Concluiu corretamente */
 
- /* 1 */ MEN_CondRetValorNulo
+ /* 1 */ MEN_CondRetValorNulo,
+
+
+ /* 2 */ MEN_CondRetPonteiroNulo,
    		/* Ponteiro Nulo */
+
+ /* 3 */ MEN_CondRetNaoAchou
 
    } MEN_tpCondRet ;
 
