@@ -32,6 +32,9 @@
 /********** Prototipo das funcoes encapsuladas pelo modulo **********/
 
 void INT_CriarPerfil();
+void INT_EnviarMensagem();
+void INT_CriarAmizade();
+void INT_BuscarPerfil();
 
 void INT_MenuPrincipal() {
     int opcao = 0;
@@ -49,13 +52,13 @@ void INT_MenuPrincipal() {
 			INT_CriarAmizade();
 			break;
         case 3:
-			printf("\nOK! 3\n");
+			INT_EnviarMensagem();
 			break;
         case 4:
 			printf("\nOK! 4\n");
 			break;
         case 5:
-			printf("\nOK! 5\n");
+			INT_BuscarPerfil();
 			break;
         case 6:
 			printf("\nOK! 6\n");
@@ -141,6 +144,7 @@ void INT_CriarAmizade() {
 		break;
 	case CON_CondRetOK:
 		printf("\nPerfis conectados com sucesso.\n");
+		break;
 	default:
 		printf("\n!! Algum dos perfis nao foi encontrado na rede.\n");
 	}
@@ -166,14 +170,44 @@ void INT_EnviarMensagem() {
 	switch (ret) {
 	case CON_CondRetOK:
 		printf("\nMensagem enviada com sucesso.\n");
+		break;
 	case CON_CondRetAmizadeNaoExiste:
 		printf("\n!! Erro: nao foi possivel enviar mensagem pois os perfis nao estao conectados. !!\n");
+		break;
 	case CON_CondRetFaltouMemoria:
 		printf("\n!! Ocorreu um problema ao enviar a mensagem :( Tente novamente.\n");
+		break;
 	case CON_CondRetValorNulo:
 		printf("\n!! Erro: Dados invalidos. !!\n");
+		break;
 	default:
 		printf("\nAlgum (ou ambos) perfil nao foi encontrado na rede.\n");
+	}
+
+}
+
+void INT_BuscarPerfil() {
+	char email[TAM_PERFIL];
+	CON_tpCondRet ret;
+	printf("\n*****BUSCAR PERFIL*****\n\n\tDigite o e-mail do perfil a ser buscado.\n\n");
+
+	printf("Email:\n");
+	scanf(" %[^\n]", email);
+
+	ret = CON_MostrarPerfil (email);
+	
+	switch (ret) {
+	case CON_CondRetOK:
+		//printf("\nMensagem enviada com sucesso.\n");
+		break;
+	case CON_CondRetStringVazia:
+		printf("\n!! Erro: Dado vazio. !!\n");
+		break;
+	case CON_CondRetValorNulo:
+		printf("\n!! Erro: Ocorreu um problema ao buscar o perfil. !!\n");
+		break;
+	default:
+		printf("\nNao foi encontrado um perfil com esse e-mail.\n");
 	}
 
 }
