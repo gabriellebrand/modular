@@ -66,7 +66,7 @@ CON_tpCondRet CON_CriarPerfil(char *pNome, char *pEmail, char *pCidade, char gen
 		Grafo = GRA_CriarGrafo (PER_DestruirPerfil, PER_CompararPerfil);
 
 	//TODO: verificar se o perfil ja existe na rede!!
-	if (CON_BuscarPerfil(pEmail, perfil) == CON_CondRetOK)
+	if (CON_BuscarPerfil(pEmail, &perfil) == CON_CondRetOK)
 		return CON_PerfilJaExiste;
 
 		/* Cria um ponteiro para o perfil*/
@@ -97,7 +97,7 @@ CON_tpCondRet CON_CriarPerfil(char *pNome, char *pEmail, char *pCidade, char gen
 *
 ***********************************************************************/
 
-CON_tpCondRet CON_BuscarPerfil(char *email, PER_tppPerfil pPerfil) {
+CON_tpCondRet CON_BuscarPerfil(char *email, PER_tppPerfil *pPerfil) {
 
 	GRA_tpCondRet ret;
 
@@ -114,7 +114,7 @@ CON_tpCondRet CON_BuscarPerfil(char *email, PER_tppPerfil pPerfil) {
 	if (ret == GRA_CondRetVerticeNaoExiste)
 		return CON_CondRetNaoAchou;
 
-	pPerfil = (PER_tppPerfil) GRA_ObterValor(Grafo);
+	*pPerfil = (PER_tppPerfil) GRA_ObterValor(Grafo);
 
 	if (pPerfil == NULL)
 		return CON_CondRetValorNulo;
@@ -131,12 +131,12 @@ CON_tpCondRet CON_BuscarPerfil(char *email, PER_tppPerfil pPerfil) {
 
 CON_tpCondRet CON_MostrarPerfil (char *email) {
 
-	PER_tppPerfil pPerfil;
+	PER_tppPerfil pPerfil = NULL;
 	CON_tpCondRet ret;
 	PER_tpCondRet pRet;
 
 	/* Busca o perfil*/
-	ret = CON_BuscarPerfil (email, pPerfil);
+	ret = CON_BuscarPerfil (email, &pPerfil);
 
 	if (ret!=CON_CondRetOK)
 		return ret;
@@ -312,10 +312,11 @@ CON_tpCondRet CON_EnviarMensagem(char *email1, char *email2, char *texto) {
 	CON_tpCondRet cRet;
 	PER_tppPerfil remetente, destinatario;
 	//1. verificar se os dois perfis sao amigos
-	if ((cRet = CON_BuscarPerfil(email1, remetente)) != CON_CondRetOK) {
+	if ((cRet = CON_BuscarPerfil(email1, &remetente)) != CON_CondRetOK) {
 		return cRet;
 	}
 
+	PER_MostrarPerfil(remetente);
 	ret = GRA_IrVizinho(Grafo, email2);
 
 	if ((ret == GRA_CondRetGrafoNaoExiste)||(ret == GRA_CondRetGrafoVazio))
@@ -329,7 +330,7 @@ CON_tpCondRet CON_EnviarMensagem(char *email1, char *email2, char *texto) {
 	//2. acessar as referencias para o perfil1 e perfil 2
 	destinatario = (PER_tppPerfil) GRA_ObterValor(Grafo);
 
-	if (remetente || destinatario == NULL)
+	if (remetente == NULL || destinatario == NULL)
 		return CON_CondRetValorNulo;
 
 	//3. chamar a funcao enviar mensagem do modulo perfil
@@ -358,11 +359,11 @@ CON_tpCondRet CON_CarregarHistorico(char *pEmail1, char *pEmail2) {
 	*/
 
 	//busca perfil 1
-	if ((ret = CON_BuscarPerfil(pEmail1, perfil1)) != CON_CondRetOK)
+	if ((ret = CON_BuscarPerfil(pEmail1, &perfil1)) != CON_CondRetOK)
 		return ret;
 
 	//busca perfil 2 (necessario verificar se ele existe)
-	if ((ret = CON_BuscarPerfil(pEmail2, perfil2)) != CON_CondRetOK)
+	if ((ret = CON_BuscarPerfil(pEmail2, &perfil2)) != CON_CondRetOK)
 		return ret;
 
 	//acho que nao eh necessário verificar se os dois sao amigos, pois excluir amizade nao implica em excluir msgs trocadas
