@@ -1,0 +1,122 @@
+// Script de Teste para o Módulo Mensagem - TesteMensagem.script
+// Programação Modular - 2017.2
+// Grupo: 
+//Gabriel Cantergiani
+//Wellington Bezerra
+//Gabrielle Bradenburg
+
+// Propósito: Testar todas as funções e possiveis condicoes de retorno do modulo Mensagem
+
+
+== Inicializar valores
+=declararparm   mensagem0  int 0
+=declararparm   mensagem1  int 1
+=declararparm   mensagem2  int 2
+=declararparm   mensagem3  int 3
+=declararparm   mensagem4  int 4
+=declararparm   mensagem5  int 5
+=declararparm   mensagem6  int 6
+
+=declararparm   nome0    string  "pedro"
+=declararparm   nome1    string  "joao"
+=declararparm   nome2    string  "carlos"
+=declararparm   nome3    string  "lucas"
+=declararparm   nome4    string  "jose"
+
+=declararparm   perfil0  int 0
+=declararparm   perfil1  int 1
+=declararparm   perfil2  int 2
+=declararparm   perfil3  int 3
+=declararparm   perfil4  int 4
+
+=declararparm   texto0    string  "Ola"
+=declararparm   texto1    string  "Oi"
+=declararparm   texto2    string  "Tudo Bem?"
+=declararparm   texto3    string  "Tudo! E você?"
+=declararparm   texto4    string  "Tambem!"
+
+=declararparm   id0    int 1
+=declararparm   id1    int 2
+=declararparm   id2    int 3
+=declararparm   id3    int 4
+=declararparm   id4    int 5
+=declararparm   id5    int 6
+=declararparm   id6    int 7
+
+=declararparm   OK             int  0
+=declararparm   ValorNulo      int  1
+=declararparm   PonteiroNulo   int  2
+=declararparm   NaoAchou       int  3
+
+=declararparm   pNULL          int  0
+=declararparm   pNaoNULL       int  1
+
+// ==========      INICIO DOS CASOS DE TESTE   =====================================================================
+
+==Cria Perfis para execucao dos testes
+=criarperfil perfil0 nome0
+=criarperfil perfil1 nome1
+=criarperfil perfil2 nome2
+=criarperfil perfil3 nome3
+=criarperfil perfil4 nome4
+
+== Criar mensagem 0
+=criarmensagem  mensagem0 perfil0 perfil1 texto0
+
+==Criar mensagem 1
+=criarmensagem  mensagem1 perfil1 perfil0 texto1
+
+==Criar mensagem 2
+=criarmensagem  mensagem2 perfil2 perfil3 texto2
+
+== Verificar Obter Texto, texto certo
+=obtertexto     mensagem0 texto0 OK
+
+== Verifica Obter Texto, texto errado
+=obtertexto     mensagem0 texto1 NaoAchou
+
+== Verifica Obter ID de mensagem, id certa
+=obterid        mensagem0 id0 OK
+
+== Verifica Obter ID de mensagem, id errada
+=obterid        mensagem1 id3 NaoAchou
+
+==Verifica Obter Remetente correto
+=obterremetente mensagem0 nome0 OK
+
+==Verifica Obter Remetente errado
+=obterremetente mensagem0 nome1 NaoAchou
+=obterremetente mensagem1 nome3 NaoAchou
+
+==Verifica Obter destinatario correto
+=obterdestinatario mensagem1 nome0 OK
+
+==Verifica Obter destinatario errado
+=obterdestinatario mensagem2 nome4 NaoAchou
+
+== Verifica Comparar Mensagem, mensagens iguais
+=compararmensagem  mensagem1 mensagem1 OK
+
+== Verifica Comparar Mensagem, mensagens diferentes
+=compararmensagem  mensagem1 mensagem2 NaoAchou
+
+== Verifica Comparar Mensagem, mensagens nao existe
+=compararmensagem  mensagem2 mensagem4 ValorNulo
+
+== Verifica desativar remetente, cond ret OK
+=desativarremetente mensagem0 OK
+
+==Verifica se remetente foi desativado
+=obterremetente mensagem0 nome1 ValorNulo
+
+==Verifica desativar remetente, cond ret Valor Nulo
+=desativarremetente mensagem3 ValorNulo
+
+== Verifica desativar destinatario, cond ret OK
+=desativardestinatario  mensagem1 OK
+
+==Verifica se destinatario foi desativado
+=obterdestinatario  mensagem1 nome2 ValorNulo
+
+== Verifica desativar destinatario, cond ret Valor Nulo
+=desativardestinatario mensagem4 ValorNulo
