@@ -75,7 +75,9 @@ typedef enum {
 
 	CON_CondRetAmizadeNaoExiste,
 
-	CON_CondRetFaltouMemoria
+	CON_CondRetFaltouMemoria,
+
+	CON_PerfilJaExiste
 
 } CON_tpCondRet;
 
@@ -181,7 +183,7 @@ CON_tpCondRet CON_ExcluirPerfil (char *pEmail);
 *		- CON_CondRetRedeVazia
 *		- CON_CondRetNaoAchou
 *		- CON_CondRetAmizadeJaExiste
-*		- CON_ConRetAmizadeInvalida
+*		- CON_CondRetAmizadeInvalida
 *		- CON_CondRetOK
 *
 ***********************************************************************/
@@ -259,3 +261,10 @@ CON_tpCondRet CON_EnviarMensagem(char *email1, char *email2, char *texto);
 *
 ***********************************************************************/
 CON_tpCondRet CON_CarregarHistorico(char *pEmail1, char *pEmail2);
+
+#undef CONTROLADOR_EXT
+
+/********** Fim do módulo de definição: CON Controlador **********/
+
+#else
+#endif

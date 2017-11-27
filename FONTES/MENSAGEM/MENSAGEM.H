@@ -41,13 +41,18 @@ typedef struct MEN_tagMensagem * MEN_tppMensagem;
 *
 ***********************************************************************/
 
-   typedef enum {
+typedef enum {
 	   
  /* 0 */ MEN_CondRetOK ,
                /* Concluiu corretamente */
 
- /* 1 */ PER_CondRetPonteiroNulo
+ /* 1 */ MEN_CondRetValorNulo,
+
+
+ /* 2 */ MEN_CondRetPonteiroNulo,
    		/* Ponteiro Nulo */
+
+ /* 3 */ MEN_CondRetNaoAchou
 
    } MEN_tpCondRet ;
 
@@ -140,7 +145,7 @@ void * MEN_ObterRemetente(MEN_tppMensagem mensagem);
 *		- Se a mensagem enviada como parâmetro não existe, retorna NULL.
 *
 ***********************************************************************/
-void * MEN_ObterDestinatario(MEN_tppMensagem mensagem)
+void * MEN_ObterDestinatario(MEN_tppMensagem mensagem);
 
 /***********************************************************************
 *
@@ -202,3 +207,5 @@ MEN_tpCondRet MEN_DesativarRemetente(MEN_tppMensagem mensagem);
 ***********************************************************************/
 MEN_tpCondRet MEN_DesativarDestinatario(MEN_tppMensagem mensagem);
 
+#else
+#endif

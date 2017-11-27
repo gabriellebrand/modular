@@ -23,8 +23,12 @@
 #include   <memory.h>
 #include   <malloc.h>
 #include   <assert.h>
-#include   "PERFIL.H"
 
+#define MENSAGEM_OWN
+#include "MENSAGEM.H"
+#undef MENSAGEM_OWN
+
+#define TAM_MSG 251
 static int contadorID = 1;
 
 /***********************************************************************
@@ -42,7 +46,7 @@ typedef struct MEN_tagMensagem {
     void * destinatario;
         /* Ponteiro para o destinatario */
     
-    char texto[250];
+    char texto[TAM_MSG];
         /* Texto da mensagem */
     
     int id;
@@ -58,7 +62,7 @@ typedef struct MEN_tagMensagem {
 MEN_tppMensagem MEN_CriarMensagem(void * remetente, void * destinatario, char *texto) {
 
 	MEN_tppMensagem mensagem;
-	if (remente == NULL  || destinatario == NULL || texto == NULL || strlen(texto) == 0)
+	if (remetente == NULL  || destinatario == NULL || texto == NULL || strlen(texto) == 0)
 		return NULL;
 
 	mensagem = (MEN_tpMensagem*)malloc(sizeof(MEN_tpMensagem));

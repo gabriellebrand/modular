@@ -33,11 +33,13 @@
 
 #include "LISTA.H"
 #include "MENSAGEM.H"
+
+
 /***** Declarações exportadas pelo módulo *****/
 
 /* Tipo referência para um Perfil */
 
-typedef struct PER_tagPerfil * PER_tppPerfil ;
+typedef struct PER_tagPerfil * PER_tppPerfil;
 
 
 /***********************************************************************
@@ -51,17 +53,17 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 ***********************************************************************/
 
    typedef enum {
-	   
- /* 0 */ PER_CondRetOK ,
+     
+ /* 0 */ PER_CondRetOK,
                /* Concluiu corretamente */
 
- /* 1 */ PER_CondRetFaltouMemoria ,
+ /* 1 */ PER_CondRetFaltouMemoria,
                /* Faltou memoria */
 
- /* 2 */ PER_CondRetPonteiroNulo ,
-   		/* Ponteiro Nulo */
+ /* 2 */ PER_CondRetPonteiroNulo,
+      /* Ponteiro Nulo */
 
- /* 3 */ PER_CondRetStringVazia ,
+ /* 3 */ PER_CondRetStringVazia,
       /* String vazia */
 
  /* 4 */ PER_CondRetValorInvalido,
@@ -87,10 +89,10 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 *     pDataNasc - Data de Nascimento do perfil a ser criado
 *
 *  $FV Valor retornado
-*		Se executou corretamente retorna o ponteiro para um Perfil.
+*   Se executou corretamente retorna o ponteiro para um Perfil.
 *
-*		Se ocorreu algum erro, por exemplo falta de memoria ou dados errados,
-*		a funcao retorna NULL.
+*   Se ocorreu algum erro, por exemplo falta de memoria ou dados errados,
+*   a funcao retorna NULL.
 *
 ***********************************************************************/
 
@@ -107,7 +109,7 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
  *     pPerfil  - ponteiro do o perfil que será destruido
  *
  *  $FV Valor retornado
- *	    PER_CondRetOK  - destruicao do perfil com sucesso
+ *      PER_CondRetOK  - destruicao do perfil com sucesso
  *      PER_CondRetPonteiroNulo - se o valor do perfil for NULL
  *
  ***********************************************************************/
@@ -126,7 +128,7 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
  *     pValor2  - ponteiro do o perfil 2
  *
  *  $FV Valor retornado
- *	    igual a 0  - dois perfis são iguais
+ *      igual a 0  - dois perfis são iguais
  *      diferente de 0 - dois perfis são diferentes
  *
  ***********************************************************************/
@@ -218,9 +220,9 @@ PER_tpCondRet PER_AlterarCidade(PER_tppPerfil pPerfil, char *cidade);
  *     dataNasc - novo valor que irá substituir a data de nascimento do perfil.
  *
  *  $FV Valor retornado
- *      PER_CondRetPonteiroNulo, caso o ponteiro para o perfil seja nulo
- *      PER_CondRetValorInvalido, caso a string da data de nascimento não tenha o tamanho correto de 10 caracteres "XX/XX/XXXX".
- *      PER_CondRetOk, caso a alteração seja feita corretamente.
+ *      PER_CondRetPonteiroNulo - caso o ponteiro para o perfil seja nulo
+ *      PER_CondRetValorInvalido - caso a string da data de nascimento não tenha o tamanho correto de 10 caracteres "XX/XX/XXXX".
+ *      PER_CondRetOk - caso a alteração seja feita corretamente.
  *
  ***********************************************************************/
 PER_tpCondRet PER_AlterarDataNasc(PER_tppPerfil pPerfil, char * dataNasc);
@@ -237,9 +239,9 @@ PER_tpCondRet PER_AlterarDataNasc(PER_tppPerfil pPerfil, char * dataNasc);
  *     genero - caractere com os possíveis valores: 'M' - masculino, 'F' - feminino, 'O' - outro
  *
  *  $FV Valor retornado
- *      PER_CondRetPonteiroNulo, caso o ponteiro para o perfil seja nulo
- *      PER_CondRetValorInvalido, caso o valor do parametro genero seja diferente de "M', 'F' ou 'O'
- *      PER_CondRetOk, caso a alteração seja feita corretamente.
+ *      PER_CondRetPonteiroNulo - caso o ponteiro para o perfil seja nulo
+ *      PER_CondRetValorInvalido - caso o valor do parametro genero seja diferente de "M', 'F' ou 'O'
+ *      PER_CondRetOk - caso a alteração seja feita corretamente.
  *
  ***********************************************************************/
 PER_tpCondRet PER_AlterarGenero(PER_tppPerfil pPerfil, char genero);
@@ -258,9 +260,9 @@ PER_tpCondRet PER_AlterarGenero(PER_tppPerfil pPerfil, char genero);
  *     destinatario  - ponteiro do tipo Perfil do destinatario
  *
  *  $FV Valor retornado
- *      PER_CondRetPonteiroNulo, caso algum dos parametros seja nulo
- *      PER_CondRetFaltouMemoria, caso não consiga adicionar a mensagem na lista
- *      PER_CondRetOk, caso a alteração seja feita corretamente.
+ *      PER_CondRetPonteiroNulo - caso algum dos parametros seja nulo
+ *      PER_CondRetFaltouMemoria - caso não consiga adicionar a mensagem na lista
+ *      PER_CondRetOk - caso a alteração seja feita corretamente.
  *
  ***********************************************************************/
 PER_tpCondRet PER_EnviarMensagem(PER_tppPerfil remetente, char * texto, PER_tppPerfil destinatario);
@@ -268,6 +270,26 @@ PER_tpCondRet PER_EnviarMensagem(PER_tppPerfil remetente, char * texto, PER_tppP
 /***********************************************************************
 *
 *  $FC Função: PER  &Buscar Mensagem Enviada
+*
+*  $ED Descrição da função
+*      Busca uma mensagem na lista de mensagens enviadas por um perfil para um outro perfil em específico.
+*      Por exemplo: buscar as mensagens que o perfil A enviou para o perfil B: o primeiro parâmetro é o perfil A,
+*      o segundo parâmetro é o e-mail do perfil B.
+*      Funciona como um iterador através do parâmetro inicio. Se inicio = 0, o elemento corrente da lista
+*      de mensagens vai para o primeiro elemento da lista. O texto da mensagem e o identificador da mensagem
+*      são retornados por referência. Se inicio > 0, o elemento corrente vai avançando até retornar todas as
+*      mensagens encontradas.
+*
+*  $EP Parâmetros
+*     pPerfil  - Perfil onde será buscada a mensagem de outro perfil em específico.
+*     pEmail  - email do perfil que será buscado na lista de mensagens
+*     inicio - colocar 0 na primeira iteração (vai para o inicio da lista) e > 0 nas proximas iterações
+*     textoMsg - parametro pelo qual o texto da mensagem encontrada será retornado
+*     idMsg - parametro pelo qual o identificado da mensagem encontrada será retornado
+*
+*  $FV Valor retornado
+*     PER_CondRetPonteiroNulo - caso o parametro pPerfil, parametro pEmail, mensagem encontrada ou remetente encontrado sejam NULL (erro)
+*     
 *
 ***********************************************************************/
 PER_tpCondRet PER_BuscarMsgEnviada(PER_tppPerfil pPerfil, char * pEmail, int inicio, char * textoMsg, int * idMsg);
