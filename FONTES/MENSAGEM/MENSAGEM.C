@@ -28,6 +28,7 @@
 #include "MENSAGEM.H"
 #undef MENSAGEM_OWN
 
+#define TAM_MSG 251
 static int contadorID = 1;
 
 /***********************************************************************
@@ -45,7 +46,7 @@ typedef struct MEN_tagMensagem {
     void * destinatario;
         /* Ponteiro para o destinatario */
     
-    char texto[250];
+    char texto[TAM_MSG];
         /* Texto da mensagem */
     
     int id;

@@ -183,7 +183,7 @@ CON_tpCondRet CON_ExcluirPerfil (char *pEmail);
 *		- CON_CondRetRedeVazia
 *		- CON_CondRetNaoAchou
 *		- CON_CondRetAmizadeJaExiste
-*		- CON_ConRetAmizadeInvalida
+*		- CON_CondRetAmizadeInvalida
 *		- CON_CondRetOK
 *
 ***********************************************************************/

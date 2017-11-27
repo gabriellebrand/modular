@@ -27,6 +27,7 @@
 #undef INTERFACE_OWN
 
 #define TAM_PERFIL 101
+#define TAM_MSG 251
 
 /********** Prototipo das funcoes encapsuladas pelo modulo **********/
 
@@ -45,7 +46,7 @@ void INT_MenuPrincipal() {
 			INT_CriarPerfil();
 			break;
         case 2:
-			printf("\nOK! 2\n");
+			INT_CriarAmizade();
 			break;
         case 3:
 			printf("\nOK! 3\n");
@@ -110,8 +111,74 @@ void INT_CriarPerfil() {
 	default:
 		printf("\n!! Ocorreu um erro ao realizar o cadastro. !!\n");
 	}
+}
+
+void INT_CriarAmizade() {
+	CON_tpCondRet ret;
+	char email1[TAM_PERFIL], email2[TAM_PERFIL];
+	printf("\n*****CRIAR AMIZADE*****\n\n\tDigite o e-mail dos dois perfis que serao conectados.\n\n");
+	
+	printf("E-mail 1:\n");
+	scanf(" %[^\n]", email1);
+	
+	printf("E-mail 2:\n");
+	scanf(" %[^\n]", email2);
+
+	ret = CON_CriarAmizade(email1, email2);
+
+	switch (ret) {
+	case CON_CondRetAmizadeJaExiste:
+		printf("\n!! Amizade ja' existe entre os dois perfis.\n");
+		break;
+	case CON_CondRetAmizadeInvalida:
+		printf("\n!! Erro: nao e' possivel conectar um perfil com ele mesmo. !!\n");
+		break;
+	case CON_CondRetStringVazia:
+		printf("\n!! Erro: e-mails invalidos. !!\n");
+		break;
+	case CON_CondRetValorNulo:
+		printf("\n!! Ocorreu um problema ao conectar os perfis :( Tente novamente.\n");
+		break;
+	case CON_CondRetOK:
+		printf("\nPerfis conectados com sucesso.\n");
+	default:
+		printf("\n!! Algum dos perfis nao foi encontrado na rede.\n");
+	}
+}
+
+void INT_EnviarMensagem() {
+	char mensagem[TAM_MSG], emailRem[TAM_PERFIL], emailDest[TAM_PERFIL];
+	CON_tpCondRet ret;
+
+	printf("\n*****ENVIAR MENSAGEM*****\n\n\tDigite o e-mail do remetente, o texto da mensagem e o e-mail do destinatario.\n\n");
+
+	printf("E-mail do remetente:\n");
+	scanf(" %[^\n]", emailRem);
+	
+	printf("Texto da mensagem:\n");
+	scanf(" %[^\n]", mensagem);
+
+	printf("E-mail do destinatario:\n");
+	scanf(" %[^\n]", emailDest);
+
+	ret = CON_EnviarMensagem(emailRem, emailDest, mensagem);
+
+	switch (ret) {
+	case CON_CondRetOK:
+		printf("\nMensagem enviada com sucesso.\n");
+	case CON_CondRetAmizadeNaoExiste:
+		printf("\n!! Erro: nao foi possivel enviar mensagem pois os perfis nao estao conectados. !!\n");
+	case CON_CondRetFaltouMemoria:
+		printf("\n!! Ocorreu um problema ao enviar a mensagem :( Tente novamente.\n");
+	case CON_CondRetValorNulo:
+		printf("\n!! Erro: Dados invalidos. !!\n");
+	default:
+		printf("\nAlgum (ou ambos) perfil nao foi encontrado na rede.\n");
+	}
 
 }
+
+
 
 int main (void) {
 
