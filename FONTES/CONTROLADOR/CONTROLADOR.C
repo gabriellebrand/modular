@@ -267,25 +267,30 @@ CON_tpCondRet CON_ExcluirAmizade (char *email1, char *email2) {
 CON_tpCondRet CON_BuscarAmizades(char *email) { /*Talvez seja melhor mudar o nome dessa funcao pra ListarAmizades */
 	GRA_tpCondRet ret;
 	int i = 0;
-	void * val;
+	//void * val = NULL;
 	PER_tppPerfil perAmigo;
-	//1. buscar o vertice relativo ao email passado
-	ret = GRA_IrVertice (Grafo, email);
 
-	if (ret == GRA_CondRetVerticeNaoExiste)
-		return CON_CondRetNaoAchou;
-	if (ret != GRA_CondRetOK)
-		return CON_CondRetRedeVazia;
+	do {
+		//1. buscar o vertice relativo ao email passado
+		ret = GRA_IrVertice (Grafo, email);
 
-	//2. acessar a lista de arestas do vertice
-	//3. retornar o perfil de cada uma das arestas acessadas
-	while((ret = GRA_AvancarVizinho (Grafo, i, val)) == GRA_CondRetOK) {
-		perAmigo = (PER_tppPerfil)val;
-		//4. chamar aqui a funcao que imprime os valores do perfil
-		//TODO: trocar isso por obter campos do perfil e chamar a funcao da interface que imprime os campos!!
-		PER_MostrarPerfil(perAmigo);
-		i++;
-	}
+		if (ret == GRA_CondRetVerticeNaoExiste)
+			return CON_CondRetNaoAchou;
+		if (ret != GRA_CondRetOK)
+			return CON_CondRetRedeVazia;
+		
+		//2. ir para o vizinho
+		ret = GRA_AvancarVizinho (Grafo, i);
+
+		if (ret == GRA_CondRetOK) {
+			perAmigo = (PER_tppPerfil) GRA_ObterValor(Grafo);
+			//4. chamar aqui a funcao que imprime os valores do perfil
+			//TODO: trocar isso por obter campos do perfil e chamar a funcao da interface que imprime os campos!!
+			PER_MostrarPerfil(perAmigo);
+			i++;
+		}
+
+	} while (ret == GRA_CondRetOK);
 
 	switch (ret) {
 	case GRA_CondRetNaoPossuiAresta:
@@ -302,7 +307,7 @@ CON_tpCondRet CON_BuscarAmizades(char *email) { /*Talvez seja melhor mudar o nom
 
 
 /***********************************************************************
-*
+*		
 *  $FC Função: CON  &Enviar Mensagem
 *
 ***********************************************************************/
