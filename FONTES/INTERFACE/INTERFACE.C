@@ -237,6 +237,27 @@ void INT_ListarAmizades() {
 
 }
 
+void INT_MostrarMensagem(char *pTexto, char * pRemetente) {
+	if (pTexto != NULL && pRemetente != NULL)
+		printf("\n%s:  %s\n", pRemetente, pTexto);
+	else
+		printf("\nNao foi possivel imprimir a mensagem.\n");
+}
+
+void INT_MostrarPerfil(char * email, char * nome, char * cidade, char *dataNasc) {
+	if (nome != NULL)
+		printf("\n\tNome: %s", nome);
+	if (email != NULL)
+		printf("\n\tE-mail: %s", email);
+	if (cidade != NULL)
+		printf("\n\tCidade: %s", cidade);
+	if (dataNasc != NULL)
+		printf("\n\tData de nascimento: %s", dataNasc);
+
+}
+
+void INT_MostrarUsuario
+
 
 
 int main (void) {
