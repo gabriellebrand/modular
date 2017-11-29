@@ -35,10 +35,12 @@ void INT_CriarPerfil();
 void INT_EnviarMensagem();
 void INT_CriarAmizade();
 void INT_BuscarPerfil();
+void INT_ListarAmizades();
+void INT_CarregarHistorico();
 
 void INT_MenuPrincipal() {
     int opcao = 0;
-    printf("\n*****MENU PRINCIPAL*****\n");
+    printf("\n::::::::::::::::::MENU PRINCIPAL::::::::::::::::::\n");
     printf("\n\t(1) Criar novo perfil \n\t(2) Criar uma nova amizade \n\t(3) Enviar uma mensagem \n\t(4) Carregar historico de mensagens \n\t(5) Buscar perfil \n\t(6) Listar amizades de perfil \n\t(7) Excluir Perfil \n\t(8) Excluir Amizade \n");
     printf("\nDigite o numero da opcao desejada.\n");
 
@@ -55,13 +57,13 @@ void INT_MenuPrincipal() {
 			INT_EnviarMensagem();
 			break;
         case 4:
-			printf("\nOK! 4\n");
+			INT_CarregarHistorico();
 			break;
         case 5:
 			INT_BuscarPerfil();
 			break;
         case 6:
-			printf("\nOK! 6\n");
+			INT_ListarAmizades();
 			break;
         case 7:
 			printf("\nOK! 7\n");
@@ -77,7 +79,7 @@ void INT_MenuPrincipal() {
 void INT_CriarPerfil() {
 	char nome[TAM_PERFIL], email[TAM_PERFIL], cidade[TAM_PERFIL], genero, dataNasc[11];
 	CON_tpCondRet ret;
-	printf("\n*****CRIAR PERFIL*****\n\nDigite todos os dados solicitados, respeitando o formato exigido.\nTodas as informacoes sao obrigatorias.\n");
+	printf("\n::::::::::::::::::CRIAR PERFIL::::::::::::::::::\n\nDigite todos os dados solicitados, respeitando o formato exigido.\nTodas as informacoes sao obrigatorias.\n");
 
 	printf("\nNome:\n(max 100 caracteres)\n");
 	scanf(" %[^\n]", nome);
@@ -119,7 +121,7 @@ void INT_CriarPerfil() {
 void INT_CriarAmizade() {
 	CON_tpCondRet ret;
 	char email1[TAM_PERFIL], email2[TAM_PERFIL];
-	printf("\n*****CRIAR AMIZADE*****\n\n\tDigite o e-mail dos dois perfis que serao conectados.\n\n");
+	printf("\n::::::::::::::::::CRIAR AMIZADE::::::::::::::::::\n\n\tDigite o e-mail dos dois perfis que serao conectados.\n\n");
 	
 	printf("E-mail 1:\n");
 	scanf(" %[^\n]", email1);
@@ -154,7 +156,7 @@ void INT_EnviarMensagem() {
 	char mensagem[TAM_MSG], emailRem[TAM_PERFIL], emailDest[TAM_PERFIL];
 	CON_tpCondRet ret;
 
-	printf("\n*****ENVIAR MENSAGEM*****\n\n\tDigite o e-mail do remetente, o texto da mensagem e o e-mail do destinatario.\n\n");
+	printf("\n::::::::::::::::::ENVIAR MENSAGEM::::::::::::::::::\n\n\tDigite o e-mail do remetente, o texto da mensagem e o e-mail do destinatario.\n\n");
 
 	printf("E-mail do remetente:\n");
 	scanf(" %[^\n]", emailRem);
@@ -178,7 +180,7 @@ void INT_EnviarMensagem() {
 		printf("\n!! Ocorreu um problema ao enviar a mensagem :( Tente novamente.\n");
 		break;
 	case CON_CondRetValorNulo:
-		printf("\n!! Erro: Dados invalidos. !!\n");
+		printf("\n!! Erro: ueDados invalidos. !!\n");
 		break;
 	default:
 		printf("\nAlgum (ou ambos) perfil nao foi encontrado na rede.\n");
@@ -189,7 +191,7 @@ void INT_EnviarMensagem() {
 void INT_BuscarPerfil() {
 	char email[TAM_PERFIL];
 	CON_tpCondRet ret;
-	printf("\n*****BUSCAR PERFIL*****\n\n\tDigite o e-mail do perfil a ser buscado.\n\n");
+	printf("\n::::::::::::::::::BUSCAR PERFIL::::::::::::::::::\n\n\tDigite o e-mail do perfil a ser buscado.\n\n");
 
 	printf("Email:\n");
 	scanf(" %[^\n]", email);
@@ -212,11 +214,84 @@ void INT_BuscarPerfil() {
 
 }
 
+void INT_ListarAmizades() {
+	char email[TAM_PERFIL];
+	CON_tpCondRet ret;
+
+	printf("\n::::::::::::::::::LISTAR AMIZADES::::::::::::::::::\n\n Digite o email do perfil para listar todas as amizades.\n");
+	
+	printf("Email:\n");
+	scanf(" %[^\n]", email);
+	
+	ret = CON_BuscarAmizades(email);
+
+	switch (ret) {
+	case CON_CondRetOK:
+		break;
+	case CON_CondRetNaoAchou:
+		printf("\nNao foi encontrado nenhum amigo para esse e-mail.\n");
+		break;
+	case CON_CondRetValorNulo:
+		printf("\n!! Erro: Ocorreu um problema ao buscar as amizades do perfil. !!\n");
+		break;
+	default:
+		printf("\nNao foi encontrado um perfil com esse e-mail.\n");
+	}
+
+}
+
+void INT_CarregarHistorico() {
+	char email1[TAM_PERFIL], email2[TAM_PERFIL];
+	CON_tpCondRet ret;
+	printf("\n::::::::::::::::::MOSTRAR CONVERSA::::::::::::::::::\n\n Digite o email dos perfis para carregar a conversa entre eles.\n");
+
+	printf("E-mail 1:\n");
+	scanf(" %[^\n]", email1);
+	
+	printf("E-mail 2:\n");
+	scanf(" %[^\n]", email2);
+	
+	ret = CON_CarregarHistorico(email1, email2);
+
+	switch (ret) {
+	case CON_CondRetRedeVazia:
+		printf("\nOs perfis nao estao cadastrados no sistema. \n");
+		break;
+	case CON_CondRetNaoAchou:
+		printf("\n Algum dos perfis nao foi encontrado na rede.\n");
+		break;
+	case CON_CondRetOK:
+		printf("\n--Fim da conversa--\n");
+		break;
+	default:
+		printf("\n!! Ocorreu um erro ao buscar algum dos perfis. !!\n");
+	}
+}
+
+void INT_MostrarMensagem(char *pTexto, char * pRemetente) {
+	if (pTexto != NULL && pRemetente != NULL)
+		printf("\n%s:  %s\n", pRemetente, pTexto);
+	else
+		printf("\nNao foi possivel imprimir a mensagem.\n");
+}
+
+void INT_MostrarPerfil(char * email, char * nome, char * cidade, char *dataNasc) {
+	if (nome != NULL)
+		printf("\n\tNome: %s", nome);
+	if (email != NULL)
+		printf("\n\tE-mail: %s", email);
+	if (cidade != NULL)
+		printf("\n\tCidade: %s", cidade);
+	if (dataNasc != NULL)
+		printf("\n\tData de nascimento: %s", dataNasc);
+
+}
+
 
 
 int main (void) {
 
-	printf("\n******** REDE DE RELACIONAMENTOS ********\n\n");
+	printf("\n::::::::::::::::::REDE DE RELACIONAMENTOS::::::::::::::::::\n\n");
 
 	while(1)
 		INT_MenuPrincipal();

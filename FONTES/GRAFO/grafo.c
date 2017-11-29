@@ -367,10 +367,11 @@ GRA_tpCondRet GRA_IrVizinho (GRA_tppGrafo pGrafo, void *pChaveID) {
 *  $ED Descrição da função
 *  Essa funcao avança na lista de arestas do vértice corrente a partir do primeiro elemento.
 *  O parametro numElem indica quantos elementos serão pulados, a partir do primeiro.
-*  O valor do elemento da aresta é armazenado no ponteiro pDado.
+*  O valor do elemento da aresta é armazenado no vertice corrente.
+*  É necessário chamar a funcao ir vertice para atualizar o vertice corrente e buscar na lista de arestas correta.
 *  Se numElem = 0, o primeiro elemento da lista de arestas é retornado.
 * **************************************************************************/
-GRA_tpCondRet GRA_AvancarVizinho (GRA_tppGrafo pGrafo, int numElem, void *pDado) {
+GRA_tpCondRet GRA_AvancarVizinho (GRA_tppGrafo pGrafo, int numElem) {
 
   LIS_tppLista pVerticeCorr, listaArestas;
   GRA_tpConteudoVert *conteudoVert;
@@ -398,7 +399,8 @@ GRA_tpCondRet GRA_AvancarVizinho (GRA_tppGrafo pGrafo, int numElem, void *pDado)
 
   //avança elemento vizinho na lista de arestas
   if (LIS_AvancarElementoCorrente(listaArestas,numElem) == LIS_CondRetOK) {
-    pDado = LIS_ObterValor(listaArestas);
+    //pDado = LIS_ObterValor(listaArestas);
+  pGrafo->pVertCorr = (LIS_tppLista) LIS_ObterValor(listaArestas);
     return GRA_CondRetOK;
   }
 

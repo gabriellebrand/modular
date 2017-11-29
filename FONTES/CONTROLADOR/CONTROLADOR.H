@@ -36,6 +36,7 @@
 #include "GRAFO.H"
 #include "PERFIL.H"
 #include "MENSAGEM.H"
+#include "INTERFACE.H"
 
 
 /***** Declarações exportadas pelo módulo *****/

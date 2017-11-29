@@ -267,25 +267,30 @@ CON_tpCondRet CON_ExcluirAmizade (char *email1, char *email2) {
 CON_tpCondRet CON_BuscarAmizades(char *email) { /*Talvez seja melhor mudar o nome dessa funcao pra ListarAmizades */
 	GRA_tpCondRet ret;
 	int i = 0;
-	void * val;
+	//void * val = NULL;
 	PER_tppPerfil perAmigo;
-	//1. buscar o vertice relativo ao email passado
-	ret = GRA_IrVertice (Grafo, email);
 
-	if (ret == GRA_CondRetVerticeNaoExiste)
-		return CON_CondRetNaoAchou;
-	if (ret != GRA_CondRetOK)
-		return CON_CondRetRedeVazia;
+	do {
+		//1. buscar o vertice relativo ao email passado
+		ret = GRA_IrVertice (Grafo, email);
 
-	//2. acessar a lista de arestas do vertice
-	//3. retornar o perfil de cada uma das arestas acessadas
-	while((ret = GRA_AvancarVizinho (Grafo, i, val)) == GRA_CondRetOK) {
-		perAmigo = (PER_tppPerfil)val;
-		//4. chamar aqui a funcao que imprime os valores do perfil
-		//TODO: trocar isso por obter campos do perfil e chamar a funcao da interface que imprime os campos!!
-		PER_MostrarPerfil(perAmigo);
-		i++;
-	}
+		if (ret == GRA_CondRetVerticeNaoExiste)
+			return CON_CondRetNaoAchou;
+		if (ret != GRA_CondRetOK)
+			return CON_CondRetRedeVazia;
+		
+		//2. ir para o vizinho
+		ret = GRA_AvancarVizinho (Grafo, i);
+
+		if (ret == GRA_CondRetOK) {
+			perAmigo = (PER_tppPerfil) GRA_ObterValor(Grafo);
+			//4. chamar aqui a funcao que imprime os valores do perfil
+			//TODO: trocar isso por obter campos do perfil e chamar a funcao da interface que imprime os campos!!
+			PER_MostrarPerfil(perAmigo);
+			i++;
+		}
+
+	} while (ret == GRA_CondRetOK);
 
 	switch (ret) {
 	case GRA_CondRetNaoPossuiAresta:
@@ -302,7 +307,7 @@ CON_tpCondRet CON_BuscarAmizades(char *email) { /*Talvez seja melhor mudar o nom
 
 
 /***********************************************************************
-*
+*		
 *  $FC Função: CON  &Enviar Mensagem
 *
 ***********************************************************************/
@@ -316,7 +321,6 @@ CON_tpCondRet CON_EnviarMensagem(char *email1, char *email2, char *texto) {
 		return cRet;
 	}
 
-	PER_MostrarPerfil(remetente);
 	ret = GRA_IrVizinho(Grafo, email2);
 
 	if ((ret == GRA_CondRetGrafoNaoExiste)||(ret == GRA_CondRetGrafoVazio))
@@ -347,8 +351,8 @@ CON_tpCondRet CON_EnviarMensagem(char *email1, char *email2, char *texto) {
 }
 
 CON_tpCondRet CON_CarregarHistorico(char *pEmail1, char *pEmail2) {
-	int i = 0, idMsg1, idMsg2;
-	char *textoMsg1, *textoMsg2;
+	int i = 0, idMsg1=0, idMsg2=0;
+	char textoMsg1[TAM_MSG], textoMsg2[TAM_MSG], *nome1, *nome2;
 	CON_tpCondRet ret;
 	PER_tppPerfil perfil1, perfil2;
 
@@ -362,9 +366,13 @@ CON_tpCondRet CON_CarregarHistorico(char *pEmail1, char *pEmail2) {
 	if ((ret = CON_BuscarPerfil(pEmail1, &perfil1)) != CON_CondRetOK)
 		return ret;
 
+	nome1 = PER_ObterNome(perfil1);
+
 	//busca perfil 2 (necessario verificar se ele existe)
 	if ((ret = CON_BuscarPerfil(pEmail2, &perfil2)) != CON_CondRetOK)
 		return ret;
+
+	nome2 = PER_ObterNome(perfil2);
 
 	//acho que nao eh necessário verificar se os dois sao amigos, pois excluir amizade nao implica em excluir msgs trocadas
 
@@ -379,7 +387,7 @@ CON_tpCondRet CON_CarregarHistorico(char *pEmail1, char *pEmail2) {
 		}
 
 		//busca uma mensagem enviada pelo perfil2 na lista de mensagens recebidas pelo perfil1
-		if (idMsg1 == 0) { //mensagem anterior já foi impressa, pode procurar a proxima
+		if (idMsg2 == 0) { //mensagem anterior já foi impressa, pode procurar a proxima
 			if (PER_BuscarMsgRecebida(perfil1, pEmail2, i, textoMsg2, &idMsg2) != PER_CondRetOK) {
 				//nao encontrou mais nenhuma mensagem ou entao deu algum erro
 				idMsg2 = -1;
@@ -393,6 +401,7 @@ CON_tpCondRet CON_CarregarHistorico(char *pEmail1, char *pEmail2) {
 		if (idMsg1 < 0) { // chegou ao fim da lista de msgs enviadas -> só resta imprimir as mensagens recebidas
 			if (idMsg2 > 0) {
 				//mensagem 2 ainda nao foi impressa -> chama funcao q imprime a mensagem (interface)
+				INT_MostrarMensagem(textoMsg2, nome2);
 				idMsg2 = 0; // marca mensagem 2 como impressa -> pode buscar a proxima
 			}
 		}
@@ -400,6 +409,7 @@ CON_tpCondRet CON_CarregarHistorico(char *pEmail1, char *pEmail2) {
 		else if (idMsg2 < 0) { // chegou ao fim da lista de msgs recebidas -> só resta imprimir as mensagens enviadas
 			if (idMsg1 > 0) {
 				//mensagem 1 ainda nao foi impressa -> chama funcao q imprime a mensagem (interface)
+				INT_MostrarMensagem(textoMsg1, nome1);
 				idMsg1 = 0; // marca mensagem 1 como impressa -> pode buscar a proxima
 			}
 		}
@@ -407,9 +417,11 @@ CON_tpCondRet CON_CarregarHistorico(char *pEmail1, char *pEmail2) {
 		else if ((idMsg1 > 0) && (idMsg2 > 0)) { //as duas mensagens estao aguardando impressao
 			if (idMsg1 < idMsg2) {
 				//chama funcao q imprime a mensagem 1 (interface)
+				INT_MostrarMensagem(textoMsg1, nome1);
 				idMsg1 = 0; // marca mensagem 1 como impressa -> pode buscar a proxima
 			} else {
 				//chama funcao q imprime a mensagem 2 (interface)
+				INT_MostrarMensagem(textoMsg2, nome2);
 				idMsg2 = 0; // marca mensagem 2 como impressa -> pode buscar a proxima
 			}
 		}

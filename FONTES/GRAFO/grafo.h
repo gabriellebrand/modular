@@ -213,12 +213,12 @@ GRA_tpCondRet GRA_IrVertice (GRA_tppGrafo pGrafo, void *pChaveID);
 * **************************************************************************/
 GRA_tpCondRet GRA_IrVizinho (GRA_tppGrafo pGrafo, void *pChaveID);
 
-
 /***************************************************************************
 *  Função: GRA  &Avançar Vizinho
 *  $ED Descrição da função
 *     Essa funcao avança na lista de arestas do vértice corrente a partir do primeiro elemento.
 *     Se numElem = 0, o primeiro elemento da lista de arestas é retornado.
+*   É necessário chamar a funcao ir vertice para atualizar o vertice corrente e buscar na lista de arestas correta.
 *
 *  $EP Parâmetros
 *     pGrafo - ponteiro para o grafo
@@ -233,7 +233,7 @@ GRA_tpCondRet GRA_IrVizinho (GRA_tppGrafo pGrafo, void *pChaveID);
 *     GRA_CondRetNaoPossuiAresta   - se o vértice corrente não possuir nenhuma aresta
 *     GRA_CondRetFimArestas        - chegou ao fim da lista de arestas do vertice corrente
 * **************************************************************************/
-GRA_tpCondRet GRA_AvancarVizinho (GRA_tppGrafo pGrafo, int numElem, void *pDado);
+GRA_tpCondRet GRA_AvancarVizinho (GRA_tppGrafo pGrafo, int numElem);
 
 /***********************************************************************
 *  $FC Função: GRA &Obter Valor

@@ -172,6 +172,57 @@ char * PER_ObterEmail(PER_tppPerfil pPerfil);
 
 /***********************************************************************
  *
+ *  $FC Função: PER  &Obter  Nome
+ *
+ *  $ED Descrição da função
+ *     Recebe um perfil e obtem o nome cadastrado neste perfil.
+ *
+ *  $EP Parâmetros
+ *     pPerfil  - ponteiro de um Perfil
+ *
+ *  $FV Valor retornado
+ *      Cadeia de caracteres - caso o ponteiro para o perfil seja valido.
+ *      NULL - caso o ponteiro seja nulo.
+ *
+ ***********************************************************************/
+char * PER_ObterNome(PER_tppPerfil pPerfil);
+
+/***********************************************************************
+ *
+ *  $FC Função: PER  &Obter  Cidade
+ *
+ *  $ED Descrição da função
+ *     Recebe um perfil e obtem a cidade cadastrada neste perfil.
+ *
+ *  $EP Parâmetros
+ *     pPerfil  - ponteiro de um Perfil
+ *
+ *  $FV Valor retornado
+ *      Cadeia de caracteres - caso o ponteiro para o perfil seja valido.
+ *      NULL - caso o ponteiro seja nulo.
+ *
+ ***********************************************************************/
+char * PER_ObterCidade(PER_tppPerfil pPerfil);
+
+/***********************************************************************
+ *
+ *  $FC Função: PER  &Obter  Data de nascimento
+ *
+ *  $ED Descrição da função
+ *     Recebe um perfil e obtem a data de nascimento deste perfil.
+ *
+ *  $EP Parâmetros
+ *     pPerfil  - ponteiro de um Perfil
+ *
+ *  $FV Valor retornado
+ *      Cadeia de caracteres - caso o ponteiro para o perfil seja valido.
+ *      NULL - caso o ponteiro seja nulo.
+ *
+ ***********************************************************************/
+char * PER_ObterNascimento(PER_tppPerfil pPerfil);
+
+/***********************************************************************
+ *
  *  $FC Função: PER  &Alterar Nome
  *
  *  $ED Descrição da função
