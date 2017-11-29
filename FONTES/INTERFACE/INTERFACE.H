@@ -47,7 +47,6 @@
 *		Mostra o menu principal de navegacao e envia o usuario para a opcao selecionada.
 *
 ***********************************************************************/
-
 void INT_MenuPrincipal();
 
 /***********************************************************************
@@ -57,8 +56,27 @@ void INT_MenuPrincipal();
 *  $ED Descrição da função
 *		Recebe o texto da mensagem e o nome do remetente e imprime.
 *
+*  $EP Parâmetros
+*		pTexto - string do texto da mensagem
+*		pRemetente - string do nome do perfil remetente
+*
 ***********************************************************************/
 void INT_MostrarMensagem(char *pTexto, char * pRemetente);
+
+/***********************************************************************
+*
+*  $FC Função: INT  &Mostrar Perfil
+*
+*  $ED Descrição da função
+*		Recebe os dados do perfil e imprime.
+*		Os parametros que receberem NULL nao serao impressos.
+*
+*  $EP Parâmetros
+*		pTexto - string do texto da mensagem
+*		pRemetente - string do nome do perfil remetente
+*
+***********************************************************************/
+void INT_MostrarPerfil(char * email, char * nome, char * cidade, char *genero, char *dataNasc);
 
 
 /********** Fim do módulo de definição: INT Interface **********/

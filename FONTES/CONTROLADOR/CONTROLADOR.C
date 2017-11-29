@@ -50,6 +50,7 @@ CON_tpCondRet CON_CriarPerfil(char *pNome, char *pEmail, char *pCidade, char gen
 	PER_tppPerfil perfil = NULL;
 	PER_tpCondRet retornoPerfil;
 	GRA_tpCondRet retornoGrafo;
+	char gen = 'O';
 
 	/* Verifica se dados recebidos são válidos*/
 	if ( pNome==NULL || pEmail==NULL || pCidade==NULL || pDataNasc==NULL)
@@ -65,7 +66,6 @@ CON_tpCondRet CON_CriarPerfil(char *pNome, char *pEmail, char *pCidade, char gen
 	if(Grafo==NULL)
 		Grafo = GRA_CriarGrafo (PER_DestruirPerfil, PER_CompararPerfil);
 
-	//TODO: verificar se o perfil ja existe na rede!!
 	if (CON_BuscarPerfil(pEmail, &perfil) == CON_CondRetOK)
 		return CON_PerfilJaExiste;
 
@@ -82,10 +82,8 @@ CON_tpCondRet CON_CriarPerfil(char *pNome, char *pEmail, char *pCidade, char gen
 		return CON_CondRetErroCadastro;
 
 	/*Mostra as informações do perfil cadastrado na tela*/
-	retornoPerfil = PER_MostrarPerfil(perfil);
-
-	if (retornoPerfil!= PER_CondRetOK)
-		return CON_CondRetErroCadastro;
+	gen = PER_ObterGenero(perfil);
+	INT_MostrarPerfil(PER_ObterEmail(perfil), PER_ObterNome(perfil), PER_ObterCidade(perfil), &gen, PER_ObterNascimento(perfil)); 
 
 	return CON_CondRetOK;
 
@@ -134,6 +132,7 @@ CON_tpCondRet CON_MostrarPerfil (char *email) {
 	PER_tppPerfil pPerfil = NULL;
 	CON_tpCondRet ret;
 	PER_tpCondRet pRet;
+	char gen = 'O';
 
 	/* Busca o perfil*/
 	ret = CON_BuscarPerfil (email, &pPerfil);
@@ -141,12 +140,10 @@ CON_tpCondRet CON_MostrarPerfil (char *email) {
 	if (ret!=CON_CondRetOK)
 		return ret;
 
+	gen = PER_ObterGenero(pPerfil);
+
 	/* Mostra o perfil, caso encontrado*/
-
-	pRet = PER_MostrarPerfil (pPerfil);
-
-	if(pRet!=PER_CondRetOK)
-		return CON_CondRetValorNulo;
+	INT_MostrarPerfil(PER_ObterEmail(pPerfil), PER_ObterNome(pPerfil), PER_ObterCidade(pPerfil), &gen, PER_ObterNascimento(pPerfil)); 
 
 	return CON_CondRetOK;
 	
@@ -285,8 +282,8 @@ CON_tpCondRet CON_BuscarAmizades(char *email) { /*Talvez seja melhor mudar o nom
 		if (ret == GRA_CondRetOK) {
 			perAmigo = (PER_tppPerfil) GRA_ObterValor(Grafo);
 			//4. chamar aqui a funcao que imprime os valores do perfil
-			//TODO: trocar isso por obter campos do perfil e chamar a funcao da interface que imprime os campos!!
-			PER_MostrarPerfil(perAmigo);
+			INT_MostrarPerfil(PER_ObterEmail(perAmigo), PER_ObterNome(perAmigo), NULL, NULL, NULL);
+			//PER_MostrarPerfil(perAmigo);
 			i++;
 		}
 

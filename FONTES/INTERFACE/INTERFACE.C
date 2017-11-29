@@ -96,13 +96,11 @@ void INT_CriarPerfil() {
 	printf("\nData de nascimento:\n(no formato 'DD/MM/AAAA')\n");
 	scanf(" %[^\n]", dataNasc);
 
-	//printf("\nOs dados do perfil sao: \n%s %s %s %c %s\n", nome, email, cidade, genero, dataNasc);
-
 	ret = CON_CriarPerfil(nome, email, cidade, genero, dataNasc);
 
 	switch (ret) {
 	case CON_CondRetOK:
-		printf("\nPerfil criado com sucesso.\n");
+		printf("\n\nPerfil criado com sucesso.\n");
 		break;
 	case CON_CondRetErroFormato:
 		printf("\n!! Erro: formato do genero invalido. !!\n");
@@ -275,13 +273,15 @@ void INT_MostrarMensagem(char *pTexto, char * pRemetente) {
 		printf("\nNao foi possivel imprimir a mensagem.\n");
 }
 
-void INT_MostrarPerfil(char * email, char * nome, char * cidade, char *dataNasc) {
+void INT_MostrarPerfil(char * email, char * nome, char * cidade, char *genero, char *dataNasc) {
 	if (nome != NULL)
 		printf("\n\tNome: %s", nome);
 	if (email != NULL)
 		printf("\n\tE-mail: %s", email);
 	if (cidade != NULL)
 		printf("\n\tCidade: %s", cidade);
+	if (genero != NULL)
+		printf("\n\tGenero: %c", *genero);
 	if (dataNasc != NULL)
 		printf("\n\tData de nascimento: %s", dataNasc);
 

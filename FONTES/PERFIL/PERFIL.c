@@ -270,6 +270,16 @@ char * PER_ObterNascimento(PER_tppPerfil pPerfil) {
 
 /***************************************************************************
  *
+ *  Função: PER Obter Data de nascimento
+ *****/
+
+char PER_ObterGenero(PER_tppPerfil pPerfil) {
+	if (pPerfil == NULL) return NULL;
+	return pPerfil->genero;
+}
+
+/***************************************************************************
+ *
  *  Função: PER Alterar Nome
  *****/
 

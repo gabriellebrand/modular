@@ -223,6 +223,23 @@ char * PER_ObterNascimento(PER_tppPerfil pPerfil);
 
 /***********************************************************************
  *
+ *  $FC Função: PER  &Obter  Data de nascimento
+ *
+ *  $ED Descrição da função
+ *     Recebe um perfil o genero deste perfil.
+ *
+ *  $EP Parâmetros
+ *     pPerfil  - ponteiro de um Perfil
+ *
+ *  $FV Valor retornado
+ *      Caractere - caso o ponteiro para o perfil seja valido.
+ *      NULL - caso o ponteiro seja nulo.
+ *
+ ***********************************************************************/
+char PER_ObterGenero(PER_tppPerfil pPerfil);
+
+/***********************************************************************
+ *
  *  $FC Função: PER  &Alterar Nome
  *
  *  $ED Descrição da função
