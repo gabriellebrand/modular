@@ -64,6 +64,16 @@ typedef struct GRA_tagConteudoVert {
 
   void (* exclui) (void * pDado) ;
 
+  #ifdef _DEBUG
+      GRA_tpPGrafo pCabeca ;
+      /* Ponteiro para cabeca
+      *
+      *$ED Descrição
+      *   Todos os vértices correntes do grafo devem apontar para a respectiva cabeça.
+      *   Esse ponteiro corresponde a um identificador do grafo para fins
+      *   de verificação da integridade. */
+  #endif
+
 } GRA_tpConteudoVert;
 
 /*****  Dados encapsulados no módulo  *****/
@@ -235,6 +245,13 @@ if(!pDado || !pChaveID) return GRA_CondRetValorNulo;
     LIS_DestruirLista(pArestas);
     return GRA_CondRetFaltouMemoria;
   } /* if */
+
+  #ifdef _DEBUG
+    CED_DefinirTipoEspaco( pConteudoVert , GRA_TipoEspacoNo ) ;
+    pConteudoVert->pCabeca = pGrafo ;
+  #else
+    pArvore = NULL ;
+  #endif
 
   pConteudoVert->pArestas = pArestas;
   pConteudoVert->pDado = pDado;
@@ -746,3 +763,87 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
    } /* Fim função: GRA  &Deturpar Grafo */
 
 #endif 
+
+#ifdef _DEBUG
+
+/***************************************************************************
+*
+*  Função: GRA  &Verificar um grafo
+*  ****/
+
+   GRA_tpCondRet GRA_VerificarGrafo( void * pGrafoParm )
+   {
+
+      GRA_tppGrafo pGrafo = NULL;
+
+      CED_MarcarEspacoAtivo( pGrafoParm );
+
+      if ( GRA_VerificarCabeca( pGrafoParm ) != GRA_CondRetOK )
+      {
+         return GRA_CondRetErroEstrutura ;
+      } /* if */
+
+      return GRA_CondRetOK;
+
+   } /* Fim função: GRA  &Verificar um grafo */
+
+#endif
+
+#ifdef _DEBUG
+
+/***************************************************************************
+*
+*  Função: GRA  &Verificar um nó cabeça
+*  ****/
+
+   GRA_tpCondRet GRA_VerificarCabeca( void * pCabecaParm )
+   {
+
+      GRA_tppGrafo pGrafo = NULL ;
+
+      /* Verifica o tipo do espaço */
+
+         if ( pCabecaParm == NULL )
+         {
+            TST_NotificarFalha( "Tentou verificar cabeça inexistente." ) ;
+            return GRA_CondRetErroEstrutura ;
+         } /* if */
+
+         if ( ! CED_VerificarEspaco( pCabecaParm , NULL ))
+         {
+            TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
+            return GRA_CondRetErroEstrutura ;
+         } /* if */
+
+         if ( TST_CompararInt( GRA_TipoEspacoCabeca ,
+              CED_ObterTipoEspaco( pCabecaParm ) ,
+              "Tipo do espaço de dados não é cabeça de árvore." ) != TST_CondRetOK )
+         {
+            return GRA_CondRetErroEstrutura ;
+         } /* if */
+
+         pGrafo = ( GRA_tppGrafo)( pCabecaParm ) ;
+
+      /* Verifica corrente */
+
+         if ( pGrafo->pVertCorr != NULL )
+         {
+            if ( TST_CompararPonteiro( pCabecaParm , pGrafo->pVertCorr->pCabeca ,
+                 "Nó corrente não aponta para cabeça." ) != TST_CondRetOK )
+            {
+               return GRA_CondRetErroEstrutura ;
+            } /* if */
+         } else {
+            if ( TST_CompararPonteiro( NULL , pAGrafo->pVertCorr ,
+                 "Árvore não vazia tem nó corrente NULL." ) != TST_CondRetOK )
+            {
+               return GRA_CondRetErroEstrutura ;
+            } /* if */
+         } /* if */
+
+      return GRA_CondRetOK ;
+
+   } /* Fim função: GRA  &Verificar um nó cabeça */
+
+#endif
+
