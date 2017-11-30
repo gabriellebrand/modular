@@ -78,7 +78,9 @@ typedef enum {
 
 	CON_CondRetFaltouMemoria,
 
-	CON_PerfilJaExiste
+	CON_PerfilJaExiste,
+
+	CON_PerfilNaoExiste
 
 } CON_tpCondRet;
 

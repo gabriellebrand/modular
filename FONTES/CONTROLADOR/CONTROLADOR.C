@@ -157,12 +157,12 @@ CON_tpCondRet CON_MostrarPerfil (char *email) {
 ***********************************************************************/
 CON_tpCondRet CON_ExcluirPerfil (char *pEmail) {
 
-	PER_tppPerfil pPerfil;
+	PER_tppPerfil pPerfil = NULL;
 	CON_tpCondRet retCON;
 	GRA_tpCondRet retGrafo;
 
 	/*Buscar perfil*/
-	retCON = CON_BuscarPerfil (pEmail, pPerfil);
+	retCON = CON_BuscarPerfil (pEmail, &pPerfil);
 
 	if (retCON!= CON_CondRetOK)
 		return retCON;
@@ -272,7 +272,7 @@ CON_tpCondRet CON_BuscarAmizades(char *email) { /*Talvez seja melhor mudar o nom
 		ret = GRA_IrVertice (Grafo, email);
 
 		if (ret == GRA_CondRetVerticeNaoExiste)
-			return CON_CondRetNaoAchou;
+			return CON_PerfilNaoExiste;
 		if (ret != GRA_CondRetOK)
 			return CON_CondRetRedeVazia;
 		
