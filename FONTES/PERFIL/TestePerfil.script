@@ -1,0 +1,181 @@
+// Script de Teste para o Módulo Perfil - TestePerfil.script
+// Programação Modular - 2017.2
+// Grupo: 
+//Gabriel Cantergiani
+//Wellington Bezerra
+//Gabrielle Bradenburg
+
+// Propósito: Testar todas as funções e possiveis condicoes de retorno do modulo Perfil
+
+
+== Inicializar valores
+
+=declararparm   perfil0  int 0
+=declararparm   perfil1  int 1
+=declararparm   perfil2  int 2
+=declararparm   perfil3  int 3
+=declararparm   perfil4  int 4
+
+=declararparm   nome0    string  "pedro"
+=declararparm   nome1    string  "joao"
+=declararparm   nome2    string  "luiza"
+=declararparm   nome3    string  "lucas"
+=declararparm   nome4    string  "joana"
+
+=declararparm   email0    string  "pedro@gmail.com"
+=declararparm   email1    string  "joao@gmail.com"
+=declararparm   email2    string  "luiza@gmail.com"
+=declararparm   email3    string  "lucas@gmail.com"
+=declararparm   email4    string  "joana@gmail.com"
+
+=declararparm   cidade0    string  "rio"
+=declararparm   cidade1    string  "sao paulo"
+=declararparm   cidade2    string  "belo horizonte"
+=declararparm   cidade3    string  "fortaleza"
+=declararparm   cidade4    string  "Recife"
+
+=declararparm   genero0    char  'M'
+=declararparm   genero1    char  'F'
+=declararparm   genero2    char  'O'
+
+=declararparm   dataNasc0    string  "15/02/1990"
+=declararparm   dataNasc1    string  "22/07/1985"
+=declararparm   dataNasc2    string  "03/11/1993"
+=declararparm   dataNasc3    string  "14/08/1978"
+=declararparm   dataNasc4    string  "28/01/2001"
+
+=declararparm   texto0    string  "Ola"
+=declararparm   texto1    string  "Oi"
+=declararparm   texto2    string  "Tudo Bem?"
+=declararparm   texto3    string  "Tudo! E você?"
+=declararparm   texto4    string  "Tambem!"
+
+=declararparm   OK             int  0
+=declararparm   PonteiroNulo   int  2
+=declararparm   StringVazia    int  3
+=declararparm   ValorInvalido  int  4
+=declararparm   NaoAchou       int  5
+
+=declararparm   pNULL          int  0
+=declararparm   pNaoNULL       int  1
+
+// ==========      INICIO DOS CASOS DE TESTE   =====================================================================
+
+==Verifica criacao de Perfil
+=criarperfil	perfil0	 nome0  email0  cidade0  genero0  dataNasc0
+=criarperfil	perfil1	 nome1  email1  cidade1  genero1  dataNasc1
+=criarperfil	perfil2	 nome2  email2  cidade2  genero2  dataNasc2
+=criarperfil	perfil3	 nome3  email3  cidade3  genero0  dataNasc3
+
+==Verifica destruicao de Perfil
+=destruirperfil		perfil0
+
+==Verifica comparacao de dois Perfis iguais
+=compararperfil		perfil1  email1  OK
+
+==Verifica comparacao de dois Perfis diferentes
+=compararperfil		perfil2  email3  NaoAchou
+
+==Verifica mostrar informacoes de Perfil existente
+=mostrarperfil		perfil2  OK
+
+==Verifica mostrar informacoes de Perfil nao existente
+=mostrarperfil		perfil4  PonteiroNulo
+
+==Verifica Obter email correto
+=obteremail			perfil1  email1  OK
+
+==Verifica Obter email errado
+=obteremail			perfil3  email2  NaoAchou
+
+==Verifica Obter nome correto
+=obternome			perfil2  nome2  OK
+
+==Verifica Obter nome errado
+=obternome			perfil1  nome3  NaoAchou
+
+==Verifica Obter cidade correta
+=obtercidade		perfil3  cidade3  OK
+
+==Verifica Obter cidade errada
+=obtercidade		perfil2  cidade4  NaoAchou
+
+==Verifica Obter Data de Nascimento correta
+=obterdatanasc		perfil2  dataNasc2  OK
+
+==Verifica Obter data de Nascimento errada
+=obterdatanasc		perfil1  dataNasc4  NaoAchou
+
+==Verifica Obter Genero correto
+=obtergenero		perfil1  genero1  OK
+
+==Verifica Obter Genero errado
+=obtergenero		perfil2  genero0  NaoAchou
+
+==Verifica Alteracao de Nome correto
+=alterarnome		perfil1  nome4  OK
+=mostrarperfil		perfil1  OK
+
+==Verifica Alteracao de Nome, String Vazia
+=alterarnome		perfil3  ""  StringVazia
+
+==Verifica Alteracao de Nome, Ponteiro Nulo
+=alterarnome		perfil4  nome2  PonteiroNulo
+
+==Verifica Alteracao de cidade correto
+=alterarcidade		perfil1  cidade4  OK
+=mostrarperfil		perfil1  OK
+
+==Verifica Alteracao de cidade, String Vazia
+=alterarcidade		perfil3  ""  StringVazia
+
+==Verifica Alteracao de cidade, Ponteiro Nulo
+=alterarcidade		perfil4  cidade2  PonteiroNulo
+
+==Verifica Alteracao de datanasc correto
+=alterardatanasc	perfil1  dataNasc4  OK
+=mostrarperfil		perfil1  OK
+
+==Verifica Alteracao de datanasc, Valor Invalido
+=alterardatanasc	perfil3  "133/12/19994"  ValorInvalido
+
+==Verifica Alteracao de datanasc, Ponteiro Nulo
+=alterardatanasc	perfil4  dataNasc2  PonteiroNulo
+
+==Verifica Alteracao de genero correto
+=alterargenero	    perfil1  genero2  OK
+=mostrarperfil		perfil1  OK
+
+==Verifica Alteracao de genero, valor invalido
+=alterargenero	    perfil3  'K'  ValorInvalido
+
+==Verifica Alteracao de genero, Ponteiro Nulo
+=alterargenero	    perfil4  genero0  PonteiroNulo
+
+==Verifica enviar mensagem, Cond Ret OK
+=enviarmensagem		perfil1  texto0  perfil2  OK
+=enviarmensagem		perfil2  texto1  perfil3  OK
+=enviarmensagem		perfil2  texto2  perfil1  OK
+
+==Verifica enviar mensagem, Perfil nulo
+=enviarmensagem		perfil2  texto2  perfil4  PonteiroNulo
+
+==Verifica buscar mensagem enviada, Cond Ret OK
+=buscarmsgenv		perfil1  email2  OK
+=buscarmsgenv		perfil2  email1  OK
+
+==Verifica buscar mensagem enviada, Ponteiro nulo
+=buscarmsgenv		perfil4  email1  PonteiroNulo
+
+=enviarmensagem		perfil1  texto3  perfil2  OK
+=enviarmensagem		perfil2  texto2  perfil3  OK
+
+==Verifica buscar mensagem recebida, OK
+=buscarmsgrec		perfil2  email1  OK
+=buscarmsgrec		perfil3  email2  OK
+
+==Verifica buscar mensagem recebida, Ponteiro nulo
+=buscarmsgrec		perfil4  email0  PonteiroNulo
+
+
+// Fim do script de teste TestePerfil.script
