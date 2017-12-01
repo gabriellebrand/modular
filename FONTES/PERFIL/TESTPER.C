@@ -338,6 +338,72 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste )
 
          } /* fim ativa: Testar Alterar Genero */
 
+         /* Testar Enviar Mensagem */
+
+         else if ( strcmp( ComandoTeste , ENVIAR_MENSAGEM_CMD ) == 0 )
+         {
+
+            numLidos = LER_LerParametros( "isii" ,
+                       &inxPerfil, StringDado1, &inxPerfil2, &CondRetEsperada ) ;
+
+            if ( ( numLidos != 4 ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+            CondRetObtida = PER_EnviarMensagem ( vtPerfil[ inxPerfil ], StringDado1,  vtPerfil[ inxPerfil2 ] );
+
+            return TST_CompararInt( CondRetObtida , CondRetEsperada ,
+                     "Condicao de retorno errada ao enviar mensagem."   ) ;
+
+         } /* fim ativa: Testar Enviar Mensagem */
+
+         /* Testar Buscar Mensagem enviada */
+
+         else if ( strcmp( ComandoTeste , BUSCAR_MSG_ENV_CMD ) == 0 )
+         {
+
+            numLidos = LER_LerParametros( "isi" ,
+                       &inxPerfil, StringDado1, &CondRetEsperada ) ;
+
+            if ( ( numLidos != 3 ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+            CondRetObtida = PER_BuscarMsgEnviada ( vtPerfil[ inxPerfil ], StringDado1,  0 , StringDado2, &i );
+
+             if (CondRetObtida == PER_CondRetOK)
+                printf("\nMensagem %d enviada: %s\n", i, &StringDado2);
+
+            return TST_CompararInt( CondRetObtida , CondRetEsperada ,
+                     "Condicao de retorno errada ao buscar mensagem enviada."   ) ;
+
+         } /* fim ativa: Testar Buscar mensagem enviada */
+
+          /* Testar Buscar Mensagem Recebida */
+
+         else if ( strcmp( ComandoTeste , BUSCAR_MSG_REC_CMD ) == 0 )
+         {
+
+            numLidos = LER_LerParametros( "isi" ,
+                       &inxPerfil, StringDado1, &CondRetEsperada ) ;
+
+            if ( ( numLidos != 3 ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+            CondRetObtida = PER_BuscarMsgRecebida ( vtPerfil[ inxPerfil ], StringDado1,  0 , StringDado2, &i );
+
+             if (CondRetObtida == PER_CondRetOK)
+                printf("\nMensagem %d Recebida: %s\n", i, StringDado2);
+
+            return TST_CompararInt( CondRetObtida , CondRetEsperada ,
+                     "Condicao de retorno errada ao buscar mensagem Recebida."   ) ;
+
+         } /* fim ativa: Testar Buscar mensagem Recebida */
+
 
           return TST_CondRetNaoConhec ;
 
