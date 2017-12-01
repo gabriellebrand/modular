@@ -67,7 +67,7 @@ PER_tpCondRet PER_AlterarEmail(PER_tppPerfil pPerfil, char* email);
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
-/***************************************************************************
+/**************************************************************************
  *
  *  Função: PER &Criar Perfil
  *****/
@@ -230,7 +230,7 @@ PER_tpCondRet PER_MostrarPerfil(PER_tppPerfil pPerfil) {
 
 /***************************************************************************
  *
- *  Função: PER Obter Email
+ *  Função: PER Recuperar Email
  *****/
 
 char * PER_ObterEmail(PER_tppPerfil pPerfil) {
@@ -277,6 +277,7 @@ char PER_ObterGenero(PER_tppPerfil pPerfil) {
 	if (pPerfil == NULL) return NULL;
 	return pPerfil->genero;
 }
+
 
 /***************************************************************************
  *
@@ -393,6 +394,7 @@ PER_tpCondRet PER_EnviarMensagem(PER_tppPerfil remetente, char *texto, PER_tppPe
 PER_tpCondRet PER_VerificaMsgEnviada(PER_tppPerfil pPerfil, char *pEmail, char * textoMsg, int * idMsg) {
 	MEN_tppMensagem msg;
 	PER_tppPerfil destinatario;
+	char * mensagem = (char *) malloc(sizeof(char *));
 
 	msg = (MEN_tppMensagem) LIS_ObterValor(pPerfil->msgEnviadas);
 	if (msg == NULL)
@@ -408,8 +410,8 @@ PER_tpCondRet PER_VerificaMsgEnviada(PER_tppPerfil pPerfil, char *pEmail, char *
 		//copia o id da msg pro parametro idMsg para ser acessado pelo cliente
 		*idMsg = MEN_ObterID(msg);
 		//copia o texto da msg pro parametro do textoMsg
-		strcpy(textoMsg,MEN_ObterTexto(msg));
-
+		mensagem = MEN_ObterTexto(msg);
+		strcpy(textoMsg, mensagem);
 		return PER_CondRetOK;
 	}
 
@@ -423,15 +425,16 @@ PER_tpCondRet PER_VerificaMsgEnviada(PER_tppPerfil pPerfil, char *pEmail, char *
  *****/
 PER_tpCondRet PER_BuscarMsgEnviada(PER_tppPerfil pPerfil, char * pEmail, int inicio, char * textoMsg, int * idMsg) {
 	PER_tpCondRet ret;
+	char * mensagem = (char *) malloc(sizeof(char *));
 
-	if ((pPerfil == NULL) || (pEmail == NULL))
-		PER_CondRetPonteiroNulo;
+	if ((pPerfil == NULL) || (pEmail == NULL)){
+		return PER_CondRetPonteiroNulo;
+	}
 
 	if (inicio == 0) { //primeira iteracao
 		IrInicioLista(pPerfil->msgEnviadas);
-
-		ret = PER_VerificaMsgEnviada(pPerfil, pEmail, textoMsg, idMsg);
-
+		ret = PER_VerificaMsgEnviada(pPerfil, pEmail, mensagem, idMsg);
+		strcpy(textoMsg, mensagem);
 		switch (ret) {
 		case PER_CondRetOK:
 			return PER_CondRetOK; //encontrou a mensagem já no primeiro elemento
@@ -443,9 +446,8 @@ PER_tpCondRet PER_BuscarMsgEnviada(PER_tppPerfil pPerfil, char * pEmail, int ini
 
 	//acessa elemento por elemento da lista de mensagens, buscando a mensagem cujo destinatário possui o email requerido
 	while (LIS_AvancarElementoCorrente(pPerfil->msgEnviadas,1) == LIS_CondRetOK) {
-
-		ret = PER_VerificaMsgEnviada(pPerfil, pEmail,textoMsg, idMsg);
-
+		ret = PER_VerificaMsgEnviada(pPerfil, pEmail,mensagem, idMsg);
+		strcpy(textoMsg, mensagem);
 		switch (ret) {
 		case PER_CondRetOK:
 			return PER_CondRetOK; //encontrou a mensagem entao retorna
@@ -472,23 +474,26 @@ PER_tpCondRet PER_BuscarMsgEnviada(PER_tppPerfil pPerfil, char * pEmail, int ini
 
 PER_tpCondRet PER_VerificaMsgRecebida(PER_tppPerfil pPerfil, char *pEmail, char * textoMsg, int * idMsg) {
 	MEN_tppMensagem msg;
-	PER_tppPerfil remetente;
+	PER_tppPerfil Remetente;
+	char * mensagem = (char *) malloc(sizeof(char *));
 
 	msg = (MEN_tppMensagem) LIS_ObterValor(pPerfil->msgRecebidas);
 	if (msg == NULL)
 		return PER_CondRetPonteiroNulo;
 
-	remetente = (PER_tppPerfil) MEN_ObterRemetente(msg);
-	if (remetente == NULL)
+	Remetente = (PER_tppPerfil) MEN_ObterRemetente(msg);
+	if (Remetente == NULL)
 		return PER_CondRetPonteiroNulo;
 
-	if (PER_CompararPerfil(remetente, (void *) pEmail) == 0) {
-		//encontrou uma mensagem cujo destinatario possui o email requerido
+	if (PER_CompararPerfil(Remetente, (void *) pEmail) == 0) {
+		//encontrou uma mensagem cujo Remetente possui o email requerido
 		
 		//copia o id da msg pro parametro idMsg para ser acessado pelo cliente
 		*idMsg = MEN_ObterID(msg);
 		//copia o texto da msg pro parametro do textoMsg
-		strcpy(textoMsg,MEN_ObterTexto(msg));
+		mensagem = MEN_ObterTexto(msg);
+
+		strcpy(textoMsg, mensagem);
 
 		return PER_CondRetOK;
 	}
@@ -503,14 +508,15 @@ PER_tpCondRet PER_VerificaMsgRecebida(PER_tppPerfil pPerfil, char *pEmail, char 
  *****/
 PER_tpCondRet PER_BuscarMsgRecebida(PER_tppPerfil pPerfil, char * pEmail, int inicio, char * textoMsg, int * idMsg) {
 	PER_tpCondRet ret;
+	char * mensagem = (char *) malloc(sizeof(char *));
 
 	if ((pPerfil == NULL) || (pEmail == NULL))
-		PER_CondRetPonteiroNulo;
+		return PER_CondRetPonteiroNulo;
 
 	if (inicio == 0) { //primeira iteracao
 		IrInicioLista(pPerfil->msgRecebidas);
-
-		ret = PER_VerificaMsgRecebida(pPerfil, pEmail,textoMsg, idMsg);
+		ret = PER_VerificaMsgRecebida(pPerfil, pEmail,mensagem, idMsg);
+		strcpy(textoMsg, mensagem);
 
 		switch (ret) {
 		case PER_CondRetOK:
@@ -524,8 +530,9 @@ PER_tpCondRet PER_BuscarMsgRecebida(PER_tppPerfil pPerfil, char * pEmail, int in
 	//acessa elemento por elemento da lista de mensagens, buscando a mensagem cujo remetente possui o email requerido
 	while (LIS_AvancarElementoCorrente(pPerfil->msgRecebidas,1) == LIS_CondRetOK) {
 
-		ret = PER_VerificaMsgRecebida(pPerfil, pEmail,textoMsg, idMsg);
-		
+		ret = PER_VerificaMsgRecebida(pPerfil, pEmail,mensagem, idMsg);
+		strcpy(textoMsg, mensagem);
+
 		switch (ret) {
 		case PER_CondRetOK:
 			return PER_CondRetOK; //encontrou a mensagem entao retorna
