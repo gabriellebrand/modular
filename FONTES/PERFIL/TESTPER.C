@@ -38,6 +38,10 @@ static const char DESTRUIR_PERFIL_CMD      [ ] = "=destruirperfil"      ;
 static const char COMPARAR_PERFIL_CMD      [ ] = "=compararperfil"      ;
 static const char MOSTRAR_PERFIL_CMD       [ ] = "=mostrarperfil"      ;
 static const char OBTER_EMAIL_CMD          [ ] = "=obteremail"      ;
+static const char OBTER_NOME_CMD           [ ] = "=obternome"      ;
+static const char OBTER_CIDADE_CMD         [ ] = "=obtercidade"      ;
+static const char OBTER_DATANASC_CMD       [ ] = "=obterdatanasc"      ;
+static const char OBTER_GENERO_CMD         [ ] = "=obtergenero"      ;
 static const char ALTERAR_NOME_CMD         [ ] = "=alterarnome"      ;
 static const char ALTERAR_CIDADE_CMD       [ ] = "=alterarcidade"      ;
 static const char ALTERAR_DATANASC_CMD     [ ] = "=alterardatanasc"      ;
@@ -81,7 +85,11 @@ static const char BUSCAR_MSG_REC_CMD       [ ] = "=buscarmsgrec"      ;
 *     =destruirperfil  				   inxPerfil
 *     =compararperfil               inxPerfil1  string(email)  CondRet
 *     =mostrarperfil  				   inxPerfil   CondRet
-*     =obteremail   				      inxPerfil   string(email)  CondRet
+*     =obteremail                   inxPerfil   string(email)  CondRet
+*     =obternome                    inxPerfil   string(nome)  CondRet
+*     =obtercidade                  inxPerfil   string(cidade)  CondRet
+*     =obterdatanasc                inxPerfil   string(dataNasc)  CondRet
+*     =obtergenero   				   inxPerfil   string(genero)  CondRet
 *	   =alterarnome  				      inxPerfil string(nome)     CondRet
 *	   =alterarcidade  				   inxPerfil string(cidade)   CondRet
 *	   =alterardatanasc  			   inxPerfil string(dataNasc) CondRet
@@ -257,6 +265,108 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste )
                      "Condicao de retorno errada ao obter email."   ) ;
 
          } /* fim ativa: Testar Obter Email */
+
+         /* Testar Obter Nome */
+
+         else if ( strcmp( ComandoTeste , OBTER_NOME_CMD ) == 0 )
+         {
+
+            numLidos = LER_LerParametros( "isi" ,
+                       &inxPerfil, StringDado1, &CondRetEsperada ) ;
+
+            if ( ( numLidos != 3 )
+              || ( ! ValidarInxPerfil( inxPerfil , NAO_VAZIO )))
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+            StringDado5 = PER_ObterNome ( vtPerfil[ inxPerfil ] );
+
+            if (strcmp(StringDado1, StringDado5) == 0)
+               CondRetObtida = PER_CondRetOK;
+            else
+               CondRetObtida = PER_CondRetNaoAchou;
+
+            return TST_CompararInt( CondRetObtida , CondRetEsperada ,
+                     "Condicao de retorno errada ao obter Nome."   ) ;
+
+         } /* fim ativa: Testar Obter Nome */
+
+         /* Testar Obter Cidade */
+
+         else if ( strcmp( ComandoTeste , OBTER_CIDADE_CMD ) == 0 )
+         {
+
+            numLidos = LER_LerParametros( "isi" ,
+                       &inxPerfil, StringDado1, &CondRetEsperada ) ;
+
+            if ( ( numLidos != 3 )
+              || ( ! ValidarInxPerfil( inxPerfil , NAO_VAZIO )))
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+            StringDado5 = PER_ObterCidade ( vtPerfil[ inxPerfil ] );
+
+            if (strcmp(StringDado1, StringDado5) == 0)
+               CondRetObtida = PER_CondRetOK;
+            else
+               CondRetObtida = PER_CondRetNaoAchou;
+
+            return TST_CompararInt( CondRetObtida , CondRetEsperada ,
+                     "Condicao de retorno errada ao obter Cidade."   ) ;
+
+         } /* fim ativa: Testar Obter Cidade */
+
+         /* Testar Obter Data de Nascimento */
+
+         else if ( strcmp( ComandoTeste , OBTER_DATANASC_CMD ) == 0 )
+         {
+
+            numLidos = LER_LerParametros( "isi" ,
+                       &inxPerfil, StringDado1, &CondRetEsperada ) ;
+
+            if ( ( numLidos != 3 )
+              || ( ! ValidarInxPerfil( inxPerfil , NAO_VAZIO )))
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+            StringDado5 = PER_ObterNascimento ( vtPerfil[ inxPerfil ] );
+
+            if (strcmp(StringDado1, StringDado5) == 0)
+               CondRetObtida = PER_CondRetOK;
+            else
+               CondRetObtida = PER_CondRetNaoAchou;
+
+            return TST_CompararInt( CondRetObtida , CondRetEsperada ,
+                     "Condicao de retorno errada ao obter Data de Nascimento."   ) ;
+
+         } /* fim ativa: Testar Obter Data de Nascimento */
+
+         /* Testar Obter Genero */
+
+         else if ( strcmp( ComandoTeste , OBTER_GENERO_CMD ) == 0 )
+         {
+
+            numLidos = LER_LerParametros( "ici" ,
+                       &inxPerfil, &CharDado, &CondRetEsperada ) ;
+
+            if ( ( numLidos != 3 )
+              || ( ! ValidarInxPerfil( inxPerfil , NAO_VAZIO )))
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+            if (CharDado == PER_ObterGenero ( vtPerfil[ inxPerfil ] ) )
+                  CondRetObtida = PER_CondRetOK;
+            else
+                  CondRetObtida = PER_CondRetNaoAchou;
+
+            return TST_CompararInt( CondRetObtida , CondRetEsperada ,
+                     "Condicao de retorno errada ao obter Genero."   ) ;
+
+         } /* fim ativa: Testar Obter Genero */
 
          /* Testar Alterar Nome */
 
