@@ -168,7 +168,6 @@ CON_tpCondRet CON_MostrarPerfil (char *email);
 ***********************************************************************/
 CON_tpCondRet CON_ExcluirPerfil (char *pEmail);
 
-
 /***********************************************************************
 *
 *  $FC Função: CON  &Alterar Nome do Perfil
@@ -188,7 +187,7 @@ CON_tpCondRet CON_ExcluirPerfil (char *pEmail);
 *		CON_CondRetFaltouMemoria 	- ocorreu um erro de alocacao de espaco
 *
 ***********************************************************************/
-CON_tpCondRet CON_AlterarPerfilNome(char *email, char *nome)
+CON_tpCondRet CON_AlterarPerfilNome(char *email, char *nome);
 
 /***********************************************************************
 *

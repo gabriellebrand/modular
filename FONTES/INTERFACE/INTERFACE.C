@@ -40,13 +40,16 @@ void INT_ListarAmizades();
 void INT_CarregarHistorico();
 void INT_ExcluirPerfil();
 void INT_ExcluirAmizade();
+void INT_AlterarPerfil();
+
+/******************************************************************/
 
 void INT_MenuPrincipal() {
     int opcao = 0;
 	char linha[BUF_SIZE];
 
     printf("\n::::::::::::::::::MENU PRINCIPAL::::::::::::::::::\n");
-    printf("\n\t(1) Criar novo perfil \n\t(2) Criar uma nova amizade \n\t(3) Enviar uma mensagem \n\t(4) Carregar historico de mensagens \n\t(5) Buscar perfil \n\t(6) Listar amizades de perfil \n\t(7) Excluir Perfil \n\t(8) Excluir Amizade \n\t(9) Sair\n");
+    printf("\n\t(1) Criar novo perfil \n\t(2) Criar uma nova amizade \n\t(3) Enviar uma mensagem \n\t(4) Carregar historico de mensagens \n\t(5) Buscar perfil \n\t(6) Listar amizades de perfil \n\t(7) Excluir Perfil \n\t(8) Excluir Amizade \n\t(9) Alterar Perfil \n\t(10) Sair\n");
     printf("\nDigite o numero da opcao desejada.\n");
 
     fgets(linha, sizeof(linha), stdin);
@@ -78,6 +81,9 @@ void INT_MenuPrincipal() {
 			INT_ExcluirAmizade();
 			break;
 		case 9:
+			INT_AlterarPerfil();
+			break;
+		case 10:
 			exit(1);
         default:
         printf("\nOpcao invalida!\n");
@@ -95,7 +101,6 @@ void INT_CriarPerfil() {
 	printf("\nNome:\n(max 100 caracteres)\n");
 	fgets(linha, sizeof(linha), stdin);
     sscanf(linha, "%[^\n]s", nome);
-	///scanf(" %[^\n]", nome);
 	
 	printf("\nE-mail:\n(max 100 caracteres)\n");
 	fgets(linha, sizeof(linha), stdin);
@@ -138,6 +143,74 @@ void INT_CriarPerfil() {
 	default:
 		printf("\n!! Ocorreu um erro ao realizar o cadastro. !!\n");
 	}
+}
+
+void INT_AlterarPerfil() {
+	char linha[BUF_SIZE];
+	char email[TAM_PERFIL], perfilDado[TAM_PERFIL], genero, dataNasc[11];
+	CON_tpCondRet ret;
+	int opcao;
+	printf("\n::::::::::::::::::ALTERAR PERFIL::::::::::::::::::\n\n\tDigite o e-mail do perfil sera alterado.\n\n");
+
+	printf("Email:\n");
+	fgets(linha, sizeof(linha), stdin);
+    sscanf(linha, "%s", email);
+
+    printf("\nEscolha uma das opcoes abaixo para alterar no perfil:\n\n\t(1) Nome\n\t(2) Cidade\n\t(3) Data de nascimento\n\t(4) Genero\n");
+
+    fgets(linha, sizeof(linha), stdin);
+    sscanf(linha, "%d", &opcao);
+
+    switch (opcao){
+    case 1:
+    	printf("\nNovo nome:\n(max 100 caracteres)\n");
+		fgets(linha, sizeof(linha), stdin);
+    	sscanf(linha, "%[^\n]s", perfilDado);
+
+    	ret = CON_AlterarPerfilNome(email, perfilDado);
+    	break;
+    case 2:
+    	printf("\nNova cidade:\n(max 100 caracteres)\n");
+		fgets(linha, sizeof(linha), stdin);
+    	sscanf(linha, "%[^\n]s", perfilDado);
+
+    	ret = CON_AlterarPerfilCidade(email, perfilDado);
+    	break;
+    case 3:
+    	printf("\nNova data de nascimento:\n(no formato 'DD/MM/AAAA')\n");
+		fgets(linha, sizeof(linha), stdin);
+	
+		if (strlen(linha) == 11)
+			sscanf(linha, "%[^\n]s", dataNasc);
+		else {
+			printf("\n Data Invalida! %d \n", strlen(linha));
+			return;
+		}
+
+		ret = CON_AlterarPerfilNasc(email, dataNasc);
+		break;
+    case 4:
+    	printf("\nNovo genero:\n(caractere 'F' - feminino ou 'M' - masculino ou 'O' - outro)\n");
+		fgets(linha, sizeof(linha), stdin);
+    	sscanf(linha, "%c", &genero);
+
+    	ret = CON_AlterarPerfilGenero(email, genero);
+    	break;
+    default:
+    	printf("\nOpcao invalida!\n");
+    	return;
+    }
+
+
+    if ((ret == CON_CondRetValorNulo) || (ret == CON_CondRetFaltouMemoria))
+    	printf("\n!! Ocorreu um erro ao alterar o dado. !!\n");
+    else if ((ret == CON_CondRetRedeVazia)||(ret == CON_CondRetNaoAchou))
+    	printf("\nNao foi encontrado um perfil para esse email.\n");
+    else if ((ret == CON_CondRetStringVazia)||(ret == CON_CondRetErroFormato))
+    	printf("\n!!Dado invalido. !!\n");
+    else
+    	printf("\nDado alterado com sucesso.\n");
+
 }
 
 void INT_CriarAmizade() {
