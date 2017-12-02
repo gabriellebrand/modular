@@ -250,7 +250,7 @@ if(!pDado || !pChaveID) return GRA_CondRetValorNulo;
     CED_DefinirTipoEspaco( pConteudoVert , GRA_TipoEspacoNo ) ;
     pConteudoVert->pCabeca = pGrafo ;
   #else
-    pArvore = NULL ;
+    pGrafo = NULL ;
   #endif
 
   pConteudoVert->pArestas = pArestas;
@@ -716,7 +716,7 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
 
          default :
 
-         if ( pArvore->pNoCorr->pArestas != NULL )
+         if ( pGrafo->pVertCorr->pArestas != NULL )
          {
 
             switch ( ModoDeturpar ) {
