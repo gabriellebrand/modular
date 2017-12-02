@@ -225,7 +225,7 @@ CON_tpCondRet CON_AlterarPerfilGenero(char *email, char genero) {
 *
 ***********************************************************************/
 
-CON_tpCondRet CON_BuscarPerfil(char *email, PER_tppPerfil *pPerfil) {
+CON_tpCondRet CON_BuscarPerfil(char *email, PER_tppPerfil pPerfil) {
 
 	GRA_tpCondRet ret;
 
@@ -236,13 +236,13 @@ CON_tpCondRet CON_BuscarPerfil(char *email, PER_tppPerfil *pPerfil) {
 
 	ret = GRA_IrVertice(Grafo, (void*)email);
 
-	if (ret != GRA_CondRetOK) 
+	if (ret == GRA_CondRetGrafoNaoExiste) 
 		return CON_CondRetRedeVazia;
 	
 	if (ret == GRA_CondRetVerticeNaoExiste)
 		return CON_CondRetNaoAchou;
 
-	*pPerfil = (PER_tppPerfil) GRA_ObterValor(Grafo);
+	pPerfil = (PER_tppPerfil) GRA_ObterValor(Grafo);
 
 	if (pPerfil == NULL)
 		return CON_CondRetValorNulo;
@@ -396,6 +396,9 @@ CON_tpCondRet CON_BuscarAmizades(char *email) { /*Talvez seja melhor mudar o nom
 	int i = 0;
 	//void * val = NULL;
 	PER_tppPerfil perAmigo;
+	
+	if(email == NULL)
+		return CON_CondRetValorNulo;
 
 	do {
 		//1. buscar o vertice relativo ao email passado
@@ -443,6 +446,10 @@ CON_tpCondRet CON_EnviarMensagem(char *email1, char *email2, char *texto) {
 	PER_tpCondRet pRet;
 	CON_tpCondRet cRet;
 	PER_tppPerfil remetente, destinatario;
+	
+	if (email1 == NULL || email2 == NULL || texto == NULL)
+		return CON_CondRetValorNulo;
+	
 	//1. verificar se os dois perfis sao amigos
 	if ((cRet = CON_BuscarPerfil(email1, &remetente)) != CON_CondRetOK) {
 		return cRet;
