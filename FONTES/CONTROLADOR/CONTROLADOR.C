@@ -225,7 +225,7 @@ CON_tpCondRet CON_AlterarPerfilGenero(char *email, char genero) {
 *
 ***********************************************************************/
 
-CON_tpCondRet CON_BuscarPerfil(char *email, PER_tppPerfil pPerfil) {
+CON_tpCondRet CON_BuscarPerfil(char *email, PER_tppPerfil *pPerfil) {
 
 	GRA_tpCondRet ret;
 
@@ -242,7 +242,7 @@ CON_tpCondRet CON_BuscarPerfil(char *email, PER_tppPerfil pPerfil) {
 	if (ret == GRA_CondRetVerticeNaoExiste)
 		return CON_CondRetNaoAchou;
 
-	pPerfil = (PER_tppPerfil) GRA_ObterValor(Grafo);
+	*pPerfil = (PER_tppPerfil) GRA_ObterValor(Grafo);
 
 	if (pPerfil == NULL)
 		return CON_CondRetValorNulo;
