@@ -65,7 +65,7 @@ typedef struct GRA_tagConteudoVert {
   void (* exclui) (void * pDado) ;
 
   #ifdef _DEBUG
-      GRA_tpPGrafo pCabeca ;
+      GRA_tppGrafo pCabeca ;
       /* Ponteiro para cabeca
       *
       *$ED Descrição
@@ -269,7 +269,6 @@ if(!pDado || !pChaveID) return GRA_CondRetValorNulo;
   return GRA_InserirVertice(pGrafo, pVertice);
 } /* Fim função: GRA  &Criar Vertice */
 
-
 /***************************************************************************
 *  Função: GRA  &Inserir Vertice
 * **************************************************************************/
@@ -283,6 +282,55 @@ GRA_tpCondRet GRA_InserirVertice(GRA_tppGrafo pGrafo, LIS_tppLista pVertice) {
   pGrafo->pVertCorr = (LIS_tppLista) LIS_ObterValor(pGrafo->pVertices);
   return GRA_CondRetOK;
 } /* Fim função: GRA  &Inserir Vertice */
+
+/***************************************************************************
+*  Função: GRA  &Alterar Vertice
+* **************************************************************************/
+
+GRA_tpCondRet GRA_AlterarVertCorr(GRA_tppGrafo pGrafo, void *pDado, void *pChaveID) { 
+
+  LIS_tppLista pVertice;
+  GRA_tpConteudoVert * pConteudoVert, *conteudoAntigo;
+
+  if (!pGrafo) {
+    return GRA_CondRetGrafoNaoExiste;
+  } /* if */
+
+if(!pDado || !pChaveID) 
+  return GRA_CondRetValorNulo;
+
+
+
+    /* inicializando o novo pDado que ira substituir o antigo */
+  pConteudoVert = (GRA_tpConteudoVert *)malloc(sizeof(GRA_tpConteudoVert));
+
+  if (!pConteudoVert) {
+    //nao faz a alteracao
+    return GRA_CondRetFaltouMemoria;
+  } /* if */
+
+  //obtem o conteudo do vertice corrente
+  conteudoAntigo = (GRA_tpConteudoVert *) LIS_ObterValor(pGrafo->pVerticeCorr);
+
+  if (conteudoAntigo == NULL)
+    return GRA_CondRetValorNulo;
+
+  //passa as informacoes do antigo conteudo para o novo e atualiza o pDado
+  pConteudoVert->pArestas = conteudoAntigo->pArestas;
+  pConteudoVert->pDado = pDado;
+  pConteudoVert->compara = pGrafo->compara;
+  pConteudoVert->exclui = pGrafo->exclui;
+
+  //remove o conteudo antigo, se existir (se nao existir nao faz nada, apenas adiciona um novo)
+  LIS_ExcluirElemento(pGrafo->pVerticeCorr);
+
+  //coloca o conteudo novo
+  if (LIS_InserirElementoApos(pGrafo->pVerticeCorr, pConteudoVert) == LIS_CondRetFaltouMemoria)
+    return GRA_CondRetFaltouMemoria;
+
+  return GRA_CondRetOK;
+} /* Fim função: GRA  &Alterar Vertice */
+
 
 /***************************************************************************
 *  Função: GRA  &Ir Vertice

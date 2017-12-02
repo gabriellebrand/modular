@@ -252,7 +252,7 @@ GRA_tpCondRet GRA_AvancarVizinho (GRA_tppGrafo pGrafo, int numElem);
 void * GRA_ObterValor( GRA_tppGrafo pGrafo);
 
 /***********************************************************************
-*  $FC Função: GRA - Obter Valor
+*  $FC Função: GRA - Criar Vertice
 *  $ED Descrição da função
 *     Cria um novo vértice e insere ele no grafo.
 *     Se inserido corretamente, o novo vértice passa a ser o vértice corrente.
@@ -273,6 +273,24 @@ void * GRA_ObterValor( GRA_tppGrafo pGrafo);
 *     
 ***********************************************************************/
 GRA_tpCondRet GRA_CriarVertice(GRA_tppGrafo pGrafo, void *pDado, void *pChaveID);
+
+/***********************************************************************
+*  $FC Função: GRA - Alterar Vertice
+*  $ED Descrição da função
+*     Altera o conteudo pDado do vertice corrente do grafo.
+*
+*  $EP Parâmetros
+*     pGrafo    - ponteiro para o grafo
+*     pDado     - ponteiro para o novo dado a ser armazenado no vértice
+*     
+*  $FV Valor retornado
+*     GRA_CondRetGrafoNaoExiste    - ponteiro para o grafo é nulo
+*     GRA_CondRetValorNulo         - conteudo do vertice corrente esta nulo ou grafo esta vazio (nao ha vertice corrente)
+*     GRA_CondRetFaltouMemoria     - faltou memoria para alocação do novo conteudo do vértice
+*     GRA_CondRetOK                - vértice foi alterado com sucesso
+*     
+***********************************************************************/
+GRA_tpCondRet GRA_AlterarVertCorr(GRA_tppGrafo pGrafo, void *pDado);
 
 /***********************************************************************
 *  $FC Função: GRA - Excluir Vértice Corrente

@@ -29,11 +29,12 @@
 
 /*******   Protótipo das Funções Encapsuladas no Módulo *********************/
 
-
+CON_tpCondRet CON_AlterarPerfil(PER_tppPerfil pPerfil);
 
 /************** Dados encapsulados no modulo   *********************************************************/
 
 static GRA_tppGrafo Grafo = NULL; /* Ponteiro para o Grafo utilizado na rede de relacionamentos*/
+
 
 
 /*******  Código das Funções Exportadas pelo Módulo ***********************/
@@ -88,6 +89,135 @@ CON_tpCondRet CON_CriarPerfil(char *pNome, char *pEmail, char *pCidade, char gen
 	return CON_CondRetOK;
 
 }  /* Fim função: CON  &Criar Perfil */
+
+/***********************************************************************
+*
+*  $FC Função: CON  &Alterar Perfil (funcao de apoio)
+*
+***********************************************************************/
+
+CON_tpCondRet CON_AlterarPerfil(PER_tppPerfil pPerfil) {
+	GRA_tpCondRet gRet;
+	
+	gRet = GRA_AlterarVertCorr(Grafo, pPerfil);
+
+	switch (gRet) {
+	case GRA_CondRetGrafoNaoExiste:
+		return CON_CondRetRedeVazia;
+	case GRA_CondRetValorNulo:
+		return CON_tpCondRetValorNulo;
+	case GRA_CondRetFaltouMemoria:
+		CON_CondRetFaltouMemoria;
+	default:
+		return CON_CondRetOK;
+
+	}
+}
+
+/***********************************************************************
+*
+*  $FC Função: CON  &Alterar Nome do Perfil
+*
+***********************************************************************/
+CON_tpCondRet CON_AlterarPerfilNome(char *email, char *nome) {
+	PER_tppPerfil pPerfil = NULL;
+	CON_tpCondRet ret;
+	PER_tpCondRet pRet;
+	
+	/* Busca o perfil*/
+	if ((ret = CON_BuscarPerfil (email, &pPerfil)) != CON_CondRetOK)
+		return ret;
+
+	pRet = PER_AlterarNome(pPerfil, nome);
+
+	switch (pRet) {
+	case PER_CondRetPonteiroNulo:
+		return CON_CondRetValorNulo;
+	case PER_CondRetStringVazia:
+		CON_CondRetStringVazia;
+	}
+
+	return CON_AlterarPerfil(pPerfil);
+}
+
+/***********************************************************************
+*
+*  $FC Função: CON  &Alterar Cidade do Perfil
+*
+***********************************************************************/
+CON_tpCondRet CON_AlterarPerfilCidade(char *email, char *cidade) {
+	PER_tppPerfil pPerfil = NULL;
+	CON_tpCondRet ret;
+	PER_tpCondRet pRet;
+	
+	/* Busca o perfil*/
+	if ((ret = CON_BuscarPerfil (email, &pPerfil)) != CON_CondRetOK)
+		return ret;
+
+	pRet = PER_AlterarCidade(pPerfil, cidade);
+
+	switch (pRet) {
+	case PER_CondRetPonteiroNulo:
+		return CON_tpCondRetValorNulo;
+	case PER_CondRetStringVazia:
+		return CON_CondRetStringVazia;
+	}
+
+	return CON_AlterarPerfil(pPerfil);
+}
+
+/***********************************************************************
+*
+*  $FC Função: CON  &Alterar Data de Nascimento do Perfil
+*
+***********************************************************************/
+CON_tpCondRet CON_AlterarPerfilNasc(char *email, char *dataNasc) {
+	PER_tppPerfil pPerfil = NULL;
+	CON_tpCondRet ret;
+	PER_tpCondRet pRet;
+	
+	/* Busca o perfil*/
+	if ((ret = CON_BuscarPerfil (email, &pPerfil)) != CON_CondRetOK)
+		return ret;
+
+	pRet = PER_AlterarDataNasc(pPerfil, dataNasc);
+
+	switch (pRet) {
+	case PER_CondRetPonteiroNulo:
+		return CON_tpCondRetValorNulo;
+	case PER_CondRetValorInvalido:
+		return CON_CondRetErroFormato;
+	}
+
+	//PER_AlterarGenero(PER_tppPerfil pPerfil, genero);
+	return CON_AlterarPerfil(pPerfil);
+}
+
+/***********************************************************************
+*
+*  $FC Função: CON  &Alterar Genero do Perfil
+*
+***********************************************************************/
+CON_tpCondRet CON_AlterarPerfilGenero(char *email, char genero) {
+	PER_tppPerfil pPerfil = NULL;
+	CON_tpCondRet ret;
+	PER_tpCondRet pRet;
+	
+	/* Busca o perfil*/
+	if ((ret = CON_BuscarPerfil (email, &pPerfil)) != CON_CondRetOK)
+		return ret;
+
+	pRet = PER_AlterarGenero(PER_tppPerfil pPerfil, genero);
+
+	switch (pRet) {
+	case PER_CondRetPonteiroNulo:
+		return CON_tpCondRetValorNulo;
+	case PER_CondRetValorInvalido:
+		return CON_CondRetErroFormato;
+	}
+	
+	return CON_AlterarPerfil(pPerfil);
+}
 
 /***********************************************************************
 *

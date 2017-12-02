@@ -171,6 +171,90 @@ CON_tpCondRet CON_ExcluirPerfil (char *pEmail);
 
 /***********************************************************************
 *
+*  $FC Função: CON  &Alterar Nome do Perfil
+*
+*  $ED Descrição da função
+*     Recebe um email e altera o nome do perfil correspondente
+*  $EP Parâmetros
+*     email - email do perfil que será alterado (max 100 caracteres)
+*	  nome - novo valor que irá substituir o antigo
+*
+*  $FV Valor retornado
+*		CON_CondRetValorNulo		- algum ponteiro da estrutura esta apontado para NULL (erro estrutural)
+*		CON_CondRetStringVazia		- string passada esta vazia
+*		CON_CondRetRedeVazia		- nao possui nenhum perfil cadastrado na rede
+*		CON_CondRetNaoAchou			- nao achou o perfil referente ao email passado
+*		CON_CondRetOK				- fez a alteracao com sucesso
+*		CON_CondRetFaltouMemoria 	- ocorreu um erro de alocacao de espaco
+*
+***********************************************************************/
+CON_tpCondRet CON_AlterarPerfilNome(char *email, char *nome)
+
+/***********************************************************************
+*
+*  $FC Função: CON  &Alterar Cidade do Perfil
+*
+*  $ED Descrição da função
+*     Recebe um email e altera a cidade do perfil correspondente
+*  $EP Parâmetros
+*     email - email do perfil que será alterado (max 100 caracteres)
+*	  cidade - novo valor que irá substituir o antigo
+*
+*  $FV Valor retornado
+*		CON_CondRetValorNulo		- algum ponteiro da estrutura esta apontado para NULL (erro estrutural)
+*		CON_CondRetStringVazia		- string passada esta vazia
+*		CON_CondRetRedeVazia		- nao possui nenhum perfil cadastrado na rede
+*		CON_CondRetNaoAchou			- nao achou o perfil referente ao email passado
+*		CON_CondRetOK				- fez a alteracao com sucesso
+*		CON_CondRetFaltouMemoria 	- ocorreu um erro de alocacao de espaco
+*
+***********************************************************************/
+CON_tpCondRet CON_AlterarPerfilCidade(char *email, char *cidade);
+
+/***********************************************************************
+*
+*  $FC Função: CON  &Alterar Data de Nascimento do Perfil
+*
+*  $ED Descrição da função
+*     Recebe um email e altera a data de nascimento do perfil correspondente
+*  $EP Parâmetros
+*     email - email do perfil que será alterado (max 100 caracteres)
+*	  dataNasc - novo valor que irá substituir o antigo
+*
+*  $FV Valor retornado
+*		CON_CondRetValorNulo		- algum ponteiro da estrutura esta apontado para NULL (erro estrutural)
+*		CON_CondRetStringVazia		- string passada esta vazia
+*		CON_CondRetRedeVazia		- nao possui nenhum perfil cadastrado na rede
+*		CON_CondRetNaoAchou			- nao achou o perfil referente ao email passado
+*		CON_CondRetOK				- fez a alteracao com sucesso
+*		CON_CondRetFaltouMemoria 	- ocorreu um erro de alocacao de espaco
+*
+***********************************************************************/
+CON_tpCondRet CON_AlterarPerfilNasc(char *email, char *dataNasc);
+
+/***********************************************************************
+*
+*  $FC Função: CON  &Alterar Genero do Perfil
+*
+*  $ED Descrição da função
+*     Recebe um email e altera o genero do perfil correspondente
+*  $EP Parâmetros
+*     email - email do perfil que será alterado (max 100 caracteres)
+*	  genero - novo valor que irá substituir o antigo
+*
+*  $FV Valor retornado
+*		CON_CondRetValorNulo		- algum ponteiro da estrutura esta apontado para NULL (erro estrutural)
+*		CON_CondRetStringVazia		- string passada esta vazia
+*		CON_CondRetRedeVazia		- nao possui nenhum perfil cadastrado na rede
+*		CON_CondRetNaoAchou			- nao achou o perfil referente ao email passado
+*		CON_CondRetOK				- fez a alteracao com sucesso
+*		CON_CondRetFaltouMemoria 	- ocorreu um erro de alocacao de espaco
+*
+***********************************************************************/
+CON_tpCondRet CON_AlterarPerfilGenero(char *email, char genero);
+
+/***********************************************************************
+*
 *  $FC Função: CON  &Criar Amizade
 *
 *  $ED Descrição da função
