@@ -813,85 +813,169 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
 #endif 
 
 #ifdef _DEBUG
-
-/***************************************************************************
+/***********************************************************************
 *
-*  Função: GRA  &Verificar um grafo
-*  ****/
+*  $FC Função: GRA Verificar estrutura
+*
+***********************************************************************/
 
-   GRA_tpCondRet GRA_VerificarGrafo( void * pGrafoParm )
-   {
 
-      GRA_tppGrafo pGrafo = NULL;
+#define INCERROS (*numErros)++
 
-      CED_MarcarEspacoAtivo( pGrafoParm );
+   GRA_tpCondRet GRA_VerificarEstrutura( GRA_tppGrafo pGrafo, int * numErros ) {
+     int achou, qtd = 0, somaTam = 0;
+     GRA_tppConteudoVert pVertice, pVerticeAnt, pVerticeProx;
+     //GRA_tpAresta * pAresta;
 
-      if ( GRA_VerificarCabeca( pGrafoParm ) != GRA_CondRetOK )
-      {
-         return GRA_CondRetErroEstrutura ;
-      } /* if */
+     *numErros = 0;
 
+     if( pGrafo == NULL){
+        CNT_CONTAR( "GRA_VerificarEstrura-1" );
+      INCERROS;
+     }
+
+     CNT_CONTAR( "GRA_VerificarEstrura-2" );
+     CED_MarcarEspacoAtivo( pGrafo ) ;
+     
+     LIS_IrInicioLista( pGrafo->pVertices );
+
+     if(LIS_ObterValor(pGrafo->pVertices) != NULL) {
+
+      CNT_CONTAR( "GRA_VerificarEstrura-3" );
+
+      if(pGrafo->pVertCorr == NULL){
+        CNT_CONTAR( "GRA_VerificarEstrura-4" );
+        INCERROS;
+      }
+
+      if(LIS_ProcurarValor(pGrafo->pVertices, pGrafo->pVertCorr) != LIS_CondRetOK){
+          CNT_CONTAR( "GRA_VerificarEstrura-5" );
+          INCERROS;
+        }
+     }
+
+     // Para cada vertice
+     LIS_IrInicioLista(pGrafo->pVertices); 
+     while( LIS_ObterValor( pGrafo->pVertices ) ) { // verifica se cada elemento da lista vertice é diferente de null
+       
+       CED_MarcarEspacoAtivo( pGrafo ) ;
+
+       pVertice = LIS_ObterValor( pGrafo->pVertices ); //obtem o valor de um elemento
+       tpElemLista *elem = pGrafo->pVertices->pElemCorr
+       CNT_CONTAR( "GRA_VerificarEstrura-6" );
+
+       if(pVertice!= NULL && CED_ObterTamanhoValor(pVertice)!= -1 ) {
+         CNT_CONTAR( "GRA_VerificarEstrura-7" );
+         
+
+         // Para cada predecessor
+         tpElemLista *elemAnt = elem->pAnt;
+         LIS_IrInicioLista(elemAnt->pValor->pArestas);
+         while( LIS_ObterValor( pVertice->pListaAnt ) ) {
+            CNT_CONTAR( "GRA_VerificarEstrura-8" );
+            pVertice2 = (GRA_tppConteudoVert) LIS_ObterValor( elemAnt->pValor->pArestas );
+
+            if(CED_ObterTamanhoValor(pVertice2) != -1) {
+            CNT_CONTAR( "GRA_VerificarEstrura-9" );
+            achou = 0;
+            
+            // Para cada sucessor do predecessor
+            LIS_IrInicioLista(pVertice2->pArestas);
+            while( LIS_ObterValor( pVertice2->pArestas ) ) {
+              CNT_CONTAR( "GRA_VerificarEstrura-10" );
+              pVerticeBuscado = (GRA_tppConteudoVert) LIS_ObterValor( pVertice2->pArestas );
+
+              if( pVerticeBuscado == pVertice ){
+                  CNT_CONTAR( "GRA_VerificarEstrura-11" );
+                  achou = 1;
+              }
+              if( LIS_AvancarElementoCorrente( pVertice2->pArestas, 1 ) != LIS_CondRetOK ){
+                CNT_CONTAR( "GRA_VerificarEstrura-12" );
+                break;
+              }
+
+            }// Fim: Para cada sucessor do predecessor
+            if(!achou){
+              CNT_CONTAR( "GRA_VerificarEstrura-13" );
+              INCERROS;
+            } else {
+                  CNT_CONTAR( "GRA_VerificarEstrura-14" );
+                  INCERROS;
+                }
+                
+                if( LIS_AvancarElementoCorrente( pVertice2->pArestas, 1 ) != LIS_CondRetOK ){
+                CNT_CONTAR( "GRA_VerificarEstrura-15" );
+                break;
+              }
+            } // Fim: Para cada predecessor
+
+
+            //Para cada sucessor
+            tpElemLista *elemProx = elem->pProx;
+            LIS_IrInicioLista(elemProx->pValor->pArestas);
+            while( LIS_ObterValor( elemProx->pValor->pArestas ) ) {
+              CNT_CONTAR( "GRA_VerificarEstrura-16" );
+              pVerticeBuscadoProx = (GRA_tppConteudoVert) LIS_ObterValor(elemProx->pValor->pArestas);
+
+            if(CED_ObterTamanhoValor(pVerticeBuscado) != -1) {
+              CNT_CONTAR( "GRA_VerificarEstrura-17" );
+
+              if(pVerticeBuscado->pCabeca != pGrafo){
+                CNT_CONTAR( "GRA_VerificarEstrura-18" );
+                INCERROS;
+              }
+              LIS_IrInicioLista(pVerticeBuscado->pArestas);
+              if(LIS_ProcurarValor(pVerticeBuscado->pArestas, pVertice) != LIS_CondRetOK){
+                CNT_CONTAR( "GRA_VerificarEstrura-19" );
+                INCERROS;
+              }
+            } else {
+                  CNT_CONTAR( "GRA_VerificarEstrura-20" );
+                  INCERROS;
+                }
+                if( LIS_AvancarElementoCorrente( elemProx->pValor->pArestas, 1 ) != LIS_CondRetOK ){
+                CNT_CONTAR( "GRA_VerificarEstrura-21" );
+                break;
+              }
+            }//fim: para cada sucessor
+
+            if(pVertice->pCabeca != pGrafo){
+              CNT_CONTAR( "GRA_VerificarEstrura-22" );
+              INCERROS;
+            }
+
+
+            if(pVertice->pDado != NULL && pVertice->idTipo != CED_ObterTipoEspaco(pVertice->pDado)){
+              CNT_CONTAR( "GRA_VerificarEstrura-23" );
+              INCERROS;
+            }
+
+            qtd++;              
+
+      } else {
+            CNT_CONTAR( "GRA_VerificarEstrura-24" );
+            INCERROS;
+          }
+
+       if( LIS_AvancarElementoCorrente( pGrafo->pListaVertices, 1 ) != LIS_CondRetOK ){
+         CNT_CONTAR( "GRA_VerificarEstrura-25" );
+         break;
+       }
+
+    }//fim: para cada vertice
+
+    if(pGrafo->totalElem != qtd){
+          CNT_CONTAR( "GRA_VerificarEstrura-26" );
+          INCERROS;
+      }
+
+      if(pGrafo->tamValores != somaTam){
+          CNT_CONTAR( "GRA_VerificarEstrura-27" );
+          INCERROS;
+      }
+        
+      CNT_CONTAR( "GRA_VerificarEstrura-28" );
       return GRA_CondRetOK;
+  }
 
-   } /* Fim função: GRA  &Verificar um grafo */
-
-#endif
-
-#ifdef _DEBUG
-
-/***************************************************************************
-*
-*  Função: GRA  &Verificar um nó cabeça
-*  ****/
-
-   GRA_tpCondRet GRA_VerificarCabeca( void * pCabecaParm )
-   {
-
-      GRA_tppGrafo pGrafo = NULL ;
-
-      /* Verifica o tipo do espaço */
-
-         if ( pCabecaParm == NULL )
-         {
-            TST_NotificarFalha( "Tentou verificar cabeça inexistente." ) ;
-            return GRA_CondRetErroEstrutura ;
-         } /* if */
-
-         if ( ! CED_VerificarEspaco( pCabecaParm , NULL ))
-         {
-            TST_NotificarFalha( "Controle do espaço acusou erro." ) ;
-            return GRA_CondRetErroEstrutura ;
-         } /* if */
-
-         if ( TST_CompararInt( GRA_TipoEspacoCabeca ,
-              CED_ObterTipoEspaco( pCabecaParm ) ,
-              "Tipo do espaço de dados não é cabeça de árvore." ) != TST_CondRetOK )
-         {
-            return GRA_CondRetErroEstrutura ;
-         } /* if */
-
-         pGrafo = ( GRA_tppGrafo)( pCabecaParm ) ;
-
-      /* Verifica corrente */
-
-         if ( pGrafo->pVertCorr != NULL )
-         {
-            if ( TST_CompararPonteiro( pCabecaParm , pGrafo->pVertCorr->pCabeca ,
-                 "Nó corrente não aponta para cabeça." ) != TST_CondRetOK )
-            {
-               return GRA_CondRetErroEstrutura ;
-            } /* if */
-         } else {
-            if ( TST_CompararPonteiro( NULL , pAGrafo->pVertCorr ,
-                 "Árvore não vazia tem nó corrente NULL." ) != TST_CondRetOK )
-            {
-               return GRA_CondRetErroEstrutura ;
-            } /* if */
-         } /* if */
-
-      return GRA_CondRetOK ;
-
-   } /* Fim função: GRA  &Verificar um nó cabeça */
-
-#endif
-
+#undef INCERROS
