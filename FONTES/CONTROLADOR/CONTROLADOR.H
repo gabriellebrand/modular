@@ -222,7 +222,7 @@ CON_tpCondRet CON_AlterarPerfilCidade(char *email, char *cidade);
 *
 *  $FV Valor retornado
 *		CON_CondRetValorNulo		- algum ponteiro da estrutura esta apontado para NULL (erro estrutural)
-*		CON_CondRetStringVazia		- string passada esta vazia
+*		CON_CondRetErroFormato		- formato da data invalido
 *		CON_CondRetRedeVazia		- nao possui nenhum perfil cadastrado na rede
 *		CON_CondRetNaoAchou			- nao achou o perfil referente ao email passado
 *		CON_CondRetOK				- fez a alteracao com sucesso
@@ -243,7 +243,7 @@ CON_tpCondRet CON_AlterarPerfilNasc(char *email, char *dataNasc);
 *
 *  $FV Valor retornado
 *		CON_CondRetValorNulo		- algum ponteiro da estrutura esta apontado para NULL (erro estrutural)
-*		CON_CondRetStringVazia		- string passada esta vazia
+*		CON_CondRetErroFormato		- formato do genero invalido
 *		CON_CondRetRedeVazia		- nao possui nenhum perfil cadastrado na rede
 *		CON_CondRetNaoAchou			- nao achou o perfil referente ao email passado
 *		CON_CondRetOK				- fez a alteracao com sucesso

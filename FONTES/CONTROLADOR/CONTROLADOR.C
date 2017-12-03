@@ -92,30 +92,6 @@ CON_tpCondRet CON_CriarPerfil(char *pNome, char *pEmail, char *pCidade, char gen
 
 /***********************************************************************
 *
-*  $FC Função: CON  &Alterar Perfil (funcao de apoio)
-*
-***********************************************************************/
-
-CON_tpCondRet CON_AlterarPerfil(PER_tppPerfil pPerfil) {
-	GRA_tpCondRet gRet;
-	
-	gRet = GRA_AlterarVertCorr(Grafo, pPerfil);
-
-	switch (gRet) {
-	case GRA_CondRetGrafoNaoExiste:
-		return CON_CondRetRedeVazia;
-	case GRA_CondRetValorNulo:
-		return CON_tpCondRetValorNulo;
-	case GRA_CondRetFaltouMemoria:
-		CON_CondRetFaltouMemoria;
-	default:
-		return CON_CondRetOK;
-
-	}
-}
-
-/***********************************************************************
-*
 *  $FC Função: CON  &Alterar Nome do Perfil
 *
 ***********************************************************************/
@@ -134,10 +110,10 @@ CON_tpCondRet CON_AlterarPerfilNome(char *email, char *nome) {
 	case PER_CondRetPonteiroNulo:
 		return CON_CondRetValorNulo;
 	case PER_CondRetStringVazia:
-		CON_CondRetStringVazia;
+		return CON_CondRetStringVazia;
 	}
 
-	return CON_AlterarPerfil(pPerfil);
+	return CON_CondRetOK;
 }
 
 /***********************************************************************
@@ -158,12 +134,12 @@ CON_tpCondRet CON_AlterarPerfilCidade(char *email, char *cidade) {
 
 	switch (pRet) {
 	case PER_CondRetPonteiroNulo:
-		return CON_tpCondRetValorNulo;
+		return CON_CondRetValorNulo;
 	case PER_CondRetStringVazia:
 		return CON_CondRetStringVazia;
 	}
 
-	return CON_AlterarPerfil(pPerfil);
+	return CON_CondRetOK;
 }
 
 /***********************************************************************
@@ -184,13 +160,13 @@ CON_tpCondRet CON_AlterarPerfilNasc(char *email, char *dataNasc) {
 
 	switch (pRet) {
 	case PER_CondRetPonteiroNulo:
-		return CON_tpCondRetValorNulo;
+		return CON_CondRetValorNulo;
 	case PER_CondRetValorInvalido:
 		return CON_CondRetErroFormato;
 	}
 
 	//PER_AlterarGenero(PER_tppPerfil pPerfil, genero);
-	return CON_AlterarPerfil(pPerfil);
+	return CON_CondRetOK;
 }
 
 /***********************************************************************
@@ -207,16 +183,16 @@ CON_tpCondRet CON_AlterarPerfilGenero(char *email, char genero) {
 	if ((ret = CON_BuscarPerfil (email, &pPerfil)) != CON_CondRetOK)
 		return ret;
 
-	pRet = PER_AlterarGenero(PER_tppPerfil pPerfil, genero);
+	pRet = PER_AlterarGenero(pPerfil, genero);
 
 	switch (pRet) {
 	case PER_CondRetPonteiroNulo:
-		return CON_tpCondRetValorNulo;
+		return CON_CondRetValorNulo;
 	case PER_CondRetValorInvalido:
 		return CON_CondRetErroFormato;
 	}
 	
-	return CON_AlterarPerfil(pPerfil);
+	return CON_CondRetOK;
 }
 
 /***********************************************************************
@@ -236,7 +212,7 @@ CON_tpCondRet CON_BuscarPerfil(char *email, PER_tppPerfil *pPerfil) {
 
 	ret = GRA_IrVertice(Grafo, (void*)email);
 
-	if (ret == GRA_CondRetGrafoNaoExiste) 
+	if ((ret == GRA_CondRetGrafoNaoExiste) || (ret == GRA_CondRetGrafoVazio))
 		return CON_CondRetRedeVazia;
 	
 	if (ret == GRA_CondRetVerticeNaoExiste)
