@@ -38,7 +38,6 @@
 
 =declararparm   OK             int  0
 =declararparm   grfVazio       int  1
-
 =declararparm   grfNaoExist    int  3
 =declararparm   naoTemAres     int  4
 =declararparm   vertNaoExist   int  5
@@ -46,6 +45,8 @@
 =declararparm   aresJaExist    int  7
 =declararparm   vertJaExist    int  8
 =declararparm   aresIlegal     int  9
+=declararparm 	valNulo		   int  10
+=declararparm	fimArestas	   int	11
 
 
 =declararparm   pNULL          int  0
@@ -91,9 +92,20 @@
 =criarvertice    grf1   str3   str4   str5   datNasc1   OK
 =criarvertice    grf1   str6   str7   str8   datNasc2   OK
 
+== Avancar vizinho em vertice sem arestas
+=avancarvizinho 	grf1	0	naoTemAres
+
 == Criar aresta
 =criararesta     grf1   str1   str4   OK
 =criararesta     grf1   str4   str7   OK
+
+== Ir no vizinho de um vertice
+=irviziho        grf1   str4   OK
+
+== Avancar vizinho em vertice com 2 arestas
+=avancarvizinho 	grf1	0	OK
+=avancarvizinho 	grf1	1	OK
+=avancarvizinho 	grf1	2	fimArestas
 
 == Criar uma aresta com um vertice que nao existe
 =criararesta     grf1   str4   str10  vertNaoExist
@@ -153,6 +165,9 @@
 == Tornar um vertice corrente de um grafo que nao existe
 =irvertice       grf2   str1   grfNaoExist
 
+== Avancar vizinho grafo que nao existe
+=avancarvizinho grf2 1 grfNaoExist
+
 == Criar o grafo
 =criargrafo      grf3
 
@@ -167,6 +182,9 @@
 
 == Excluir aresta de um grafo vazio
 =excluiraresta    grf3   str7   str4   grfVazio
+
+== Avancar vizinho grafo vazio
+=avancarvizinho grf3 1 grfVazio
 
 == Excluir grafo
 =excluirgrafo    grf3   OK

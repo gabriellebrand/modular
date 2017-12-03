@@ -40,6 +40,7 @@ static const char CRIAR_ARESTA_CMD           [ ] = "=criararesta";
 static const char EXCLUIR_ARESTA_CMD         [ ] = "=excluiraresta";
 static const char IR_VIZINHO_CMD             [ ] = "=irvizinho";
 static const char OBTER_VALOR_CMD            [ ] = "=obtervalor";
+static const char AVANCAR_VIZ_CMD            [ ] = "=avancarvizinho";
 
 #define TRUE  1
 #define FALSE 0
@@ -104,7 +105,8 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
   int numLidos = -1,
-      inxGrafo = -1;
+      inxGrafo = -1,
+      numElem = -1;
 
   char nome[100],
        email[100],
@@ -287,6 +289,23 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
         return TST_CompararPonteiroNulo( CondRetEsperada , GRA_ObterValor( vtGrafos[ inxGrafo ]) ,
            "Erro em ponteiro de OBTER VALOR."  ) ;
+
+      } /* fim ativa: Testar  Obter Valor */
+
+      /* Testar Avancar Vizinho */
+      else if ( strcmp( ComandoTeste , AVANCAR_VIZ_CMD ) == 0 )
+      {
+
+        numLidos = LER_LerParametros( "iii" ,
+         &inxGrafo, &numElem, &CondRetEsperada ) ;
+
+        if ( numLidos != 3 ) {
+          return TST_CondRetParm ;
+        } /* if */
+
+        CondRetObtido = GRA_AvancarVizinho (vtGrafos[ inxGrafo ], numElem);
+        return TST_CompararInt( CondRetEsperada , CondRetObtido ,
+              "Retorno errado avancar vizinho." );
 
       } /* fim ativa: Testar  Obter Valor */
 
