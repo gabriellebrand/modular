@@ -26,6 +26,8 @@
 #include "CONTROLADOR.H"
 #undef CONTROLADOR_OWN
 
+#define TAM_MSG 251
+
 
 /*******   Protótipo das Funções Encapsuladas no Módulo *********************/
 
