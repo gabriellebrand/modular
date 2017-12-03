@@ -1,0 +1,92 @@
+// Script:    TesteGrafoControleEsp.script
+// Autores: GB - Gabrielle Brandenburg
+//          GC - Gabriel Cantergiani
+//          WB - Wellington Bezerra
+// Data:      12/out/2017
+// Propósito: Testar o módulo Grafo.
+//
+
+== Inicializar valores
+=declararparm   grf0    int 0
+=declararparm   grf1    int 1
+
+=declararparm   str0    string  "wellington"
+=declararparm   str1    string  "w@w.com"
+=declararparm   str2    string  "rj"
+
+=declararparm   str3    string  "mariane"
+=declararparm   str4    string  "m@m.com"
+=declararparm   str5    string  "rj"
+
+=declararparm   str6    string  "liercio"
+=declararparm   str7    string  "l@l.com"
+=declararparm   str8    string  "rj"
+
+=declararparm   str9    string  "claudia"
+=declararparm   str10   string  "c@c.com"
+=declararparm   str11   string  "rj"
+
+=declararparm   datNasc0   string  "01/01/1950"  
+=declararparm   datNasc1   string  "05/03/1960" 
+=declararparm   datNasc2   string  "15/06/1970"
+=declararparm   datNasc3   string  "27/08/1990"
+
+=declararparm   OK             int  0
+=declararparm   grfVazio       int  1
+=declararparm	faltouMem	   int	2	
+=declararparm   grfNaoExist    int  3
+=declararparm   naoTemAres     int  4
+=declararparm   vertNaoExist   int  5
+=declararparm   aresNaoExist   int  6
+=declararparm   aresJaExist    int  7
+=declararparm   vertJaExist    int  8
+=declararparm   aresIlegal     int  9
+=declararparm 	valNulo		   int  10
+=declararparm	fimArestas	   int	11
+
+=declararparm   pNULL          int  0
+=declararparm   pNaoNULL       int  1
+
+== Limitar numero de espacos alocados para 4
+=limitarnumeroespacos 4
+
+== Criar o grafo
+=criargrafo      grf0
+
+== Criar vertices 
+=criarvertice    grf0   str0   str1   str2   datNasc0   OK
+=criarvertice    grf0   str3   str4   str5   datNasc0   OK
+=criarvertice    grf0   str6   str7   str8   datNasc2   OK
+
+== Criar arestas
+=criararesta     grf0   str1   str4   OK
+=criararesta     grf0   str4   str7   OK
+
+==Controlar vazamento de memoria
+=exibirtodosespacos 1
+=verificartodosespacos	1
+=obternumeroespacosalocados  4 		// cabeca + 3 vertices
+
+== Tentar criar vertice com falta de memoria
+=criarvertice    grf0   str9   str10   str11   datNasc3   faltouMem
+
+== Tentar criar um grafo com falta de memoria
+=criargraforet      grf1	pNULL
+
+==Excluir vertice e checar memoria
+=excluirvertice  grf0   OK
+
+== Controlar vazamento de memória
+=verificartodosespacos       1
+=exibirtodosespacos 1
+=obternumeroespacosalocados  3 		//cabeca + 1 vertice
+
+== Excluir grafo e checar memoria
+=excluirgrafo    grf0   OK
+
+== Controlar vazamento de memória
+=verificartodosespacos       1
+=exibirtodosespacos 1
+=obternumeroespacosalocados  0 		//nao tem mais nada
+
+//fim

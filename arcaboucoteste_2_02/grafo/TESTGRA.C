@@ -41,6 +41,8 @@ static const char EXCLUIR_ARESTA_CMD         [ ] = "=excluiraresta";
 static const char IR_VIZINHO_CMD             [ ] = "=irvizinho";
 static const char OBTER_VALOR_CMD            [ ] = "=obtervalor";
 static const char AVANCAR_VIZ_CMD            [ ] = "=avancarvizinho";
+static const char CRIAR_GRAFO_RET_CMD        [ ] = "=criargraforet";
+
 
 #define TRUE  1
 #define FALSE 0
@@ -132,10 +134,32 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
         vtGrafos[ inxGrafo ] =
         GRA_CriarGrafo( DestruirValor , CompararValor ) ;
 
+
+
         return TST_CompararPonteiroNulo( 1 , vtGrafos[ inxGrafo ] ,
            "Erro em ponteiro de novo grafo."  ) ;
 
       } /* fim ativa: Testar Criar Grafo */
+
+          /* Testar Criar Grafo com condicao de retorno esperada */
+
+      else if ( strcmp( ComandoTeste , CRIAR_GRAFO_RET_CMD ) == 0 )
+      {
+
+        numLidos = LER_LerParametros( "ii" ,
+         &inxGrafo, &CondRetEsperada) ;
+
+        if ( numLidos != 2  || !ValidarInxGrafo( inxGrafo , VAZIO )) {
+          return TST_CondRetParm ;
+        } /* if */
+        vtGrafos[ inxGrafo ] =
+        GRA_CriarGrafo( DestruirValor , CompararValor ) ;
+
+        
+        return TST_CompararPonteiroNulo( CondRetEsperada , vtGrafos[ inxGrafo ] ,
+           "Erro em ponteiro de novo grafo."  ) ;
+
+      } /* fim ativa: Testar Criar Grafo com condicao de retorno esperada */
 
   /* Testar Criar vertice */
 
