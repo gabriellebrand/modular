@@ -1,0 +1,263 @@
+// Script de Teste para o Módulo Controlador - TesteControlador.script
+// Programação Modular - 2017.2
+// Grupo: 
+//Gabriel Cantergiani
+//Wellington Bezerra
+//Gabrielle Bradenburg
+
+// Propósito: Testar todas as funções e possiveis condicoes de retorno do modulo Controlador
+
+
+== Inicializar valores
+
+=declararparm   perfil0  int 0
+=declararparm   perfil1  int 1
+=declararparm   perfil2  int 2
+=declararparm   perfil3  int 3
+=declararparm   perfil4  int 4
+
+=declararparm   nome0    string  "pedro"
+=declararparm   nome1    string  "joao"
+=declararparm   nome2    string  "luiza"
+=declararparm   nome3    string  "lucas"
+=declararparm   nome4    string  "joana"
+
+=declararparm   email0    string  "pedro@gmail.com"
+=declararparm   email1    string  "joao@gmail.com"
+=declararparm   email2    string  "luiza@gmail.com"
+=declararparm   email3    string  "lucas@gmail.com"
+=declararparm   email4    string  "joana@gmail.com"
+
+=declararparm   cidade0    string  "rio"
+=declararparm   cidade1    string  "sao paulo"
+=declararparm   cidade2    string  "belo horizonte"
+=declararparm   cidade3    string  "fortaleza"
+=declararparm   cidade4    string  "Recife"
+
+=declararparm   genero0    char  'M'
+=declararparm   genero1    char  'F'
+=declararparm   genero2    char  'O'
+
+=declararparm   dataNasc0    string  "15/02/1990"
+=declararparm   dataNasc1    string  "22/07/1985"
+=declararparm   dataNasc2    string  "03/11/1993"
+=declararparm   dataNasc3    string  "14/08/1978"
+=declararparm   dataNasc4    string  "28/01/2001"
+
+=declararparm   texto0    string  "Ola"
+=declararparm   texto1    string  "Oi"
+=declararparm   texto2    string  "Tudo Bem?"
+=declararparm   texto3    string  "Tudo! E você?"
+=declararparm   texto4    string  "Tambem!"
+
+=declararparm   OK             			 int  0
+=declararparm   LimiteString   			 int  1
+=declararparm   StringVazia    			 int  2
+=declararparm   ErroFormato    			 int  3
+=declararparm   ErroCadastro   			 int  4
+=declararparm   RedeVazia      			 int  5
+=declararparm   NaoAchou       			 int  6
+=declararparm   ValorNulo      			 int  7
+=declararparm   AmizadeJaExiste          int  8
+=declararparm   AmizadeInvalida			 int  9
+=declararparm   AmizadeNaoExiste		 int  10
+=declararparm   FaltouMemoria 			 int  11
+=declararparm   PerfilJaExiste  		 int  12
+=declararparm   PerfilNaoExiste  		 int  13
+
+=declararparm   pNULL          int  0
+=declararparm   pNaoNULL       int  1
+
+// ==========      INICIO DOS CASOS DE TESTE   =====================================================================
+
+==Verifica buscar Perfil Rede Vazia
+=buscarperfil		email1  RedeVazia
+
+==Verifica Mostrar Perfil Rede Vazia
+=mostrarperfil		email2  RedeVazia
+
+==Verifica excluir Perfil Rede Vazia
+=excluirperfil		email3  RedeVazia
+
+==Verifica criar amizade, Rede Vazia
+=criaramizade		email1  email3  RedeVazia
+
+==Verifica excluir amizade, Rede Vazia
+=excluiramizade		email1  email3  RedeVazia
+
+==Verifica buscar amizade, Rede Vazia
+=buscaramizades		email1  RedeVazia
+
+==Verifica enviar mensagem, Rede Vazia
+=enviarmensagem		email1  email2  texto0  RedeVazia
+
+==Verifica alterar nome, Rede Vazia
+=alterarnome		email2  "Hugo" RedeVazia
+
+==Verifica alterar cidade, Rede Vazia
+=alterarcidade		email2  "Porto Alegre" RedeVazia
+
+==Verifica alterar datanasc, Rede Vazia
+=alterardatanasc		email2  "13/04/1998" RedeVazia
+
+==Verifica alterar genero, Rede Vazia
+=alterargenero		email2  'M' RedeVazia
+
+==Verifica criacao de Perfil
+=criarperfil	 nome0  email0  cidade0  genero0  dataNasc0  OK
+=criarperfil	 nome1  email1  cidade1  genero1  dataNasc1  OK
+=criarperfil	 nome2  email2  cidade2  genero2  dataNasc2	 OK
+=criarperfil	 nome3  email3  cidade3  genero0  dataNasc3	 OK
+
+==Verifica criacao de perfil string Vazia
+=criarperfil	 nome3  ""  cidade3  genero0  dataNasc3  StringVazia
+
+==Veririca criacao de Perfil, string maior que limite
+=criarperfil	 nome3  "asdajsjshdmamskcnasokclascnaslcnalsjcalskjcbalskjcbalskjcbalskjcbascjbaslckjbalsjkcbalslalajsaljscçaj"  cidade3  genero0  dataNasc3  LimiteString
+
+==Verifica criacao de Perfil, erro no formato
+=criarperfil	 nome2  email2  cidade2  'K'  dataNasc2	 ErroFormato
+
+==Verifica criacao de Perfil, perfil ja existe
+=criarperfil	 nome2  email2  cidade2  genero2  dataNasc2	 PerfilJaExiste	
+
+==Verifica buscar Perfil, OK
+=buscarperfil		email0  OK
+
+==Verifica buscar Perfil, String Vazia
+=buscarperfil		""  StringVazia
+
+==Verifica buscar Perfil, Nao Achou
+=buscarperfil		email4  NaoAchou
+
+==Verifica mostrar Perfil, OK
+=mostrarperfil		email1  OK
+
+==Verifica mostrar Perfil, String Vazia
+=mostrarperfil		""  StringVazia
+
+==Verifica mostrar Perfil, Nao Achou
+=mostrarperfil		email4  NaoAchou
+
+==Verifica excluir Perfil, OK
+=excluirperfil		email0  OK
+
+==Verifica excluir Perfil, String Vazia
+=excluirperfil		""  StringVazia
+
+==Verifica excluir Perfil, Nao Achou
+=excluirperfil		email4  NaoAchou
+
+==Verifica alterar nome, OK
+=alterarnome		email3  "Joaquim"  OK
+
+==Verifica alterar nome, ValorNulo
+=alterarnome		""  "Rodrigo"  StringVazia
+
+==Verifica alterar nome, NaoAchou
+=alterarnome		email4  "Felipe" NaoAchou
+
+==Verifica alterar cidade, OK
+=alterarcidade		email3  "Porto Alegre"  OK
+
+==Verifica alterar cidade, ValorNulo
+=alterarcidade		""  "Curitiba"  StringVazia
+
+==Verifica alterar cidade, NaoAchou
+=alterarcidade		email4  "Goias" NaoAchou
+
+==Verifica alterar datanasc, OK
+=alterardatanasc		email3  "21/08/1988"  OK
+
+==Verifica alterar datanasc, ValorNulo
+=alterardatanasc		""  "02/01/2001"  StringVazia
+
+==Verifica alterar datanasc, NaoAchou
+=alterardatanasc		email4  "15/12/1964" NaoAchou
+
+==Verifica alterar datanasc, Erro Formato
+=alterardatanasc		email1  "1345/1/19874"  ErroFormato
+
+==Verifica alterar genero, OK
+=alterargenero		email3  'F'  OK
+
+==Verifica alterar genero, ValorNulo
+=alterargenero		""  'O'  StringVazia
+
+==Verifica alterar genero, NaoAchou
+=alterargenero		email4  'M' NaoAchou
+
+==Verifica alterar genero, Erro Formato
+=alterargenero		email2  'P' ErroFormato
+
+==Verifica criar amizade, OK
+=criaramizade		email2  email3  OK
+
+==Verifica criar amizade, String Vazia
+=criaramizade		email2  ""  StringVazia
+
+==Verifica criar amizade, Nao Achou
+=criaramizade		email3  email4  NaoAchou
+
+==Verifica criar amizade, ja existe
+=criaramizade		email3  email2  AmizadeJaExiste
+
+==Verifica criar amizade, amizade invalida
+=criaramizade		email1  email1  AmizadeInvalida
+
+==Verifica excluir amizade, OK
+=excluiramizade		email2  email3  OK
+
+==Verifica excluir amizade, String Vazia
+=excluiramizade		email2  ""  StringVazia
+
+==Verifica excluir amizade, Nao Achou
+=excluiramizade		email3  email4  NaoAchou
+
+==Verifica excluir amizade, amizade invalida
+=excluiramizade		email1  email2  AmizadeInvalida
+
+==Cria mais amizades
+=criaramizade		email2  email1  OK
+=criaramizade		email2  email3  OK
+=criaramizade		email1  email3  OK
+=criarperfil	    nome0  email0  cidade0  genero0  dataNasc0  OK
+
+==Verifica buscar amizades, OK
+=buscaramizades		email2  OK
+
+==Verifica buscar amizades, Perfil Nao existe
+=buscaramizades		email4  PerfilNaoExiste
+
+==Verifica buscar amizades, Nao Achou
+=buscaramizades		email0  NaoAchou
+
+==Verifica buscar amizades, Valor Nulo
+=buscaramizades		""  ValorNulo
+
+==Verifica enviar mensagem, OK
+=enviarmensagem		email1  email2  texto0  OK
+=enviarmensagem		email2  email1  texto1  OK
+=enviarmensagem		email1  email2  texto2  OK
+=enviarmensagem		email2  email1  texto3  OK
+
+==Verifica enviar mensagem, Amizade nao existe
+=enviarmensagem		email0  email3  texto2  AmizadeNaoExiste
+
+==Verifica enviar mensagem, Nao achou
+=enviarmensagem		email4  email2  texto1  NaoAchou
+
+==Verifica enviar mensagem, Valor Nulo
+=enviarmensagem		email2  ""  texto0  ValorNulo
+
+==Verifica carregar historico, OK
+=carregarhistorico	email1  email2  OK
+
+==Verifica carregar historico, String Vazia
+=carregarhistorico	""	email3  StringVazia
+
+==Verifica carregar historico, Nao Achou
+=carregarhistorico	email1	email4  NaoAchou
+
+
+// FIM DO SCRIPT DE TESTE PARA O MODULO CONTROLADOR
