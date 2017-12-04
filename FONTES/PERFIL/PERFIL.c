@@ -64,6 +64,9 @@ typedef struct PER_tagPerfil {
 
 /***** Protótipo de funcoes encapsuladas pelo módulo *****/
 PER_tpCondRet PER_AlterarEmail(PER_tppPerfil pPerfil, char* email);
+PER_tpCondRet PER_VerificaMsgEnviada(PER_tppPerfil pPerfil, char *pEmail, char * textoMsg, int * idMsg);
+PER_tpCondRet PER_VerificaMsgRecebida(PER_tppPerfil pPerfil, char *pEmail, char * textoMsg, int * idMsg);
+
 
 /*****  Código das funções exportadas pelo módulo  *****/
 

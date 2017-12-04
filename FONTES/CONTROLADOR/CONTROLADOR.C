@@ -19,8 +19,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "PERFIL.H"
-#include "grafo.h"
 
 #define CONTROLADOR_OWN
 #include "CONTROLADOR.H"
