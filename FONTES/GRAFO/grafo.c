@@ -116,6 +116,10 @@ GRA_tppGrafo GRA_CriarGrafo(void (* ExcluirValor)(void * pDado), int (* Comparar
   pGrafo->compara = CompararValor;
   pGrafo->exclui = ExcluirValor;
 
+  #ifdef _DEBUG
+    CED_DefinirTipoEspaco( pGrafo , GRA_TipoEspacoGrafo ) ;
+  #endif
+
   pGrafo->pVertices = LIS_CriarLista(GRA_DestruirVertice, GRA_CompararVertice);  
   /*cria a lista de vertices vazia passando a funcao que sabe destruir o valor do vertice*/
    
@@ -661,9 +665,7 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
 *  Função: ARV  &Deturpar Grafo
 *  ****/
 
-   void GRA_Deturpar( void * pGrafoParm ,
-                      GRA_tpModosDeturpacao ModoDeturpar )
-   {
+   void GRA_Deturpar( void * pGrafoParm , int flag ) {
 
       GRA_tpGraf * pGrafo = NULL;
 
@@ -674,11 +676,11 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
 
       pGrafo = ( GRA_tpGraf * )( pGrafoParm );
 
-      switch ( ModoDeturpar ){
+      switch ( flag ){
 
       /* Modifica o tipo do grafo */
 
-         case DeturpaTipoGrafo :
+         case 1:
          {
 
             CED_DefinirTipoEspaco( pGrafo , CED_ID_TIPO_VALOR_NULO ) ;
@@ -689,7 +691,7 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
 
       /* Modifica o tipo do vertice corrente */
 
-         case DeturpaTipoVerticeCorrente :
+         case 2:
          {
 
             CED_DefinirTipoEspaco( pGrafo->pVertCorr , CED_ID_TIPO_VALOR_NULO ) ;
@@ -700,7 +702,7 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
 
       /* Modifica o tipo da cabeca da lista de vertices */
 
-         case DeturpaTipoCabecaVertices :
+         case 3:
          {
 
             CED_DefinirTipoEspaco( pGrafo->pVertices , CED_ID_TIPO_VALOR_NULO ) ;
@@ -713,7 +715,7 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
 
       /* Anula ponteiro do vertice corrente */
 
-         case DeturpaVerticeCorrenteNulo :
+         case 4:
          {
 
             pGrafo->pVertCorr = NULL ;
@@ -725,7 +727,7 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
 
       /* Anula ponteiro para a cabeça da lista de vertices */
 
-         case DeturpaCabecaVerticesNulo :
+         case 5:
          {
 
             pGrafo->pVertices = NULL ;
@@ -737,7 +739,7 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
 
       /* Faz vertice corrente apontar para lixo */
 
-         case DeturpaVerticeCorrenteLixo :
+         case 6:
          {
 
             pGrafo->pVertCorr = ( LIS_tppLista )( EspacoLixo ) ;
@@ -749,7 +751,7 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
 
       /* Faz cabeca da lista de vertices apontar para lixo */
 
-         case DeturpaCabecaVerticesLixo :
+         case 7:
          {
 
             pGrafo->pVertices = ( LIS_tppLista )( EspacoLixo ) ;
@@ -765,11 +767,11 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
          if ( pGrafo->pVertCorr->pArestas != NULL )
          {
 
-            switch ( ModoDeturpar ) {
+            switch ( flag ) {
 
             /* Modifica tipo da aresta */
 
-               case DeturpaTipoAresta :
+               case 8:
                {
 
                   CED_DefinirTipoEspaco( pGrafo->pVertCorr->pArestas , CED_ID_TIPO_VALOR_NULO ) ;
@@ -780,7 +782,7 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
 
             /* Anula ponteiro da cabeca da lista de arestas */
 
-               case DeturpaCabecaArestasNulo :
+               case 9:
                {
 
                   pGrafo->pVertCorr->pArestas = NULL;
@@ -791,7 +793,7 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
 
             /* Faz cabeca da lista de aresta apontar para lixo */
 
-               case DeturpaCabecaArestasLixo :
+               case 10:
                {
 
                   pGrafo->pVertCorr->pArestas = ( LIS_tppLista )( EspacoLixo ) ;
@@ -831,11 +833,11 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
 
      if( pGrafo == NULL){
         CNT_CONTAR( "GRA_VerificarEstrura-1" );
-      INCERROS;
+        INCERROS;
      }
-
      CNT_CONTAR( "GRA_VerificarEstrura-2" );
-     CED_MarcarEspacoAtivo( pGrafo ) ;
+
+
      
      LIS_IrInicioLista( pGrafo->pVertices );
 
@@ -858,7 +860,7 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
      LIS_IrInicioLista(pGrafo->pVertices); 
      while( LIS_ObterValor( pGrafo->pVertices ) ) { // verifica se cada elemento da lista vertice é diferente de null
        
-       CED_MarcarEspacoAtivo( pGrafo ) ;
+
 
        pVertice = LIS_ObterValor( pGrafo->pVertices ); //obtem o valor de um elemento
        tpElemLista *elem = pGrafo->pVertices->pElemCorr
