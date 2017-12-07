@@ -1,23 +1,18 @@
 // Script:    TesteControleEspaco-Arv.script
 // Autor:     Arndt von Staa
 // Data:      18/fev/2006
-// PropÛsito: Ilustrar arquivo de script para controle de espaÁo din‚mico
+// Prop√≥sito: Ilustrar arquivo de script para controle de espa√ßo din√¢mico
 //
 
-== Declarar as ·rvores usadas
+== Declarar as √°rvores usadas
 =declararparm    inxArv0        int   0
-=declararparm    inxArv1        int   1
-=declararparm    inxArv2        int   2
-=declararparm    inxArv3        int   3
-=declararparm    inxArv4        int   4
-=declararparm    inxArv5        int   5
 
-== Declarar valores a serem inseridos em nÛs
+== Declarar valores a serem inseridos em n√≥s
 =declararparm    NoExcl         char  '!' 
 =declararparm    NoA            char  'a'
 =declararparm    NoX            char  'x'
 
-== Declarar condiÁıes de retorno
+== Declarar condi√ß√µes de retorno
 =declararparm    CondOK         int   0
 =declararparm    CondNaoRaiz    int   1
 =declararparm    CondErroEstrut int   2
@@ -42,27 +37,27 @@
 =irdir      inxArv1            CondOK
 =recuperar 
 
-== Verificar contadores, 1 deles j· contou
+== Verificar contadores, 1 deles j√° contou
 =verificarcontagens    7
 =contagemcontador   "ARV_IrNoDireita"  2
 =AceitaFalhasAcumuladas 7
 
-== Verificar ObterValorCorr relativo a ·rvore inexistente
+== Verificar ObterValorCorr relativo a √°rvore inexistente
 =obter      inxArv1   NoExcl   CondNaoExiste
 
-== Verificar recuperar de ObterValorCorr relativo a ·rvore inexistente
+== Verificar recuperar de ObterValorCorr relativo a √°rvore inexistente
 =obter      inxArv1   NoExcl   CondNaoRaiz  
 =recuperar
 
-== Verificar espaÁos alocados
+== Verificar espa√ßos alocados
 =verificartodosespacos       1
 =obternumeroespacosalocados  0
 
-== Criar ·rvore
+== Criar √°rvore
 =criar      inxArv3   0        CondOK
 =irdir      inxArv3   CondVazia
 
-== Inserir ‡ direita
+== Inserir √† direita
 =insdir     inxArv3   NoA      CondOK
 
 == Obter o valor inserido
@@ -75,7 +70,7 @@
 == Ir para no pai, nao tem
 =irpai      inxArv3            CondNohRaiz
   
-== Inserir ‡ esquerda
+== Inserir √† esquerda
 =insesq     inxArv3   'b'      CondOK
 
 == Obter o valor inserido
@@ -85,14 +80,14 @@
 =irpai      inxArv3   CondOK
 =obter      inxArv3   NoA      CondOK
 
-== Inserir ‡ direita
+== Inserir √† direita
 =insdir     inxArv3   'c'      CondOK
 =obter      inxArv3   'c'      CondOK
 
-== Controlar vazamento de memÛria
+== Controlar vazamento de mem√≥ria
 =exibirtodosespacos            CriterioExibir
 =verificartodosespacos         CriterioExibir
-=obternumeroespacosalocados    4                 // cabeca + 3 nÛs
+=obternumeroespacosalocados    4                 // cabeca + 3 n√≥s
 
 == Ir para no pai
 =irpai      inxArv3            CondOK
@@ -115,7 +110,7 @@
 =destruir   inxArv3
 =irdir      inxArv3   CondNaoExiste
 
-== Controlar vazamento de memÛria
+== Controlar vazamento de mem√≥ria
 =obternumeroespacosalocados  0
 =verificartodosespacos       CriterioExibir
 

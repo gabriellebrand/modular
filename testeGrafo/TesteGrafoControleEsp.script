@@ -47,32 +47,30 @@
 =declararparm   pNULL          int  0
 =declararparm   pNaoNULL       int  1
 
-== Limitar numero de espacos alocados para 4
-=limitarnumeroespacos 4
+== Limitar numero de espacos alocados para 7
+=limitarnumeroespacos 8
 
 == Criar o grafo
 =criargrafo      grf0
 
-== Criar vertice 1 
+== Criar vertices
 =criarvertice    grf0   str0   str1   str2   datNasc0   OK
-
-== Criar vertice 2 
 =criarvertice    grf0   str3   str4   str5   datNasc0   OK
-
-== Criar vertice 3 
 =criarvertice    grf0   str6   str7   str8   datNasc2   OK
 
 == Criar arestas
 =criararesta     grf0   str1   str4   OK
 =criararesta     grf0   str4   str7   OK
 
-==Controlar vazamento de memoria
-=exibirtodosespacos 1
-=verificartodosespacos	0
-=obternumeroespacosalocados  4 		// cabeca + 3 vertices
+==Checar espacos alocados
+=verificartodosespacos	1
+=obternumeroespacosalocados  7 		// cabeca + 3 vertices + 3 structs perfis
 
-== Tentar criar vertice com falta de memoria
-=criarvertice    grf0   str9   str10   str11   datNasc3   faltouMem
+== Tentar criar vertice com falta de memoria  
+=criarvertice    grf0   str9   str10   str11   datNasc3   faltouMem // 1 espaco sera ocupado pelo pDado alocado em testGra
+
+== Alterar limite de memoria
+=limitarnumeroespacos 7
 
 == Tentar criar um grafo com falta de memoria
 =criargraforet      grf1	pNULL
@@ -81,16 +79,15 @@
 =excluirvertice  grf0   OK
 
 == Controlar vazamento de memória
-=verificartodosespacos       0
-=exibirtodosespacos 1
-=obternumeroespacosalocados  3 		//cabeca + 1 vertice
+=verificartodosespacos       1
+=obternumeroespacosalocados  5 		//cabeca + (2 vertice + 2 pDado)
 
 == Excluir grafo e checar memoria
 =excluirgrafo    grf0   OK
 
-== Controlar vazamento de memória
-=verificartodosespacos       0
+== Checar memoria
+=verificartodosespacos       1
 =exibirtodosespacos 1
-=obternumeroespacosalocados  0 		//nao tem mais nada
+=obternumeroespacosalocados  0 		//tudo foi excluido
 
-//fim
+// fim
