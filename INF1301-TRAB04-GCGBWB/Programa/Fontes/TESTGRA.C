@@ -1,19 +1,19 @@
 /***************************************************************************
-*  $MCI MÃ›dulo de implementaÃâ€o: TGRA Teste do mÃ›dulo Grafo
+*  $MCI Módulo de implementação: TGRA Teste do módulo Grafo
 *
 *  Arquivo gerado:              TestGRA.c
 *  Letras identificadoras:      TGRA
 *
-*  Nome da base de software:    ArcabouÃo para a automaÃâ€o de testes de programas redigidos em C
+*  Nome da base de software:    Arcabouço para a automação de testes de programas redigidos em C
 *  Arquivo da base de software: D:\AUTOTEST\PROJETOS\LISTA.BSW
 *
-*  Projeto: Trabalho 2 - Programa;câ€o Modular
+*  Projeto: Trabalho 2 - Programa;cão Modular
 *  Gestor:  LES/DI/PUC-Rio
 *  Autor:  WB - Wellington Bezerra
 *
-*  $HA HistÃ›rico de evoluÃâ€o:
-*     Versâ€o  Autor    Data     ObservaÃÄ±es
-*     1       WB   09/out/2017 inÃŒcio desenvolvimento
+*  $HA Histórico de evolução:
+*     Versão  Autor    Data     Observações
+*     1       WB   09/out/2017 início desenvolvimento
 *
 ***************************************************************************/
 
@@ -26,7 +26,7 @@
 
 #ifdef _DEBUG
   #include    "CESPDIN.H"
-  #include "..\tabelas\IdTiposEspaco.def"
+  #include "..\Tabelas\IdTiposEspaco.def"
 #endif
 
 #include    "Generico.h"
@@ -48,6 +48,10 @@ static const char OBTER_VALOR_CMD            [ ] = "=obtervalor";
 static const char AVANCAR_VIZ_CMD            [ ] = "=avancarvizinho";
 static const char CRIAR_GRAFO_RET_CMD        [ ] = "=criargraforet";
 
+#ifdef _DEBUG
+	static const char DETURPAR_GRAFO_CMD         [ ] = "=deturpar";
+	static const char VERIFICAR_GRAFO_CMD        [ ] = "=verificar";
+#endif
 
 #define TRUE  1
 #define FALSE 0
@@ -78,7 +82,7 @@ typedef struct PER_tagPerfil {
 typedef struct PER_tagPerfil * PER_tppPerfil ;
 
 
-/***** ProtÃ›tipos das funÃÄ±es encapuladas no mÃ›dulo *****/
+/***** Protótipos das funções encapuladas no módulo *****/
 
    static void DestruirValor( void * pValor ) ;
 
@@ -86,17 +90,17 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 
    static int ValidarInxGrafo( int inxGrafo , int Modo ) ;
 
-/*****  CÃ›digo das funÃÄ±es exportadas pelo mÃ›dulo  *****/
+/*****  Código das funções exportadas pelo módulo  *****/
 
 
 /***********************************************************************
 *
-*  $FC FunÃâ€o: TGRA &Testar Grafo
+*  $FC Função: TGRA &Testar Grafo
 *
-*  $ED DescriÃâ€o da funÃâ€o
-*     Podem ser criadas atÃˆ 10 grafos, identificados pelos ÃŒndices 0 a 9
+*  $ED Descrição da função
+*     Podem ser criadas até 10 grafos, identificados pelos índices 0 a 9
 *
-*     Comandos disponÃŒveis:
+*     Comandos disponíveis:
 *
 * =criargrafo            inxGrafo
 * =criarvertice          inxGrafo nome email cidade idade CondRetEsperada
@@ -113,13 +117,15 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
   int numLidos = -1,
       inxGrafo = -1,
-      numElem = -1;
+      numElem = -1,
+	  param,
+	  numErros = 0;
 
   char nome[100],
        email[100],
        email2[100],
        cidade[100],
-       dataNasc[10];
+       dataNasc[11];
 
   PER_tppPerfil pPerfil;
   GRA_tpCondRet CondRetObtido;
@@ -345,17 +351,51 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
       } /* fim ativa: Testar  Obter Valor */
 
+	  #ifdef _DEBUG
+    /* Realizar deturpacao */
+        else if ( strcmp( ComandoTeste , DETURPAR_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "ii" , &inxGrafo, &param) ;
+
+            if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+			return TST_CondRetOK ;
+
+        } /* fim ativa: Realizar deturpacao */
+
+    /* Realizar verificao estrututral */
+        // else if ( strcmp( ComandoTeste , VERIFICAR_GRAFO_CMD  ) == 0 ) {
+
+        //     numLidos = LER_LerParametros( "ii" , &inxGrafo, &param) ;
+
+        //     if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+        //     {
+        //        return TST_CondRetParm ;
+        //     } /* if */
+           
+        //     GRA_VerificarEstrutura( vtGrafos[ inxGrafo ], &numErros );
+
+        //     return TST_CompararInt( param , numErros ,
+        //              "Total de erros errado ao verificar estrutura."  ) ;
+
+        // } /* fim ativa: Realizar verificao estrututral */ 
+
+#endif
+
 
   return TST_CondRetNaoConhec ;
 
-} /* Fim funÃâ€o: TGRA Efetuar operaÃÄ±es de teste especÃŒficas para Grafo */
+} /* Fim função: TGRA Efetuar operações de teste específicas para Grafo */
 
 
-/*****  CÃ›digo das funÃÄ±es encapsuladas no mÃ›dulo  *****/
+/*****  Código das funções encapsuladas no módulo  *****/
 
 /***********************************************************************
 *
-*  $FC FunÃâ€o: TGRA -Validar indice do Grafo
+*  $FC Função: TGRA -Validar indice do Grafo
 *
 ***********************************************************************/
 
@@ -384,11 +424,11 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
          
       return TRUE ;
 
-   } /* Fim funÃâ€o: TGRA -Validar indice do grafo */
+   } /* Fim função: TGRA -Validar indice do grafo */
 
 /***********************************************************************
 *
-*  $FC FunÃâ€o: TGRA -Destruir valor
+*  $FC Função: TGRA -Destruir valor
 *
 ***********************************************************************/
 
@@ -401,11 +441,11 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
       free( ppPerfil ) ;
       *pValor = NULL;
 
-   } /* Fim funÃâ€o: TGRA -Destruir valor */
+   } /* Fim função: TGRA -Destruir valor */
 
 /***********************************************************************
 *
-*  $FC FunÃâ€o: TGRA - Comparar valor
+*  $FC Função: TGRA - Comparar valor
 *
 ***********************************************************************/
 
@@ -419,7 +459,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
     return strcmp(email,pPerfil1->email);
 
-   } /* Fim funÃâ€o: TGRA - Comparar valor */
+   } /* Fim função: TGRA - Comparar valor */
 
 
-/********** Fim do mÃ›dulo de implementaÃâ€o: MÃ›dulo de teste especÃŒfico **********/
+/********** Fim do módulo de implementação: Módulo de teste específico **********/

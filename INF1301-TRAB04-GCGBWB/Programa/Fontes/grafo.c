@@ -8,9 +8,9 @@
 #undef GRAFO_OWN
 
 #ifdef _DEBUG
-#include "CESPDIN.H"
-#include "CONTA.H"
-#include "IdTiposEspaco.def"
+	#include "CESPDIN.H"
+	#include "CONTA.H"
+	#include "../Tabelas/IdTiposEspaco.def"
 #endif
 
 /***************************************************************************
@@ -559,6 +559,14 @@ GRA_tpCondRet GRA_ExcluirAresta(GRA_tppGrafo pGrafo, void *pChaveID_1, void *pCh
 ***********************************************************************/
 GRA_tpCondRet GRA_DestruirAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2) {
 
+	#ifdef _DEBUG
+
+		GRA_tpConteudoVert *Vert1;
+    	GRA_tpConteudoVert *Vert2;
+
+    #endif
+
+
   if( !pVertice1 || !pVertice2 )
   {
     GRA_CondRetVerticeNaoExiste;
@@ -575,8 +583,6 @@ GRA_tpCondRet GRA_DestruirAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2
 
 
   #ifdef _DEBUG
-
-    GRA_tpConteudoVert *Vert1, *Vert2;
 
     Vert1 = (GRA_tpConteudoVert *) LIS_ObterValor(pVertice1);
     Vert2 = (GRA_tpConteudoVert *) LIS_ObterValor(pVertice2);
