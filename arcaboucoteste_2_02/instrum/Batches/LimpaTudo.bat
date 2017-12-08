@@ -24,7 +24,6 @@ del *.err
 cd ..\Objetos
 del *.bak
 del *.obj
-del *.lib
 del *.build
 
 cd ..\Produto
@@ -50,7 +49,6 @@ cd ..\Ferramnt
 del *.bak
 del *.err
 del *.obj
-
 
 popd
 

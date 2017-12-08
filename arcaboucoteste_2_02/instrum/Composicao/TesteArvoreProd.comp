@@ -20,6 +20,6 @@ TestArv
 /MACHINE:IX86
 
 [BuildFim]
-ArcaboucoTeste.lib
+..\produto\ArcaboucoTeste.lib
 
 [Fim]
