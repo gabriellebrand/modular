@@ -78,6 +78,10 @@ typedef struct GRA_tagConteudoVert {
       *   Todos os vértices correntes do grafo devem apontar para a respectiva cabeça.
       *   Esse ponteiro corresponde a um identificador do grafo para fins
       *   de verificação da integridade. */
+
+      int NumArestas;
+      /* Número de arestas que um vertice possui. Deve ser igual ao número de elementos da lista pArestas */
+
   #endif
 
 } GRA_tpConteudoVert;
@@ -91,7 +95,6 @@ typedef struct GRA_tagConteudoVert {
              "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" ;
             /* Espaço de dados lixo usado ao testar */
       #endif
-
 
 
 /***** Protótipos das funções encapsuladas pelo módulo *****/
@@ -272,6 +275,10 @@ if(!pDado || !pChaveID) return GRA_CondRetValorNulo;
   pConteudoVert->pDado = pDado;
   pConteudoVert->compara = pGrafo->compara;
   pConteudoVert->exclui = pGrafo->exclui;
+   #ifdef _DEBUG
+      pConteudoVert->NumArestas = 0;
+      pConteudoVert->pCabeca = pGrafo;
+   #endif
 
   /* cria lista vértice de apenas um nó */
   pVertice = LIS_CriarLista(GRA_DestruirConteudoVert, GRA_CompararConteudoVert);
@@ -508,6 +515,11 @@ GRA_tpCondRet GRA_CriarAresta(GRA_tppGrafo pGrafo, void * pChaveID_1, void * pCh
     return GRA_CondRetFaltouMemoria;
   }
 
+   #ifdef _DEBUG
+    conteudoVert1->NumArestas++;
+    conteudoVert2->NumArestas++;
+   #endif
+
   return GRA_CondRetOK;
 } /* Fim função: GRA  &Criar Aresta */
 
@@ -560,6 +572,19 @@ GRA_tpCondRet GRA_DestruirAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2
   if (GRA_LiberarAresta(pVertice2 ,pVertice1) == GRA_CondRetArestaNaoExiste) {
     return GRA_CondRetArestaNaoExiste;
   }
+
+
+  #ifdef _DEBUG
+
+    GRA_tpConteudoVert *Vert1, *Vert2;
+
+    Vert1 = (GRA_tpConteudoVert *) LIS_ObterValor(pVertice1);
+    Vert2 = (GRA_tpConteudoVert *) LIS_ObterValor(pVertice2);
+
+    Vert1->NumArestas--;
+    Vert2->NumArestas--;
+    
+   #endif
 
   return GRA_CondRetOK;
 } /* Fim função: GRA  &Destruir Aresta */
