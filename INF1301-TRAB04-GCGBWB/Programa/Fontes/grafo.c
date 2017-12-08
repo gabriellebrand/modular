@@ -91,6 +91,8 @@ typedef struct GRA_tagConteudoVert {
 
       #ifdef _DEBUG
 
+      int numErros = 0;
+
       static char EspacoLixo[ 256 ] =
              "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" ;
             /* Espaço de dados lixo usado ao testar */
@@ -558,7 +560,9 @@ GRA_tpCondRet GRA_ExcluirAresta(GRA_tppGrafo pGrafo, void *pChaveID_1, void *pCh
 *     Destroi arestas entre duas listas vertice
 ***********************************************************************/
 GRA_tpCondRet GRA_DestruirAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2) {
-
+   #ifdef _DEBUG
+   GRA_tpConteudoVert *Vert1, *Vert2;	
+   #endif	
   if( !pVertice1 || !pVertice2 )
   {
     GRA_CondRetVerticeNaoExiste;
@@ -575,8 +579,6 @@ GRA_tpCondRet GRA_DestruirAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2
 
 
   #ifdef _DEBUG
-
-    GRA_tpConteudoVert *Vert1, *Vert2;
 
     Vert1 = (GRA_tpConteudoVert *) LIS_ObterValor(pVertice1);
     Vert2 = (GRA_tpConteudoVert *) LIS_ObterValor(pVertice2);
@@ -816,3 +818,137 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
    } /* Fim função: GRA  &Deturpar Grafo */
 
 #endif 
+
+#ifdef _DEBUG
+/***********************************************************************
+*
+*  $FC Função: GRA Verificar estrutura
+*
+***********************************************************************/
+
+
+GRA_tpCondRet VerificaEstrutura(GRA_tppGrafo pGrafo) {
+  GRA_tpCondRet condRet;
+  int count;
+  GRA_tpConteudoVert * Vertice;
+  
+
+  //1. verifica se o tipo es datrutura é de fato o tipo esperado
+  if ( GRA_TipoEspacoCabeca != CED_ObterTipoEspaco(pGrafo)) {
+    CNT_CONTAR( "GRA_VerificarEstrura-1" );
+    numErros;
+  }
+
+  //2. verifica integridade do tamanho do espaco alocado   
+  if ( sizeof(pGrafo) != CED_ObterTamanhoValor(pGrafo)) {
+    CNT_CONTAR( "GRA_VerificarEstrura-1" );
+    numErros;
+  }
+
+
+  //4. chama as funcoes verificadoras das demais estruturas do grafo
+  if ((condRet = verificaVertice(pGrafo->pVertCorr)) != GRA_CondRetOK) {
+    CNT_CONTAR( "GRA_VerificarEstrura-4" );
+    numErros;
+  }
+
+  if ((condRet = verificaListaVertices(pGrafo->pVertices)) != GRA_CondRetOK) {
+    CNT_CONTAR( "GRA_VerificarEstrura-5" );
+    numErros;
+  }
+
+
+  // Verifica Ponteiro para cabeça do grafo
+  IrInicioLista(pGrafo->pVertices);
+  while(LIS_AvancarElementoCorrente(pGrafo->pVertices, 0) == LIS_CondRetOK) {
+    Vertice = (GRA_tpConteudoVert *) LIS_ObterValor(pGrafo->pVertices);
+    if(Vertice->pCabeca != pGrafo){
+      CNT_CONTAR( "GRA_VerificarEstrura-6" );
+      numErros;
+    }
+    LIS_AvancarElementoCorrente(pGrafo->pVertices, 1);
+  }
+
+
+  return GRA_CondRetOK;
+
+}
+
+GRA_tpCondRet verificaListaVertices(LIS_tppLista pVertices) {
+  GRA_tpCondRet condRet;
+  LIS_tppLista ListaVertice;
+  //1. percorre a lista, acessando cada um dos elementos da lista vertices
+  IrInicioLista(pVertices);
+
+  while(LIS_AvancarElementoCorrente(pVertices, 0) == LIS_CondRetOK) {
+
+    ListaVertice = (LIS_tppLista) LIS_ObterValor(pVertices);
+
+    if (condRet == verificaVertice(ListaVertice) != GRA_CondRetOK) {
+      return GRA_CondRetErroEstrutura;
+    }
+
+    LIS_AvancarElementoCorrente(pVertices, 1);
+  }
+
+  return GRA_CondRetOK;
+}
+
+GRA_tpCondRet verificaVertice(LIS_tppLista pVertice) {
+  GRA_tpCondRet condRet;
+
+  //1. verifica se o tipo da estrutura é de fato o tipo esperado
+  if ( GRA_TipoEspacoVertice != CED_ObterTipoEspaco(pVertice)) {
+    return condRet;
+  }
+
+  //2. verifica integridade do tamanho do espaco alocado
+  if (sizeof(pVertice) != CED_ObterTamanhoValor(pVertice)) {
+    return condRet;
+  }
+
+
+
+  if ((condRet = GRA_VerificaConteudoVert((GRA_tpConteudoVert *) LIS_ObterValor(pVertice))) != GRA_CondRetOK) {
+    return condRet;
+  }
+
+  return GRA_CondRetOK;
+}
+
+GRA_tpCondRet GRA_VerificaConteudoVert(GRA_tpConteudoVert * pConteudoVert) {
+  GRA_tpCondRet condRet;
+  LIS_tppLista ListaArestas;
+  int count;
+  //1. verifica se o tipo da estrutura é de fato o tipo esperado
+  if (GRA_TipoPDado != CED_ObterTipoEspaco(pConteudoVert)) {
+    return condRet;
+  }
+
+  //2. verifica integridade do tamanho do espaco alocado
+  if (sizeof(pConteudoVert) != CED_ObterTamanhoValor(pConteudoVert)) {
+    return condRet;
+  }
+  //3. Verifica numero de arestas
+
+  ListaArestas = pConteudoVert->pArestas;
+
+  IrInicioLista(ListaArestas);
+  count = 0;
+  while(LIS_AvancarElementoCorrente(ListaArestas, 0) == LIS_CondRetOK){
+    count++;
+    LIS_AvancarElementoCorrente(ListaArestas, 1);
+  }
+
+  if(count != pConteudoVert->NumArestas){
+    return GRA_CondRetErroEstrutura;
+  }
+
+
+  return GRA_CondRetOK;
+}
+
+
+#endif
+
+  
