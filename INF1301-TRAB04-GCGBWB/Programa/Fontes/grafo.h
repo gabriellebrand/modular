@@ -340,7 +340,7 @@ GRA_tpCondRet GRA_ExcluirAresta(GRA_tppGrafo pGrafo, void *pChaveID_1, void *pCh
 
 void GRA_Deturpar( void * pGrafoParm , int flag );
 
-GRA_tpCondRet VerificaEstrutura(GRA_tppGrafo pGrafo);
+int GRA_VerificaEstrutura(GRA_tppGrafo pGrafo);
 
 #endif
 
