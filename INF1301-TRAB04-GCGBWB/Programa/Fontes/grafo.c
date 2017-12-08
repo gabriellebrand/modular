@@ -9,7 +9,8 @@
 
 #ifdef _DEBUG
 #include "CESPDIN.H"
-#include "..\tabelas\IdTiposEspaco.def"
+#include "CONTA.H"
+#include "IdTiposEspaco.def"
 #endif
 
 /***************************************************************************
@@ -69,7 +70,32 @@ typedef struct GRA_tagConteudoVert {
 
   void (* exclui) (void * pDado) ;
 
+  #ifdef _DEBUG
+      GRA_tppGrafo pCabeca ;
+      /* Ponteiro para cabeca
+      *
+      *$ED Descrição
+      *   Todos os vértices correntes do grafo devem apontar para a respectiva cabeça.
+      *   Esse ponteiro corresponde a um identificador do grafo para fins
+      *   de verificação da integridade. */
+
+      int NumArestas;
+      /* Número de arestas que um vertice possui. Deve ser igual ao número de elementos da lista pArestas */
+
+  #endif
+
 } GRA_tpConteudoVert;
+
+
+/*****  Dados encapsulados no módulo  *****/
+
+      #ifdef _DEBUG
+
+      static char EspacoLixo[ 256 ] =
+             "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" ;
+            /* Espaço de dados lixo usado ao testar */
+      #endif
+
 
 /***** Protótipos das funções encapsuladas pelo módulo *****/
 
@@ -249,6 +275,10 @@ if(!pDado || !pChaveID) return GRA_CondRetValorNulo;
   pConteudoVert->pDado = pDado;
   pConteudoVert->compara = pGrafo->compara;
   pConteudoVert->exclui = pGrafo->exclui;
+   #ifdef _DEBUG
+      pConteudoVert->NumArestas = 0;
+      pConteudoVert->pCabeca = pGrafo;
+   #endif
 
   /* cria lista vértice de apenas um nó */
   pVertice = LIS_CriarLista(GRA_DestruirConteudoVert, GRA_CompararConteudoVert);
@@ -260,6 +290,7 @@ if(!pDado || !pChaveID) return GRA_CondRetValorNulo;
 
   #ifdef _DEBUG
        CED_DefinirTipoEspaco( pConteudoVert , GRA_TipoEspacoVertice ) ;
+       pConteudoVert->pCabeca = pGrafo;
   #endif
 
   return GRA_InserirVertice(pGrafo, pVertice);
@@ -484,6 +515,11 @@ GRA_tpCondRet GRA_CriarAresta(GRA_tppGrafo pGrafo, void * pChaveID_1, void * pCh
     return GRA_CondRetFaltouMemoria;
   }
 
+   #ifdef _DEBUG
+    conteudoVert1->NumArestas++;
+    conteudoVert2->NumArestas++;
+   #endif
+
   return GRA_CondRetOK;
 } /* Fim função: GRA  &Criar Aresta */
 
@@ -536,6 +572,19 @@ GRA_tpCondRet GRA_DestruirAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2
   if (GRA_LiberarAresta(pVertice2 ,pVertice1) == GRA_CondRetArestaNaoExiste) {
     return GRA_CondRetArestaNaoExiste;
   }
+
+
+  #ifdef _DEBUG
+
+    GRA_tpConteudoVert *Vert1, *Vert2;
+
+    Vert1 = (GRA_tpConteudoVert *) LIS_ObterValor(pVertice1);
+    Vert2 = (GRA_tpConteudoVert *) LIS_ObterValor(pVertice2);
+
+    Vert1->NumArestas--;
+    Vert2->NumArestas--;
+    
+   #endif
 
   return GRA_CondRetOK;
 } /* Fim função: GRA  &Destruir Aresta */
@@ -604,3 +653,166 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
 
   return GRA_CondRetOK;
 } /* Fim função: GRA  &Excluir Vertice Corrente */
+
+
+
+
+
+   #ifdef _DEBUG
+
+/***************************************************************************
+*
+*  Função: ARV  &Deturpar Grafo
+*  ****/
+
+   void GRA_Deturpar( void * pGrafoParm , int flag ) {
+
+      GRA_tpGrafo * pGrafo = NULL;
+      GRA_tpConteudoVert * ConteudoVertice;
+
+      if ( pGrafoParm == NULL )
+      {
+         return;
+      } /* if */
+
+      pGrafo = ( GRA_tpGrafo * )( pGrafoParm );
+
+      switch ( flag ){
+
+      /* Modifica o tipo do grafo */
+
+         case 1:
+         {
+
+            CED_DefinirTipoEspaco( pGrafo , CED_ID_TIPO_VALOR_NULO ) ;
+
+            break ;
+
+         } /* fim ativa: Modifica o tipo do grafo */
+
+      /* Modifica o tipo do vertice corrente */
+
+         case 2:
+         {
+
+            CED_DefinirTipoEspaco( pGrafo->pVertCorr , CED_ID_TIPO_VALOR_NULO ) ;
+
+            break ;
+
+         } /* fim ativa: Modifica o tipo do vertice corrente */
+
+      /* Modifica o tipo da cabeca da lista de vertices */
+
+         case 3:
+         {
+
+            CED_DefinirTipoEspaco( pGrafo->pVertices , CED_ID_TIPO_VALOR_NULO ) ;
+
+            break ;
+
+         } /* fim ativa: Modifica a cabeca da lista vertices */
+
+
+
+      /* Anula ponteiro do vertice corrente */
+
+         case 4:
+         {
+
+            pGrafo->pVertCorr = NULL ;
+
+            break ;
+
+         } /* fim ativa: Anula ponteiro do vertice corrente */
+
+
+      /* Anula ponteiro para a cabeça da lista de vertices */
+
+         case 5:
+         {
+
+            pGrafo->pVertices = NULL ;
+
+            break ;
+
+         } /* fim ativa: Anula ponteiro para a cabeça de lista de vertices */
+
+
+      /* Faz vertice corrente apontar para lixo */
+
+         case 6:
+         {
+
+            pGrafo->pVertCorr = ( LIS_tppLista )( EspacoLixo ) ;
+
+            break ;
+
+         } /* fim ativa: Faz verticecorrente apontar para lixo */
+
+
+      /* Faz cabeca da lista de vertices apontar para lixo */
+
+         case 7:
+         {
+
+            pGrafo->pVertices = ( LIS_tppLista )( EspacoLixo ) ;
+
+            break ;
+
+         } /* fim ativa:Faz cabeca da lista de vertices apontar para lixo */
+
+      /* Deturpa aresta */
+
+         default :
+
+         ConteudoVertice = (GRA_tpConteudoVert *) LIS_ObterValor(pGrafo->pVertCorr);
+
+         if ( ConteudoVertice->pArestas != NULL )
+         {
+
+            switch ( flag ) {
+
+            /* Modifica tipo da aresta */
+
+               case 8:
+               {
+
+                  CED_DefinirTipoEspaco( ConteudoVertice->pArestas , CED_ID_TIPO_VALOR_NULO ) ;
+
+                  break ;
+
+               } /* fim ativa: Modifica tipo da aresta */
+
+            /* Anula ponteiro da cabeca da lista de arestas */
+
+               case 9:
+               {
+
+                  ConteudoVertice->pArestas = NULL;
+
+                  break ;
+
+               } /* fim ativa: Anula ponteiro da cabeca da lista de arestas */
+
+            /* Faz cabeca da lista de aresta apontar para lixo */
+
+               case 10:
+               {
+
+                  ConteudoVertice->pArestas = ( LIS_tppLista )( EspacoLixo ) ;
+
+                  break ;
+
+               } /* fim ativa: Faz cabeca da lista de aresta apontar para lixo */
+
+            } /* fim seleciona: Deturpa aresta */
+
+            break ;
+
+         } /* fim ativa: Deturpa aresta */
+
+      } /* fim seleciona: Vertice de GRA &Deturpar Grafo */
+
+   } /* Fim função: GRA  &Deturpar Grafo */
+
+#endif 
