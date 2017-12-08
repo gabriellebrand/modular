@@ -1,0 +1,38 @@
+
+!!! Inicio dos testes
+!!!      Construto sob teste: ..\produto\TesteGrafoControleEsp
+!!!      Script de teste:     ..\scripts\TesteGrafoControleEsp.script
+
+!!!    0  Linha:     1  // Script:    TesteGrafoControleEsp.script 
+!!!    0  Linha:     2  // Autores: GB - Gabrielle Brandenburg 
+!!!    0  Linha:     3  //          GC - Gabriel Cantergiani 
+!!!    0  Linha:     4  //          WB - Wellington Bezerra 
+!!!    0  Linha:     5  // Data:      12/out/2017 
+!!!    0  Linha:     6  // PropÃ³sito: Testar o mÃ³dulo Grafo. 
+!!!    0  Linha:     7  // 
+    9  == Inicializar valores
+   50  == Limitar numero de espacos alocados para 7
+   53  == Criar o grafo
+   56  == Criar vertices
+   61  == Criar arestas
+   65  ==Checar espacos alocados
+   69  == Tentar criar vertice com falta de memoria
+!!!    0  Linha:    70  Limita numero de espacos alocados. 
+   72  == Alterar limite de memoria
+   75  == Tentar criar um grafo com falta de memoria
+!!!    0  Linha:    76  Limita numero de espacos alocados. 
+   78  ==Excluir vertice e checar memoria
+   81  == Controlar vazamento de memÃ³ria
+   85  == Excluir grafo e checar memoria
+   88  == Checar memoria
+!!!    0  Linha:    93  // fim 
+
+!!! Número de linhas lidas:          93
+!!! Número de casos de teste:        13
+!!! Número comandos corretos:        51
+!!! Número de falhas encontradas:     0
+
+!!! Não foram encontrados problemas
+
+
+!!! Numero de espacos ainda alocados: 0

@@ -1,0 +1,26 @@
+# Composicao do programa de teste de um Grafo
+
+[Diretorios]
+
+Nome        =  TesteGrafoControleEsp
+PathDefault =  ..\Fontes
+err         =  ..\Produto
+obj         =  ..\Objetos
+c           =  ..\Fontes
+h           =  ..\Fontes
+def         =  ..\Tabelas
+
+[Modulos]
+Lista
+TestGra		/D_DEBUG
+Grafo		/D_DEBUG
+
+[BuildInicio]
+/OUT:..\produto\TesteGrafoControleEsp.exe
+/INCREMENTAL:NO
+/MACHINE:IX86
+
+[BuildFim]
+ArcaboucoTeste.lib
+
+[Fim]
