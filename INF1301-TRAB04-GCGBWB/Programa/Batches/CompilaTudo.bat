@@ -7,6 +7,10 @@ del ..\produto\*.err
 del ..\objetos\*.obj
 
 pushd  .
+nmake /F..\composicao\TesteGrafo.make 
+popd
+
+pushd  .
 nmake /F..\composicao\TesteGrafoControleEsp.make 
 popd
 

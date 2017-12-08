@@ -7,6 +7,7 @@ pushd  .
 
 cd ..\..\ferramnt
 
+gmake /b..\programa\composicao  /cTesteGrafo
 gmake /b..\programa\composicao  /cTesteGrafoControleEsp
 
 popd

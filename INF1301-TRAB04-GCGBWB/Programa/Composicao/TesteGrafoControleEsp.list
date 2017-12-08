@@ -4,7 +4,7 @@ GERADOR DE SCRIPT DE DIRETIVAS PARA MAKE
 Composição do construto: TesteGrafoControleEsp.comp
 
    Nome do Construto:           TesteGrafoControleEsp
-   Diretório base:              C:\Users\gabriellebrand\AppData\Roaming\Local Libraries\Local Documents\INF1301-TRAB04-GCGBWB\programa\composicao
+   Diretório base:              C:\Users\gabriellebrand\AppData\Roaming\Local Libraries\Local Documents\MODULAR\modular\INF1301-TRAB04-GCGBWB\programa\composicao
 
    Arquivo composição:          TesteGrafoControleEsp.comp
    Arquivo plataforma:          gmake.parm
