@@ -43,6 +43,11 @@ static const char OBTER_VALOR_CMD            [ ] = "=obtervalor";
 static const char AVANCAR_VIZ_CMD            [ ] = "=avancarvizinho";
 static const char CRIAR_GRAFO_RET_CMD        [ ] = "=criargraforet";
 
+#ifdef _DEBUG
+static const char DETURPAR_GRAFO_CMD         [ ] = "=deturpar";
+static const char VERIFICAR_GRAFO_CMD        [ ] = "=verificar";
+#endif
+
 
 #define TRUE  1
 #define FALSE 0
@@ -108,7 +113,8 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
   int numLidos = -1,
       inxGrafo = -1,
-      numElem = -1;
+      numElem = -1,
+      param;
 
   char nome[100],
        email[100],
@@ -330,6 +336,40 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
         CondRetObtido = GRA_AvancarVizinho (vtGrafos[ inxGrafo ], numElem);
         return TST_CompararInt( CondRetEsperada , CondRetObtido ,
               "Retorno errado avancar vizinho." );
+#ifdef _DEBUG
+    /* Realizar deturpacao */
+        else if ( strcmp( ComandoTeste , DETURPAR_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "ii" , &inxGrafo, &param) ;
+
+            if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+
+      return TST_CompararInt( GRA_CondRetOK , GRA_Deturpar(vtGRAFO[ inxGrafo ], param),
+                     "Erro ao deturpar."  ) ;
+
+        } /* fim ativa: Realizar deturpacao */
+
+    /* Realizar verificao estrututral */
+        else if ( strcmp( ComandoTeste , VERIFICAR_GRAFO_CMD  ) == 0 ) {
+
+            numLidos = LER_LerParametros( "ii" , &inxGrafo, &param) ;
+
+            if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
+           
+            GRA_VerificarEstrutura( vtGRAFO[ inxGrafo ], &numErros );
+
+            return TST_CompararInt( param , numErros ,
+                     "Total de erros errado ao verificar estrutura."  ) ;
+
+        } /* fim ativa: Realizar verificao estrututral */
+
+#endif
 
       } /* fim ativa: Testar  Obter Valor */
 
