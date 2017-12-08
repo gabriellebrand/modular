@@ -1,0 +1,31 @@
+# Composicao do programa de teste de um Grafo
+# Este exemplo utiliza o arcabouco completo 
+
+[Diretorios]
+
+Nome        =  TesteControlador
+PathDefault =  ..\Fontes
+err         =  ..\Produto
+obj         =  ..\Objetos
+c           =  ..\Fontes
+h           =  ..\Fontes
+def         =  ..\Tabelas
+
+[Modulos]
+TestCon
+Perfil
+Grafo
+Lista
+Interface
+Controlador
+Mensagem
+
+[BuildInicio]
+/OUT:..\produto\TesteControlador.exe
+/INCREMENTAL:NO
+/MACHINE:IX86
+
+[BuildFim]
+ArcaboucoTeste.lib
+
+[Fim]

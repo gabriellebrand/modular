@@ -1,19 +1,19 @@
 /***************************************************************************
-*  $MCI Módulo de implementação: TGRA Teste do módulo Grafo
+*  $MCI MÃ›dulo de implementaÃâ€o: TGRA Teste do mÃ›dulo Grafo
 *
 *  Arquivo gerado:              TestGRA.c
 *  Letras identificadoras:      TGRA
 *
-*  Nome da base de software:    Arcabouço para a automação de testes de programas redigidos em C
+*  Nome da base de software:    ArcabouÃo para a automaÃâ€o de testes de programas redigidos em C
 *  Arquivo da base de software: D:\AUTOTEST\PROJETOS\LISTA.BSW
 *
-*  Projeto: Trabalho 2 - Programa;cão Modular
+*  Projeto: Trabalho 2 - Programa;câ€o Modular
 *  Gestor:  LES/DI/PUC-Rio
 *  Autor:  WB - Wellington Bezerra
 *
-*  $HA Histórico de evolução:
-*     Versão  Autor    Data     Observações
-*     1       WB   09/out/2017 início desenvolvimento
+*  $HA HistÃ›rico de evoluÃâ€o:
+*     Versâ€o  Autor    Data     ObservaÃÄ±es
+*     1       WB   09/out/2017 inÃŒcio desenvolvimento
 *
 ***************************************************************************/
 
@@ -78,7 +78,7 @@ typedef struct PER_tagPerfil {
 typedef struct PER_tagPerfil * PER_tppPerfil ;
 
 
-/***** Protótipos das funções encapuladas no módulo *****/
+/***** ProtÃ›tipos das funÃÄ±es encapuladas no mÃ›dulo *****/
 
    static void DestruirValor( void * pValor ) ;
 
@@ -86,17 +86,17 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 
    static int ValidarInxGrafo( int inxGrafo , int Modo ) ;
 
-/*****  Código das funções exportadas pelo módulo  *****/
+/*****  CÃ›digo das funÃÄ±es exportadas pelo mÃ›dulo  *****/
 
 
 /***********************************************************************
 *
-*  $FC Função: TGRA &Testar Grafo
+*  $FC FunÃâ€o: TGRA &Testar Grafo
 *
-*  $ED Descrição da função
-*     Podem ser criadas até 10 grafos, identificados pelos índices 0 a 9
+*  $ED DescriÃâ€o da funÃâ€o
+*     Podem ser criadas atÃˆ 10 grafos, identificados pelos ÃŒndices 0 a 9
 *
-*     Comandos disponíveis:
+*     Comandos disponÃŒveis:
 *
 * =criargrafo            inxGrafo
 * =criarvertice          inxGrafo nome email cidade idade CondRetEsperada
@@ -348,14 +348,14 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
   return TST_CondRetNaoConhec ;
 
-} /* Fim função: TGRA Efetuar operações de teste específicas para Grafo */
+} /* Fim funÃâ€o: TGRA Efetuar operaÃÄ±es de teste especÃŒficas para Grafo */
 
 
-/*****  Código das funções encapsuladas no módulo  *****/
+/*****  CÃ›digo das funÃÄ±es encapsuladas no mÃ›dulo  *****/
 
 /***********************************************************************
 *
-*  $FC Função: TGRA -Validar indice do Grafo
+*  $FC FunÃâ€o: TGRA -Validar indice do Grafo
 *
 ***********************************************************************/
 
@@ -384,11 +384,11 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
          
       return TRUE ;
 
-   } /* Fim função: TGRA -Validar indice do grafo */
+   } /* Fim funÃâ€o: TGRA -Validar indice do grafo */
 
 /***********************************************************************
 *
-*  $FC Função: TGRA -Destruir valor
+*  $FC FunÃâ€o: TGRA -Destruir valor
 *
 ***********************************************************************/
 
@@ -401,11 +401,11 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
       free( ppPerfil ) ;
       *pValor = NULL;
 
-   } /* Fim função: TGRA -Destruir valor */
+   } /* Fim funÃâ€o: TGRA -Destruir valor */
 
 /***********************************************************************
 *
-*  $FC Função: TGRA - Comparar valor
+*  $FC FunÃâ€o: TGRA - Comparar valor
 *
 ***********************************************************************/
 
@@ -419,7 +419,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
     return strcmp(email,pPerfil1->email);
 
-   } /* Fim função: TGRA - Comparar valor */
+   } /* Fim funÃâ€o: TGRA - Comparar valor */
 
 
-/********** Fim do módulo de implementação: Módulo de teste específico **********/
+/********** Fim do mÃ›dulo de implementaÃâ€o: MÃ›dulo de teste especÃŒfico **********/

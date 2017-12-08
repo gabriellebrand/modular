@@ -1,0 +1,28 @@
+# Composicao do programa de teste de um Grafo
+# Este exemplo utiliza o arcabouco completo 
+
+[Diretorios]
+
+Nome        =  TestePerfil
+PathDefault =  ..\Fontes
+err         =  ..\Produto
+obj         =  ..\Objetos
+c           =  ..\Fontes
+h           =  ..\Fontes
+def         =  ..\Tabelas
+
+[Modulos]
+TestPer
+Perfil
+Mensagem
+Lista
+
+[BuildInicio]
+/OUT:..\produto\TestePerfil.exe
+/INCREMENTAL:NO
+/MACHINE:IX86
+
+[BuildFim]
+ArcaboucoTeste.lib
+
+[Fim]
