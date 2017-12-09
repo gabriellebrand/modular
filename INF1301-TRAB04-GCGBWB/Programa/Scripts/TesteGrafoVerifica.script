@@ -245,7 +245,6 @@
 =criarvertice    grf5   str0   str1   str2   datNasc0   grfNaoExist   
 
 
-
 == Testa função Verifica estrutura
 =criargrafo grf5
 =verificar grf5 0

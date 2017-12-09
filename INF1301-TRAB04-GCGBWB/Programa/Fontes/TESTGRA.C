@@ -380,7 +380,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
                return TST_CondRetParm ;
             } /* if */
            
-            numErros = VerificaEstrutura( vtGrafos[ inxGrafo ] );
+            numErros = GRA_VerificaEstrutura( vtGrafos[ inxGrafo ] );
 
             return TST_CompararInt( param , numErros ,
                      "Total de erros errado ao verificar estrutura."  ) ;
