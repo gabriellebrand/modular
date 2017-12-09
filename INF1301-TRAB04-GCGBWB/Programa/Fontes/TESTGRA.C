@@ -357,7 +357,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
             numLidos = LER_LerParametros( "ii" , &inxGrafo, &param) ;
 
-            if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            if ( ( numLidos != 2 ) )
             {
                return TST_CondRetParm ;
             } /* if */
