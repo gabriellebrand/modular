@@ -828,7 +828,7 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
 
 int GRA_VerificaEstrutura(GRA_tppGrafo pGrafo) {
   int numErros = 0;
-  GRA_tpConteudoVert * Vertice;
+  //GRA_tpConteudoVert * Vertice;
   
   printf("\nGRA_VerificarEstrura\n");
   //1. verifica se o tipo es datrutura é de fato o tipo esperado
@@ -862,6 +862,11 @@ int GRA_VerificaListaVertices(LIS_tppLista pVertices, GRA_tppGrafo pGrafo) {
   LIS_tppLista ListaVertice;
   //1. percorre a lista, acessando cada um dos elementos da lista vertices
   IrInicioLista(pVertices);
+
+  if(LIS_AvancarElementoCorrente(pVertices, 0) == LIS_CondRetListaVazia){
+    printf("\nGRA_VerificaListaVazia\n");
+    return 0;
+  }
 
   printf("\nGRA_VerificarEstrura-1\n");
   if (pVertices == NULL) {
