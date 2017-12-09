@@ -668,6 +668,7 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
 } /* Fim função: GRA  &Excluir Vertice Corrente */
 
 
+
    #ifdef _DEBUG
 
 /***************************************************************************
@@ -754,32 +755,17 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
             break ;
          } /* fim ativa:Faz cabeca da lista de vertices apontar para lixo */
 
-          /* 11. Altera quantidade total de vertices */
-          case 11:
-          {
-            pGrafo->numElem = -1;
-            break;
-          }
 
       /* Deturpa aresta */
 
          default :
 
-         ConteudoVertice = (GRA_tpConteudoVert *) LIS_ObterValor(pGrafo->pVertCorr);
+       //  ConteudoVertice = (GRA_tpConteudoVert *) LIS_ObterValor(pGrafo->pVertCorr);
 
-         if ( ConteudoVertice->pArestas != NULL )
+         if ( /*ConteudoVertice->pArestas != NULL*/ 1 )
          {
 
             switch ( flag ) {
-
-            /* 8. Modifica tipo da aresta */
-
-               case 8:
-               {
-                  CED_DefinirTipoEspaco( ConteudoVertice->pArestas , CED_ID_TIPO_VALOR_NULO ) ;
-                  break ;
-
-               } /* fim ativa: Modifica tipo da aresta */
 
             /* 9. Anula ponteiro da cabeca da lista de arestas */
 
@@ -798,6 +784,13 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
                   break ;
 
                } /* fim ativa: Faz cabeca da lista de aresta apontar para lixo */
+
+                               /* 11. Altera quantidade total de vertices */
+                case 11:
+                {
+                  pGrafo->numElem = -1;
+                  break;
+                }
 
             /*12. Alterar numero de arestas do vertice */
 
