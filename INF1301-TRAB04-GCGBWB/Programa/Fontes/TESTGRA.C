@@ -1,19 +1,19 @@
 /***************************************************************************
-*  $MCI Módulo de implementação: TGRA Teste do módulo Grafo
+*  $MCI MÃ³dulo de implementaÃ§Ã£o: TGRA Teste do mÃ³dulo Grafo
 *
 *  Arquivo gerado:              TestGRA.c
 *  Letras identificadoras:      TGRA
 *
-*  Nome da base de software:    Arcabouço para a automação de testes de programas redigidos em C
+*  Nome da base de software:    ArcabouÃ§o para a automaÃ§Ã£o de testes de programas redigidos em C
 *  Arquivo da base de software: D:\AUTOTEST\PROJETOS\LISTA.BSW
 *
-*  Projeto: Trabalho 2 - Programa;cão Modular
+*  Projeto: Trabalho 2 - Programa;cÃ£o Modular
 *  Gestor:  LES/DI/PUC-Rio
 *  Autor:  WB - Wellington Bezerra
 *
-*  $HA Histórico de evolução:
-*     Versão  Autor    Data     Observações
-*     1       WB   09/out/2017 início desenvolvimento
+*  $HA HistÃ³rico de evoluÃ§Ã£o:
+*     VersÃ£o  Autor    Data     ObservaÃ§Ãµes
+*     1       WB   09/out/2017 inÃ­cio desenvolvimento
 *
 ***************************************************************************/
 
@@ -82,7 +82,7 @@ typedef struct PER_tagPerfil {
 typedef struct PER_tagPerfil * PER_tppPerfil ;
 
 
-/***** Protótipos das funções encapuladas no módulo *****/
+/***** ProtÃ³tipos das funÃ§Ãµes encapuladas no mÃ³dulo *****/
 
    static void DestruirValor( void * pValor ) ;
 
@@ -90,17 +90,17 @@ typedef struct PER_tagPerfil * PER_tppPerfil ;
 
    static int ValidarInxGrafo( int inxGrafo , int Modo ) ;
 
-/*****  Código das funções exportadas pelo módulo  *****/
+/*****  CÃ³digo das funÃ§Ãµes exportadas pelo mÃ³dulo  *****/
 
 
 /***********************************************************************
 *
-*  $FC Função: TGRA &Testar Grafo
+*  $FC FunÃ§Ã£o: TGRA &Testar Grafo
 *
-*  $ED Descrição da função
-*     Podem ser criadas até 10 grafos, identificados pelos índices 0 a 9
+*  $ED DescriÃ§Ã£o da funÃ§Ã£o
+*     Podem ser criadas atÃ© 10 grafos, identificados pelos Ã­ndices 0 a 9
 *
-*     Comandos disponíveis:
+*     Comandos disponÃ­veis:
 *
 * =criargrafo            inxGrafo
 * =criarvertice          inxGrafo nome email cidade idade CondRetEsperada
@@ -362,40 +362,44 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
                return TST_CondRetParm ;
             } /* if */
 
+            GRA_Deturpar( vtGrafos[ inxGrafo ], param);
+
+
+
 			return TST_CondRetOK ;
 
         } /* fim ativa: Realizar deturpacao */
 
     /* Realizar verificao estrututral */
-        // else if ( strcmp( ComandoTeste , VERIFICAR_GRAFO_CMD  ) == 0 ) {
+        else if ( strcmp( ComandoTeste , VERIFICAR_GRAFO_CMD  ) == 0 ) {
 
-        //     numLidos = LER_LerParametros( "ii" , &inxGrafo, &param) ;
+            numLidos = LER_LerParametros( "ii" , &inxGrafo, &param) ;
 
-        //     if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
-        //     {
-        //        return TST_CondRetParm ;
-        //     } /* if */
+            if ( ( numLidos != 2 ) || ( ValidarInxGrafo( inxGrafo , VAZIO ) ) )
+            {
+               return TST_CondRetParm ;
+            } /* if */
            
-        //     GRA_VerificarEstrutura( vtGrafos[ inxGrafo ], &numErros );
+            numErros = VerificaEstrutura( vtGrafos[ inxGrafo ] );
 
-        //     return TST_CompararInt( param , numErros ,
-        //              "Total de erros errado ao verificar estrutura."  ) ;
+            return TST_CompararInt( param , numErros ,
+                     "Total de erros errado ao verificar estrutura."  ) ;
 
-        // } /* fim ativa: Realizar verificao estrututral */ 
+        } /* fim ativa: Realizar verificao estrututral */ 
 
 #endif
 
 
   return TST_CondRetNaoConhec ;
 
-} /* Fim função: TGRA Efetuar operações de teste específicas para Grafo */
+} /* Fim funÃ§Ã£o: TGRA Efetuar operaÃ§Ãµes de teste especÃ­ficas para Grafo */
 
 
-/*****  Código das funções encapsuladas no módulo  *****/
+/*****  CÃ³digo das funÃ§Ãµes encapsuladas no mÃ³dulo  *****/
 
 /***********************************************************************
 *
-*  $FC Função: TGRA -Validar indice do Grafo
+*  $FC FunÃ§Ã£o: TGRA -Validar indice do Grafo
 *
 ***********************************************************************/
 
@@ -424,11 +428,11 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
          
       return TRUE ;
 
-   } /* Fim função: TGRA -Validar indice do grafo */
+   } /* Fim funÃ§Ã£o: TGRA -Validar indice do grafo */
 
 /***********************************************************************
 *
-*  $FC Função: TGRA -Destruir valor
+*  $FC FunÃ§Ã£o: TGRA -Destruir valor
 *
 ***********************************************************************/
 
@@ -441,11 +445,11 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
       free( ppPerfil ) ;
       *pValor = NULL;
 
-   } /* Fim função: TGRA -Destruir valor */
+   } /* Fim funÃ§Ã£o: TGRA -Destruir valor */
 
 /***********************************************************************
 *
-*  $FC Função: TGRA - Comparar valor
+*  $FC FunÃ§Ã£o: TGRA - Comparar valor
 *
 ***********************************************************************/
 
@@ -459,7 +463,7 @@ TST_tpCondRet TST_EfetuarComando( char * ComandoTeste ) {
 
     return strcmp(email,pPerfil1->email);
 
-   } /* Fim função: TGRA - Comparar valor */
+   } /* Fim funÃ§Ã£o: TGRA - Comparar valor */
 
 
-/********** Fim do módulo de implementação: Módulo de teste específico **********/
+/********** Fim do mÃ³dulo de implementaÃ§Ã£o: MÃ³dulo de teste especÃ­fico **********/
