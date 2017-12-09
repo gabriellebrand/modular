@@ -850,14 +850,13 @@ int GRA_VerificaEstrutura(GRA_tppGrafo pGrafo) {
 
   // Verifica Ponteiro para cabeça do grafo
   IrInicioLista(pGrafo->pVertices);
-  while(LIS_AvancarElementoCorrente(pGrafo->pVertices, 0) == LIS_CondRetOK) {
+   do {
     Vertice = (GRA_tpConteudoVert *) LIS_ObterValor(pGrafo->pVertices);
     if(Vertice->pCabeca != pGrafo){
       CNT_CONTAR( "GRA_VerificarEstrura-3" );
       numErros++;
     }
-    LIS_AvancarElementoCorrente(pGrafo->pVertices, 1);
-  }
+  } while(LIS_AvancarElementoCorrente(pGrafo->pVertices, 1) == LIS_CondRetOK);
 
   CNT_CONTAR( "GRA_VerificarEstrura-9" );
   return numErros;
@@ -875,7 +874,7 @@ int GRA_VerificaListaVertices(LIS_tppLista pVertices, GRA_tppGrafo pGrafo) {
     numErros ++;
 
   CNT_CONTAR( "GRA_VerificarEstrura-4" );
-  while(LIS_AvancarElementoCorrente(pVertices, 0) == LIS_CondRetOK) {
+  do {
 
     ListaVertice = (LIS_tppLista) LIS_ObterValor(pVertices);
 
@@ -884,8 +883,7 @@ int GRA_VerificaListaVertices(LIS_tppLista pVertices, GRA_tppGrafo pGrafo) {
     numErros +=GRA_VerificaVertice(ListaVertice);
 
     CNT_CONTAR( "GRA_VerificarEstrura-5" );
-    LIS_AvancarElementoCorrente(pVertices, 1);
-  }
+  } while(LIS_AvancarElementoCorrente(pVertices, 1) == LIS_CondRetOK);
 
   //2. checa se quantidade de vertices esta correta
   if (count != pGrafo->numElem) {
@@ -945,16 +943,15 @@ int GRA_VerificaConteudoVert(GRA_tpConteudoVert * pConteudoVert) {
 
   IrInicioLista(ListaArestas);
   count = 0;
-  while(LIS_AvancarElementoCorrente(ListaArestas, 0) == LIS_CondRetOK){
+  do {
     count++;
     CNT_CONTAR( "GRA_VerificarEstrura-12" );
-    LIS_AvancarElementoCorrente(ListaArestas, 1);
-  }
+  } while(LIS_AvancarElementoCorrente(ListaArestas, 1) == LIS_CondRetOK);
 
   if(count != pConteudoVert->NumArestas){
     numErros++;
     CNT_CONTAR( "GRA_VerificarEstrura-13" );
-  }
+  } 
 
   return numErros;
 }
