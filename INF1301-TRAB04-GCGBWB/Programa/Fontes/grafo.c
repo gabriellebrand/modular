@@ -112,9 +112,9 @@ void GRA_DestruirValorListaAresta(void * pDado);
 GRA_tpCondRet GRA_DestruirAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2);
 GRA_tpCondRet GRA_LiberarAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2);
 LIS_tppLista GRA_ObterCorrente(GRA_tppGrafo pGrafo);
-int GRA_VerificaVertice(LIS_tppLista pVertice);
+int GRA_VerificaVertice(LIS_tppLista pVertice, GRA_tppGrafo pGrafo);
 int GRA_VerificaListaVertices(LIS_tppLista pVertices, GRA_tppGrafo pGrafo);
-int GRA_VerificaConteudoVert(GRA_tpConteudoVert * pConteudoVert);
+int GRA_VerificaConteudoVert(GRA_tpConteudoVert * pConteudoVert, GRA_tppGrafo pGrafo);
 
 /********************************************************/
 
@@ -830,9 +830,10 @@ int GRA_VerificaEstrutura(GRA_tppGrafo pGrafo) {
   int numErros = 0;
   GRA_tpConteudoVert * Vertice;
   
-
+  printf("\nGRA_VerificarEstrura\n");
   //1. verifica se o tipo es datrutura é de fato o tipo esperado
   if ( GRA_TipoEspacoCabeca != CED_ObterTipoEspaco(pGrafo)) {
+    printf("\nGRA_VerificarEstrura-1\n");
     CNT_CONTAR( "GRA_VerificarEstrura-1" );
     numErros++;
   }
@@ -840,25 +841,17 @@ int GRA_VerificaEstrutura(GRA_tppGrafo pGrafo) {
   //2. verifica integridade do tamanho do espaco alocado   
   if ( sizeof(pGrafo) != CED_ObterTamanhoValor(pGrafo)) {
     CNT_CONTAR( "GRA_VerificarEstrura-2" );
+    printf("\nGRA_VerificarEstrura-2\n");
     numErros++;
   }
 
   //3. chama as funcoes verificadoras das demais estruturas do grafo
-  numErros += GRA_VerificaVertice(pGrafo->pVertCorr);
+  numErros += GRA_VerificaVertice(pGrafo->pVertCorr, pGrafo);
 
   numErros += GRA_VerificaListaVertices(pGrafo->pVertices, pGrafo);
 
-  // Verifica Ponteiro para cabeça do grafo
-  IrInicioLista(pGrafo->pVertices);
-   do {
-    Vertice = (GRA_tpConteudoVert *) LIS_ObterValor(pGrafo->pVertices);
-    if(Vertice->pCabeca != pGrafo){
-      CNT_CONTAR( "GRA_VerificarEstrura-3" );
-      numErros++;
-    }
-  } while(LIS_AvancarElementoCorrente(pGrafo->pVertices, 1) == LIS_CondRetOK);
-
   CNT_CONTAR( "GRA_VerificarEstrura-9" );
+  printf("\nGRA_VerificarEstrura-9\n");
   return numErros;
 
 }
@@ -870,59 +863,74 @@ int GRA_VerificaListaVertices(LIS_tppLista pVertices, GRA_tppGrafo pGrafo) {
   //1. percorre a lista, acessando cada um dos elementos da lista vertices
   IrInicioLista(pVertices);
 
-  if (pVertices == NULL)
+  printf("\nGRA_VerificarEstrura-1\n");
+  if (pVertices == NULL) {
     numErros ++;
+    //CNT_CONTAR("Verif");
+    printf("\nGRA_VerificarEstrura-17\n");
+  }
 
   CNT_CONTAR( "GRA_VerificarEstrura-4" );
+  printf("\nGRA_VerificarEstrura-4\n");
   do {
 
     ListaVertice = (LIS_tppLista) LIS_ObterValor(pVertices);
 
     count++;
 
-    numErros +=GRA_VerificaVertice(ListaVertice);
+    numErros += GRA_VerificaVertice(ListaVertice, pGrafo);
 
     CNT_CONTAR( "GRA_VerificarEstrura-5" );
+    printf("\nGRA_VerificarEstrura-5\n");
   } while(LIS_AvancarElementoCorrente(pVertices, 1) == LIS_CondRetOK);
 
   //2. checa se quantidade de vertices esta correta
   if (count != pGrafo->numElem) {
     numErros++;
     CNT_CONTAR( "GRA_VerificarEstrura-14" );
+    printf("\nGRA_VerificarEstrura-14\n");
   }
 
   return numErros;
 }
 
-int GRA_VerificaVertice(LIS_tppLista pVertice) {
+int GRA_VerificaVertice(LIS_tppLista pVertice, GRA_tppGrafo pGrafo) {
   int numErros = 0;
 
-  if (pVertice == NULL)
+  printf("\nGRA_VerificarVertice\n");
+  if (pVertice == NULL){
     numErros++;
+    printf("\nGRA_VerificarVerticeNULL\n");
+    return 0;
+  }
   
   //1. verifica se o tipo da estrutura é de fato o tipo esperado
   if ( GRA_TipoEspacoVertice != CED_ObterTipoEspaco(pVertice)) {
     numErros++;
     CNT_CONTAR( "GRA_VerificarEstrura-6" );
+    printf("\nGRA_VerificarEstrura-6\n");
   }
 
   //2. verifica integridade do tamanho do espaco alocado
   if (sizeof(pVertice) != CED_ObterTamanhoValor(pVertice)) {
     numErros++;
     CNT_CONTAR( "GRA_VerificarEstrura-7" );
+    printf("\nGRA_VerificarEstrura-7\n");
   }
 
   //3. verifica conteudo do vertice
-  numErros += GRA_VerificaConteudoVert((GRA_tpConteudoVert *) LIS_ObterValor(pVertice));
+  numErros += GRA_VerificaConteudoVert((GRA_tpConteudoVert *) LIS_ObterValor(pVertice), pGrafo);
 
   CNT_CONTAR( "GRA_VerificarEstrura-8" );
+  printf("\nGRA_VerificarEstrura-8\n");
   return numErros;
 }
 
-int GRA_VerificaConteudoVert(GRA_tpConteudoVert * pConteudoVert) {
+int GRA_VerificaConteudoVert(GRA_tpConteudoVert * pConteudoVert, GRA_tppGrafo pGrafo) {
   LIS_tppLista ListaArestas;
   int count, numErros = 0;
  
+ printf("\nGRA_VerificarConteudo\n");
  //1. verifica se o tipo da estrutura é de fato o tipo esperado
   if (GRA_TipoPDado != CED_ObterTipoEspaco(pConteudoVert)) {
     numErros++;
@@ -951,7 +959,14 @@ int GRA_VerificaConteudoVert(GRA_tpConteudoVert * pConteudoVert) {
   if(count != pConteudoVert->NumArestas){
     numErros++;
     CNT_CONTAR( "GRA_VerificarEstrura-13" );
-  } 
+  }
+
+  //4. verifica ponteiro para a cabeca
+   if(pConteudoVert->pCabeca != pGrafo){
+      CNT_CONTAR( "GRA_VerificarEstrura-3" );
+      printf("\nGRA_VerificarEstrura-3\n");
+      numErros++;
+   }
 
   return numErros;
 }

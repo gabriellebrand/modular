@@ -15,6 +15,10 @@ nmake /F..\composicao\TesteGrafoControleEsp.make
 popd
 
 pushd  .
+nmake /F..\composicao\TesteGrafoVerifica.make 
+popd
+
+pushd  .
 nmake /F..\composicao\TestePerfil.make 
 popd
 
