@@ -1,0 +1,42 @@
+Autores:	Gabrielle Brandemburg 
+		    Gabriel Cantergiani
+		    Wellington Bezerra
+
+
+Data:		07/12/2017
+
+* Nome da função: int GRA_VerificaEstrutura(GRA_tppGrafo pGrafo) 
+- Parâmetro: ponteiro para um grafo
+- Retorno: numero inteiro com a quantidade de erros contabilizados dentro da função
+
+GRA_VerificarEstrura-1: verifica se o tipo es datrutura é de fato o tipo esperado
+GRA_VerificarEstrura-2: verifica integridade do tamanho do espaco alocado  
+
+
+GRA_VerificarEstrura-9: chama as funcoes verificadoras das demais estruturas do grafo
+
+
+* Nome da função: int GRA_VerificaListaVertices(LIS_tppLista pVertices, GRA_tppGrafo pGrafo)
+- Parâmetro: ponteiro para um grafo e para uma lista de vertices
+- Retorno: numero inteiro com a quantidade de erros contabilizados dentro da função
+
+GRA_VerificarEstrura-1: percorre a lista, acessando cada um dos elementos da lista vertices
+GRA_VerificarEstrura-14: checa se quantidade de vertices esta correta
+
+
+* Nome da função: int GRA_VerificaVertice(LIS_tppLista pVertice, GRA_tppGrafo pGrafo)
+- Parâmetro: ponteiro para um grafo e para uma lista de vertices
+- Retorno: numero inteiro com a quantidade de erros contabilizados dentro da função
+
+GRA_VerificarEstrura-6 - verifica se o tipo da estrutura é de fato o tipo esperado
+GRA_VerificarEstrura-7 - verifica integridade do tamanho do espaco alocado
+GRA_VerificarEstrura-8 - verifica conteudo do vertice
+
+* Nome da função: int GRA_VerificaConteudoVert(GRA_tpConteudoVert * pConteudoVert, GRA_tppGrafo pGrafo)
+- Parâmetro: ponteiro para um grafo e para um ponteiro para o conteúdo de um vertice
+- Retorno: numero inteiro com a quantidade de erros contabilizados dentro da função
+
+GRA_VerificarEstrura-10: verifica se o tipo da estrutura é de fato o tipo esperado
+GRA_VerificarEstrura-11; verifica integridade do tamanho do espaco alocado
+GRA_VerificarEstrura-12Verifica numero de arestas
+GRA_VerificarEstrura-13: verifica ponteiro para a  
