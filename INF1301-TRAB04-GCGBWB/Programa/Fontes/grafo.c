@@ -841,14 +841,20 @@ int GRA_VerificaEstrutura(GRA_tppGrafo pGrafo) {
   //2. verifica integridade do tamanho do espaco alocado   
   if ( sizeof(pGrafo) != CED_ObterTamanhoValor(pGrafo)) {
     CNT_CONTAR( "GRA_VerificarEstrura-2" );
-    printf("\nGRA_VerificarEstrura-2\n");
+    printf("\nGRA_VerificarEstrura-2 GrafoSize = %d, tamValor = %d\n", sizeof(pGrafo), CED_ObterTamanhoValor(pGrafo));
     numErros++;
   }
 
-  //3. chama as funcoes verificadoras das demais estruturas do grafo
-  numErros += GRA_VerificaVertice(pGrafo->pVertCorr, pGrafo);
+  if(LIS_AvancarElementoCorrente(pGrafo->pVertices, 0) == LIS_CondRetListaVazia){
+    printf("\nGRA_VerificaListaVazia\n");
+    printf("\nNUM ERROS =  %d\n", numErros);
+    return numErros;
 
+  }
+
+  //3. chama as funcoes verificadoras das demais estruturas do grafo
   numErros += GRA_VerificaListaVertices(pGrafo->pVertices, pGrafo);
+  numErros += GRA_VerificaVertice(pGrafo->pVertCorr, pGrafo);
 
   CNT_CONTAR( "GRA_VerificarEstrura-9" );
   printf("\nGRA_VerificarEstrura-9\n");
@@ -862,11 +868,6 @@ int GRA_VerificaListaVertices(LIS_tppLista pVertices, GRA_tppGrafo pGrafo) {
   LIS_tppLista ListaVertice;
   //1. percorre a lista, acessando cada um dos elementos da lista vertices
   IrInicioLista(pVertices);
-
-  if(LIS_AvancarElementoCorrente(pVertices, 0) == LIS_CondRetListaVazia){
-    printf("\nGRA_VerificaListaVazia\n");
-    return 0;
-  }
 
   printf("\nGRA_VerificarEstrura-1\n");
   if (pVertices == NULL) {
