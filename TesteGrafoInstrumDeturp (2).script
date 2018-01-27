@@ -1,0 +1,156 @@
+// Script:    TesteGrafo.script
+// Autores: GB - Gabrielle Brandenburg
+//          GC - Gabriel Cantergiani
+//          WB - Wellington Bezerra
+// Data:      01/12/2017
+// Propósito: Testar o módulo Grafo.
+//
+
+== Inicializar valores
+=declararparm   grf0    int 0
+=declararparm   grf1    int 1
+=declararparm   grf2    int 2
+=declararparm   grf3    int 3
+=declararparm   grf4    int 4
+=declararparm   grf5    int 5
+=declararparm   grf11   int 11
+
+=declararparm   str0    string  "wellington"
+=declararparm   str1    string  "w@w.com"
+=declararparm   str2    string  "rj"
+
+=declararparm   str3    string  "mariane"
+=declararparm   str4    string  "m@m.com"
+=declararparm   str5    string  "rj"
+
+=declararparm   str6    string  "liercio"
+=declararparm   str7    string  "l@l.com"
+=declararparm   str8    string  "rj"
+
+=declararparm   str9    string  "claudia"
+=declararparm   str10   string  "c@c.com"
+=declararparm   str11   string  "rj"
+
+=declararparm   datNasc0   string  "01/01/1950"  
+=declararparm   datNasc1   string  "05/03/1960" 
+=declararparm   datNasc2   string  "15/06/1970" 
+=declararparm   datNasc3   string  "27/08/1990" 
+
+=declararparm   OK             int  0
+=declararparm   grfVazio       int  1
+=declararparm   grfNaoExist    int  3
+=declararparm   naoTemAres     int  4
+=declararparm   vertNaoExist   int  5
+=declararparm   aresNaoExist   int  6
+=declararparm   aresJaExist    int  7
+=declararparm   vertJaExist    int  8
+=declararparm   aresIlegal     int  9
+=declararparm 	valNulo		   int  10
+=declararparm	fimArestas	   int	11
+
+=declararparm   pNULL          int  0
+=declararparm   pNaoNULL       int  1
+
+
+== Testar deturpacao tipo 1
+=criargrafo      grf0
+=criarvertice    grf0   str0   str1   str2   datNasc0   OK
+=criarvertice    grf0   str3   str4   str5   datNasc1   OK
+=criarvertice    grf0   str6   str7   str8   datNasc2   OK
+=criararesta     grf0   str1   str4   OK
+=criararesta     grf0   str4   str7   OK
+
+=deturpar grf0 1
+=verificar grf0 1
+
+== Testar deturpacao tipo 2
+=criargrafo      grf1
+=criarvertice    grf1   str0   str0   str2   datNasc0   OK
+=criarvertice    grf1   str3   str4   str5   datNasc0   OK
+
+=deturpar grf1 2
+=verificar grf1 1
+
+== Testar deturpacao tipo 3
+=criargrafo      grf2
+=criarvertice    grf2   str0   str0   str2   datNasc0   OK
+=criarvertice    grf2   str3   str4   str5   datNasc0   OK
+
+=deturpar grf2 3
+=verificar grf2 1
+
+==Testar deturpacao tipo 2 e 3
+=deturpar grf2 2
+=verificar grf2 2
+
+== Testar deturpacao tipo 4
+=criargrafo      grf3
+=criarvertice    grf3   str0   str0   str2   datNasc0   OK
+=criarvertice    grf3   str3   str4   str5   datNasc0   OK
+
+=deturpar grf3 4
+=verificar grf3 1
+
+== Testar deturpacao tipo 5
+=criargrafo      grf4
+=criarvertice    grf4   str0   str0   str2   datNasc0   OK
+=criarvertice    grf4   str3   str4   str5   datNasc0   OK
+
+=deturpar grf4 5
+=verificar grf4 1
+
+==Testar deturpacoes 4 e 5
+=deturpar grf4 4
+=verificar grf4 2
+
+== Testar deturpacao tipo 6
+=criargrafo      grf5
+=criarvertice    grf5   str0   str0   str2   datNasc0   OK
+=criarvertice    grf5   str3   str4   str5   datNasc0   OK
+
+=deturpar grf5 6
+=verificar grf5 1
+
+==Destroi todos os grafos
+=excluirgrafo grf0 0
+=excluirgrafo grf1 0
+=excluirgrafo grf2 0
+=excluirgrafo grf3 0
+=excluirgrafo grf4 0
+=excluirgrafo grf5 0
+
+== Testar deturpacao tipo 7
+=criargrafo      grf0
+=criarvertice    grf0   str0   str0   str2   datNasc0   OK
+=criarvertice    grf0   str3   str4   str5   datNasc0   OK
+
+=deturpar grf0 7
+=verificar grf0 1
+
+== Testar deturpacao tipo 8
+=criargrafo      grf1
+=criarvertice    grf1   str0   str0   str2   datNasc0   OK
+=criarvertice    grf1   str3   str4   str5   datNasc0   OK
+
+=deturpar grf1 8
+=verificar grf1 1
+
+== Testar deturpacao tipo 9
+=criargrafo      grf2
+=criarvertice    grf2   str0   str0   str2   datNasc0   OK
+=criarvertice    grf2   str3   str4   str5   datNasc0   OK
+
+=deturpar grf2 9
+=verificar grf2 1
+
+==Testar deturpacao tipo 8 e 9
+=deturpar grf2 8
+=verificar grf2 2
+
+== Testar deturpacao tipo 10
+=criargrafo      grf3
+=criarvertice    grf3   str0   str0   str2   datNasc0   OK
+=criarvertice    grf3   str3   str4   str5   datNasc0   OK
+
+=deturpar grf3 10
+=verificar grf3 1

@@ -1,0 +1,65 @@
+// Script:    TesteGrafo.script
+// Autores: GB - Gabrielle Brandenburg
+//          GC - Gabriel Cantergiani
+//          WB - Wellington Bezerra
+// Data:      01/12/2017
+// Propósito: Testar o módulo Grafo.
+//
+
+== Inicializar valores
+=declararparm   grf0    int 0
+=declararparm   grf1    int 1
+=declararparm   grf2    int 2
+=declararparm   grf3    int 3
+=declararparm   grf4    int 4
+=declararparm   grf5    int 5
+=declararparm   grf11   int 11
+
+=declararparm   str0    string  "wellington"
+=declararparm   str1    string  "w@w.com"
+=declararparm   str2    string  "rj"
+
+=declararparm   str3    string  "mariane"
+=declararparm   str4    string  "m@m.com"
+=declararparm   str5    string  "rj"
+
+=declararparm   str6    string  "liercio"
+=declararparm   str7    string  "l@l.com"
+=declararparm   str8    string  "rj"
+
+=declararparm   str9    string  "claudia"
+=declararparm   str10   string  "c@c.com"
+=declararparm   str11   string  "rj"
+
+=declararparm   datNasc0   string  "01/01/1950"  
+=declararparm   datNasc1   string  "05/03/1960" 
+=declararparm   datNasc2   string  "15/06/1970" 
+=declararparm   datNasc3   string  "27/08/1990" 
+
+=declararparm   OK             int  0
+=declararparm   grfVazio       int  1
+=declararparm   grfNaoExist    int  3
+=declararparm   naoTemAres     int  4
+=declararparm   vertNaoExist   int  5
+=declararparm   aresNaoExist   int  6
+=declararparm   aresJaExist    int  7
+=declararparm   vertJaExist    int  8
+=declararparm   aresIlegal     int  9
+=declararparm 	valNulo		   int  10
+=declararparm	fimArestas	   int	11
+
+=declararparm   pNULL          int  0
+=declararparm   pNaoNULL       int  1
+
+
+== Testar deturpacao tipo 1
+=criargrafo      grf1
+=criarvertice    grf1   str0   str1   str2   datNasc0   OK
+=criarvertice    grf1   str3   str4   str5   datNasc1   OK
+=criarvertice    grf1   str6   str7   str8   datNasc2   OK
+=criararesta     grf1   str1   str4   OK
+=criararesta     grf1   str4   str7   OK
+
+=deturpar grafo0 1
+
+=verificar grafo0 1
