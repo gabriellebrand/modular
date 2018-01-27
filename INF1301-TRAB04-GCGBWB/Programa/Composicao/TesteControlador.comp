@@ -3,7 +3,7 @@
 
 [Diretorios]
 
-Nome        =  TesteGrafo
+Nome        =  TesteControlador
 PathDefault =  ..\Fontes
 err         =  ..\Produto
 obj         =  ..\Objetos
@@ -12,13 +12,16 @@ h           =  ..\Fontes
 def         =  ..\Tabelas
 
 [Modulos]
+TestCon
+Perfil
+Grafo
 Lista
-TestGra		/D_DEBUG
-Grafo		/D_DEBUG
+Interface
+Controlador
+Mensagem
 
 [BuildInicio]
-
-/OUT:..\produto\TesteGrafo.exes
+/OUT:..\produto\TesteControlador.exe
 /INCREMENTAL:NO
 /MACHINE:IX86
 

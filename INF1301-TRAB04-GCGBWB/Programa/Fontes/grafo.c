@@ -8,8 +8,9 @@
 #undef GRAFO_OWN
 
 #ifdef _DEBUG
-#include "CESPDIN.H"
-#include "..\tabelas\IdTiposEspaco.def"
+	#include "CESPDIN.H"
+	#include "CONTA.H"
+	#include "../Tabelas/IdTiposEspaco.def"
 #endif
 
 /***************************************************************************
@@ -52,6 +53,10 @@ typedef struct GRA_tagGrafo {
   void (* exclui) (void ** pDado) ;
   /*ponteiro para a funcao que compara o valor armazenado no vertice com a chave identificadora - retorna zero se forem iguais */
 
+  #ifdef _DEBUG
+    int numElem;
+  #endif
+
 } GRA_tpGrafo;
 
 /***********************************************************************
@@ -69,7 +74,32 @@ typedef struct GRA_tagConteudoVert {
 
   void (* exclui) (void * pDado) ;
 
+  #ifdef _DEBUG
+      GRA_tppGrafo pCabeca ;
+      /* Ponteiro para cabeca
+      *
+      *$ED Descrição
+      *   Todos os vértices correntes do grafo devem apontar para a respectiva cabeça.
+      *   Esse ponteiro corresponde a um identificador do grafo para fins
+      *   de verificação da integridade. */
+
+      int NumArestas;
+      /* Número de arestas que um vertice possui. Deve ser igual ao número de elementos da lista pArestas */
+
+  #endif
+
 } GRA_tpConteudoVert;
+
+
+/*****  Dados encapsulados no módulo  *****/
+
+      #ifdef _DEBUG
+
+      static char EspacoLixo[ 256 ] =
+             "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" ;
+            /* Espaço de dados lixo usado ao testar */
+      #endif
+
 
 /***** Protótipos das funções encapsuladas pelo módulo *****/
 
@@ -81,7 +111,10 @@ GRA_tpCondRet GRA_InserirVertice(GRA_tppGrafo pGrafo, LIS_tppLista pVertice);
 void GRA_DestruirValorListaAresta(void * pDado);
 GRA_tpCondRet GRA_DestruirAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2);
 GRA_tpCondRet GRA_LiberarAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2);
-LIS_tppLista GRA_ObterCorrente(GRA_tppGrafo pGrafo); //done
+LIS_tppLista GRA_ObterCorrente(GRA_tppGrafo pGrafo);
+int GRA_VerificaVertice(LIS_tppLista pVertice, GRA_tppGrafo pGrafo);
+int GRA_VerificaListaVertices(LIS_tppLista pVertices, GRA_tppGrafo pGrafo);
+int GRA_VerificaConteudoVert(GRA_tpConteudoVert * pConteudoVert, GRA_tppGrafo pGrafo);
 
 /********************************************************/
 
@@ -97,8 +130,6 @@ GRA_tppGrafo GRA_CriarGrafo(void (* ExcluirValor)(void * pDado), int (* Comparar
     return NULL;
   } /* if */
 
-
-
   pGrafo->pVertCorr = NULL; /* grafo está vazio, entao nao ha vertice corrente */
   pGrafo->compara = CompararValor;
   pGrafo->exclui = ExcluirValor;
@@ -112,6 +143,7 @@ GRA_tppGrafo GRA_CriarGrafo(void (* ExcluirValor)(void * pDado), int (* Comparar
   } /*if */
 
   #ifdef _DEBUG
+       pGrafo->numElem = 0;
        CED_DefinirTipoEspaco( pGrafo , GRA_TipoEspacoCabeca ) ;
   #endif
 
@@ -249,6 +281,10 @@ if(!pDado || !pChaveID) return GRA_CondRetValorNulo;
   pConteudoVert->pDado = pDado;
   pConteudoVert->compara = pGrafo->compara;
   pConteudoVert->exclui = pGrafo->exclui;
+   #ifdef _DEBUG
+      pConteudoVert->NumArestas = 0;
+      pConteudoVert->pCabeca = pGrafo;
+   #endif
 
   /* cria lista vértice de apenas um nó */
   pVertice = LIS_CriarLista(GRA_DestruirConteudoVert, GRA_CompararConteudoVert);
@@ -260,6 +296,8 @@ if(!pDado || !pChaveID) return GRA_CondRetValorNulo;
 
   #ifdef _DEBUG
        CED_DefinirTipoEspaco( pConteudoVert , GRA_TipoEspacoVertice ) ;
+       pConteudoVert->pCabeca = pGrafo;
+       pGrafo->numElem ++;
   #endif
 
   return GRA_InserirVertice(pGrafo, pVertice);
@@ -277,6 +315,7 @@ GRA_tpCondRet GRA_InserirVertice(GRA_tppGrafo pGrafo, LIS_tppLista pVertice) {
 
   LIS_InserirElementoApos(pGrafo->pVertices, pVertice);
   pGrafo->pVertCorr = (LIS_tppLista) LIS_ObterValor(pGrafo->pVertices);
+
   return GRA_CondRetOK;
 } /* Fim função: GRA  &Inserir Vertice */
 
@@ -484,6 +523,11 @@ GRA_tpCondRet GRA_CriarAresta(GRA_tppGrafo pGrafo, void * pChaveID_1, void * pCh
     return GRA_CondRetFaltouMemoria;
   }
 
+   #ifdef _DEBUG
+    conteudoVert1->NumArestas++;
+    conteudoVert2->NumArestas++;
+   #endif
+
   return GRA_CondRetOK;
 } /* Fim função: GRA  &Criar Aresta */
 
@@ -522,6 +566,9 @@ GRA_tpCondRet GRA_ExcluirAresta(GRA_tppGrafo pGrafo, void *pChaveID_1, void *pCh
 *     Destroi arestas entre duas listas vertice
 ***********************************************************************/
 GRA_tpCondRet GRA_DestruirAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2) {
+   #ifdef _DEBUG
+   GRA_tpConteudoVert *Vert1, *Vert2;	
+   #endif	
 
   if( !pVertice1 || !pVertice2 )
   {
@@ -536,6 +583,17 @@ GRA_tpCondRet GRA_DestruirAresta(LIS_tppLista pVertice1 , LIS_tppLista pVertice2
   if (GRA_LiberarAresta(pVertice2 ,pVertice1) == GRA_CondRetArestaNaoExiste) {
     return GRA_CondRetArestaNaoExiste;
   }
+
+
+  #ifdef _DEBUG
+
+    Vert1 = (GRA_tpConteudoVert *) LIS_ObterValor(pVertice1);
+    Vert2 = (GRA_tpConteudoVert *) LIS_ObterValor(pVertice2);
+
+    Vert1->NumArestas--;
+    Vert2->NumArestas--;
+    
+   #endif
 
   return GRA_CondRetOK;
 } /* Fim função: GRA  &Destruir Aresta */
@@ -602,5 +660,317 @@ GRA_tpCondRet GRA_ExcluirVertCorr(GRA_tppGrafo pGrafo) {
   LIS_ExcluirElemento(pGrafo->pVertices);
   pGrafo->pVertCorr = (LIS_tppLista) LIS_ObterValor(pGrafo->pVertices);
 
+  #ifdef _DEBUG
+       pGrafo->numElem --;
+  #endif
+
   return GRA_CondRetOK;
 } /* Fim função: GRA  &Excluir Vertice Corrente */
+
+
+
+   #ifdef _DEBUG
+
+/***************************************************************************
+*
+*  Função: ARV  &Deturpar Grafo
+*  ****/
+
+   void GRA_Deturpar( void * pGrafoParm , int flag ) {
+
+      GRA_tpGrafo * pGrafo = NULL;
+      GRA_tpConteudoVert * ConteudoVertice;
+
+      if ( pGrafoParm == NULL )
+      {
+         return;
+      } /* if */
+
+      pGrafo = ( GRA_tpGrafo * )( pGrafoParm );
+
+      switch ( flag ){
+
+      /* 1. Modifica o tipo do grafo */
+
+         case 1:
+         {
+            CED_DefinirTipoEspaco( pGrafo , CED_ID_TIPO_VALOR_NULO ) ;
+            break ;
+
+         } /* fim ativa: Modifica o tipo do grafo */
+
+      /* 2. Modifica o tipo do vertice corrente */
+
+         case 2:
+         {
+            CED_DefinirTipoEspaco( pGrafo->pVertCorr , CED_ID_TIPO_VALOR_NULO ) ;
+            break ;
+
+         } /* fim ativa: Modifica o tipo do vertice corrente */
+
+      /* 3. Modifica o tipo da cabeca da lista de vertices */
+
+         case 3:
+         {
+            CED_DefinirTipoEspaco( pGrafo->pVertices , CED_ID_TIPO_VALOR_NULO ) ;
+            break ;
+
+         } /* fim ativa: Modifica a cabeca da lista vertices */
+
+      /* 4. Anula ponteiro do vertice corrente */
+
+         case 4:
+         {
+            pGrafo->pVertCorr = NULL ;
+            break ;
+
+         } /* fim ativa: Anula ponteiro do vertice corrente */
+
+
+      /* 5. Anula ponteiro para a cabeça da lista de vertices */
+
+         case 5:
+         {
+            pGrafo->pVertices = NULL ;
+            break ;
+
+         } /* fim ativa: Anula ponteiro para a cabeça de lista de vertices */
+
+
+      /* 6. Faz vertice corrente apontar para lixo */
+
+         case 6:
+         {
+            pGrafo->pVertCorr = ( LIS_tppLista )( EspacoLixo ) ;
+            break ;
+
+         } /* fim ativa: Faz verticecorrente apontar para lixo */
+
+
+      /* 7. Faz cabeca da lista de vertices apontar para lixo */
+
+         case 7:
+         {
+            pGrafo->pVertices = ( LIS_tppLista )( EspacoLixo ) ;
+            break ;
+         } /* fim ativa:Faz cabeca da lista de vertices apontar para lixo */
+
+
+      /* Deturpa aresta */
+
+         default :
+
+       //  ConteudoVertice = (GRA_tpConteudoVert *) LIS_ObterValor(pGrafo->pVertCorr);
+
+         if ( /*ConteudoVertice->pArestas != NULL*/ 1 )
+         {
+
+            switch ( flag ) {
+
+            /* 9. Anula ponteiro da cabeca da lista de arestas */
+
+               case 9:
+               {
+                  ConteudoVertice->pArestas = NULL;
+                  break ;
+
+               } /* fim ativa: Anula ponteiro da cabeca da lista de arestas */
+
+            /* 10. Faz cabeca da lista de aresta apontar para lixo */
+
+               case 10:
+               {
+                  ConteudoVertice->pArestas = ( LIS_tppLista )( EspacoLixo ) ;
+                  break ;
+
+               } /* fim ativa: Faz cabeca da lista de aresta apontar para lixo */
+
+                               /* 11. Altera quantidade total de vertices */
+                case 11:
+                {
+                  pGrafo->numElem = -1;
+                  break;
+                }
+
+            /*12. Alterar numero de arestas do vertice */
+
+              case 12:
+              {
+                ConteudoVertice->NumArestas = -1;
+              }
+
+            } /* fim seleciona: Deturpa aresta */
+
+            break ;
+
+         } /* fim ativa: Deturpa aresta */
+
+      } /* fim seleciona: Vertice de GRA &Deturpar Grafo */
+
+   } /* Fim função: GRA  &Deturpar Grafo */
+
+#endif 
+
+#ifdef _DEBUG
+/***********************************************************************
+*
+*  $FC Função: GRA Verificar estrutura
+*
+***********************************************************************/
+
+
+int GRA_VerificaEstrutura(GRA_tppGrafo pGrafo) {
+  int numErros = 0;
+  //GRA_tpConteudoVert * Vertice;
+  
+  printf("\nGRA_VerificarEstrura\n");
+  //1. verifica se o tipo es datrutura é de fato o tipo esperado
+  if ( GRA_TipoEspacoCabeca != CED_ObterTipoEspaco(pGrafo)) {
+    printf("\nGRA_VerificarEstrura-1\n");
+    CNT_CONTAR( "GRA_VerificarEstrura-1" );
+    numErros++;
+  }
+
+  //2. verifica integridade do tamanho do espaco alocado   
+  if ( sizeof(pGrafo) != CED_ObterTamanhoValor(pGrafo)) {
+    CNT_CONTAR( "GRA_VerificarEstrura-2" );
+    printf("\nGRA_VerificarEstrura-2 GrafoSize = %d, tamValor = %d\n", sizeof(pGrafo), CED_ObterTamanhoValor(pGrafo));
+    numErros++;
+  }
+
+  if(LIS_AvancarElementoCorrente(pGrafo->pVertices, 0) == LIS_CondRetListaVazia){
+    printf("\nGRA_VerificaListaVazia\n");
+    printf("\nNUM ERROS =  %d\n", numErros);
+    return numErros;
+
+  }
+
+  //3. chama as funcoes verificadoras das demais estruturas do grafo
+  numErros += GRA_VerificaListaVertices(pGrafo->pVertices, pGrafo);
+  numErros += GRA_VerificaVertice(pGrafo->pVertCorr, pGrafo);
+
+  CNT_CONTAR( "GRA_VerificarEstrura-9" );
+  printf("\nGRA_VerificarEstrura-9\n");
+  return numErros;
+
+}
+
+int GRA_VerificaListaVertices(LIS_tppLista pVertices, GRA_tppGrafo pGrafo) {
+  int numErros = 0;
+  int count = 0;
+  LIS_tppLista ListaVertice;
+  //1. percorre a lista, acessando cada um dos elementos da lista vertices
+  IrInicioLista(pVertices);
+
+  printf("\nGRA_VerificarEstrura-1\n");
+  if (pVertices == NULL) {
+    numErros ++;
+    //CNT_CONTAR("Verif");
+    printf("\nGRA_VerificarEstrura-17\n");
+  }
+
+  CNT_CONTAR( "GRA_VerificarEstrura-4" );
+  printf("\nGRA_VerificarEstrura-4\n");
+  do {
+
+    ListaVertice = (LIS_tppLista) LIS_ObterValor(pVertices);
+
+    count++;
+
+    numErros += GRA_VerificaVertice(ListaVertice, pGrafo);
+
+    CNT_CONTAR( "GRA_VerificarEstrura-5" );
+    printf("\nGRA_VerificarEstrura-5\n");
+  } while(LIS_AvancarElementoCorrente(pVertices, 1) == LIS_CondRetOK);
+
+  //2. checa se quantidade de vertices esta correta
+  if (count != pGrafo->numElem) {
+    numErros++;
+    CNT_CONTAR( "GRA_VerificarEstrura-14" );
+    printf("\nGRA_VerificarEstrura-14\n");
+  }
+
+  return numErros;
+}
+
+int GRA_VerificaVertice(LIS_tppLista pVertice, GRA_tppGrafo pGrafo) {
+  int numErros = 0;
+
+  printf("\nGRA_VerificarVertice\n");
+  if (pVertice == NULL){
+    numErros++;
+    printf("\nGRA_VerificarVerticeNULL\n");
+    return 0;
+  }
+  
+  //1. verifica se o tipo da estrutura é de fato o tipo esperado
+  if ( GRA_TipoEspacoVertice != CED_ObterTipoEspaco(pVertice)) {
+    numErros++;
+    CNT_CONTAR( "GRA_VerificarEstrura-6" );
+    printf("\nGRA_VerificarEstrura-6\n");
+  }
+
+  //2. verifica integridade do tamanho do espaco alocado
+  if (sizeof(pVertice) != CED_ObterTamanhoValor(pVertice)) {
+    numErros++;
+    CNT_CONTAR( "GRA_VerificarEstrura-7" );
+    printf("\nGRA_VerificarEstrura-7\n");
+  }
+
+  //3. verifica conteudo do vertice
+  numErros += GRA_VerificaConteudoVert((GRA_tpConteudoVert *) LIS_ObterValor(pVertice), pGrafo);
+
+  CNT_CONTAR( "GRA_VerificarEstrura-8" );
+  printf("\nGRA_VerificarEstrura-8\n");
+  return numErros;
+}
+
+int GRA_VerificaConteudoVert(GRA_tpConteudoVert * pConteudoVert, GRA_tppGrafo pGrafo) {
+  LIS_tppLista ListaArestas;
+  int count, numErros = 0;
+ 
+ printf("\nGRA_VerificarConteudo\n");
+ //1. verifica se o tipo da estrutura é de fato o tipo esperado
+  if (GRA_TipoPDado != CED_ObterTipoEspaco(pConteudoVert)) {
+    numErros++;
+    CNT_CONTAR( "GRA_VerificarEstrura-10" );
+  }
+
+  //2. verifica integridade do tamanho do espaco alocado
+  if (sizeof(pConteudoVert) != CED_ObterTamanhoValor(pConteudoVert)) {
+    numErros++;
+    CNT_CONTAR( "GRA_VerificarEstrura-11" );
+  }
+
+  //3. Verifica numero de arestas
+  ListaArestas = pConteudoVert->pArestas;
+
+  if(ListaArestas == NULL)
+    numErros++;
+
+  IrInicioLista(ListaArestas);
+  count = 0;
+  do {
+    count++;
+    CNT_CONTAR( "GRA_VerificarEstrura-12" );
+  } while(LIS_AvancarElementoCorrente(ListaArestas, 1) == LIS_CondRetOK);
+
+  if(count != pConteudoVert->NumArestas){
+    numErros++;
+    CNT_CONTAR( "GRA_VerificarEstrura-13" );
+  }
+
+  //4. verifica ponteiro para a cabeca
+   if(pConteudoVert->pCabeca != pGrafo){
+      CNT_CONTAR( "GRA_VerificarEstrura-3" );
+      printf("\nGRA_VerificarEstrura-3\n");
+      numErros++;
+   }
+
+  return numErros;
+}
+
+
+#endif
+
+  

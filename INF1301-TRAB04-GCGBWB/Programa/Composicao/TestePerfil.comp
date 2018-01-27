@@ -3,7 +3,7 @@
 
 [Diretorios]
 
-Nome        =  TesteGrafo
+Nome        =  TestePerfil
 PathDefault =  ..\Fontes
 err         =  ..\Produto
 obj         =  ..\Objetos
@@ -12,13 +12,13 @@ h           =  ..\Fontes
 def         =  ..\Tabelas
 
 [Modulos]
+TestPer
+Perfil
+Mensagem
 Lista
-TestGra		/D_DEBUG
-Grafo		/D_DEBUG
 
 [BuildInicio]
-
-/OUT:..\produto\TesteGrafo.exes
+/OUT:..\produto\TestePerfil.exe
 /INCREMENTAL:NO
 /MACHINE:IX86
 

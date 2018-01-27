@@ -118,6 +118,10 @@ typedef struct GRA_tagGrafo * GRA_tppGrafo;
  /* 11 */GRA_CondRetFimArestas
           /* Chegou ao fim das arestas do vertice */
 
+    #ifdef _DEBUG
+		,GRA_CondRetErroEstrutura
+     #endif
+    
    } GRA_tpCondRet ;
 
  /***********************************************************************
@@ -331,6 +335,14 @@ GRA_tpCondRet GRA_CriarAresta(GRA_tppGrafo pGrafo, void * pChaveID_1, void * pCh
 *     GRA_CondRetOK                - excluiu aresta com corretamente
 ***********************************************************************/
 GRA_tpCondRet GRA_ExcluirAresta(GRA_tppGrafo pGrafo, void *pChaveID_1, void *pChaveID_2);
+
+#ifdef _DEBUG
+
+void GRA_Deturpar( void * pGrafoParm , int flag );
+
+int GRA_VerificaEstrutura(GRA_tppGrafo pGrafo);
+
+#endif
 
 #undef GRAFO_EXT
 

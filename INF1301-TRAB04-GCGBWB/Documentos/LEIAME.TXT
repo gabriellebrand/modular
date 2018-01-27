@@ -1,0 +1,101 @@
+Autores:	Gabrielle Brandemburg 
+		    Gabriel Cantergiani
+		    Wellington Bezerra
+
+
+Data:		07/12/2017
+
+I. SOBRE O PROGRAMA
+
+
+i. Descrição do programa:
+
+O programa desenvolvido se trata de uma simulação de uma rede de relacionamentos, 
+no qual apenas um usuário faz uso da rede, adicionando perfis fictícios e conectando 
+perfis entre si para criar amizades e enviar mensagens.
+
+ii. Para executar o programa
+
+1) Entre na pasta Produto
+2) Presisone SHIFT + Clique com botão direito 
+3) Escolha a opção "OPEN COMMAND WINDOW HERE"
+4) Depois que o CMD estiver aberto:
+4.1) Digite "TRAB4-1.EXE" para executar o programa
+
+
+iii. Para utilizar o programa
+
+1) Ao abrir o programa, será mostrado na tela um menu com todas as possíveis ações a serem realizadas
+2) Para cada ação, o programa irá solicitar os dados de entrada em ordem. Digite sempre um dado por vez e pressione enter.
+3) Não ultrapasse o limite de caracteres permitidos (especificados em cada solicitação de dado) para que não ocorra problema de overflow.
+
+----------------------------------------------------------------
+----------------------------------------------------------------
+
+II. SOBRE OS TESTES DO PROGRAMA
+
+Modo de uso:
+
+i. Para executar todos os testes implementados:
+
+1) Entre na pasta Programa
+2) Presisone SHIFT + Clique com botão direito na pasta Batches
+3) Escolha a opção "OPEN COMMAND WINDOW HERE"
+4) Depois que o CMD estiver aberto:
+4.1) Digite vsvars32.bat
+4.2) Digite Tudo.bat
+
+5) Para gerar o executável(arquivo.EXE) e fazer os testes, basta:
+5.1) Digite " vsvars32.bat "
+5.2) Digite " Tudo.bat "
+
+Após finalizar a execucação dos testes da lista, feche o CMD.
+
+ii. Para executar testes do grafo:
+
+1) Entre na pasta TRAB1-2
+2) Presisone SHIFT + Clique com botão direito 
+3) Escolha a opção "OPEN COMMAND WINDOW HERE"
+4) Depois que o CMD estiver aberto:
+4.1) Digite " TRAB1-2.EXE /sTesteGrafo.script " para executar os testes com o arquivo executavel existente
+
+5) Para gerar o executável(arquivo.EXE) e fazer os testes, basta:
+5.1) Digite " vsvars32.bat "
+5.2) Digite " Tudo.bat "
+
+Após finalizar a execucação dos testes da lista, feche o CMD.
+
+iii. Comandos disponíveis
+
+*     Comandos disponíveis no grafo
+*
+* =criargrafo            inxGrafo
+* =criarvertice          inxGrafo nome email cidade idade CondRetEsperada
+* =irvertice             inxGrafo email CondRetEsperada
+* =excluirvertice        inxGrafo CondRetEsperada
+* =excluirgrafo          inxGrafo CondRetEsperada 
+* =criararesta           inxGrafo email email2 CondRetEsperada 
+* =excluiraresta         inxGrafo email email2 CondRetEsperada
+* =irvizinho             inxGrafo email CondRetEsperada
+
+
+*     Comandos disponíveis na lista
+*
+*     =resetteste
+*           - anula o vetor de listas. Provoca vazamento de memória
+*     =criarlista                   inxLista
+*     =destruirlista                inxLista
+*     =esvaziarlista                inxLista
+*     =inselemantes                 inxLista  string(nome) string(email) string(cidade) string(dataNasc) inxPerfil  CondRetEsp
+*     =inselemapos                  inxLista  string(nome) string(email) string(cidade) string(dataNasc) inxPerfil  CondRetEsp
+*     =obtervalorelem               inxLista  string(email)  CondretPonteiro
+*     =excluirelem                  inxLista  CondRetEsp
+*     =irinicio                     inxLista
+*     =irfinal                      inxLista
+*     =avancarelem                  inxLista  numElem CondRetEsp
+*	  =procurarvalor				inxLista  inxPerfil  CondRetEsp
+*     =procurarconteudo             inxLista  string(email)
+
+
+
+

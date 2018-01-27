@@ -1,0 +1,94 @@
+Autores:	Gabrielle Brandemburg 
+		    Gabriel Cantergiani
+		    Wellington Bezerra
+
+
+Data:		07/12/2017
+
+FUNCOES - MODULO CONTROLADOR
+
+=criarperfil                  <nome> 	<email>     <cidade>    <genero>  <dataNasc>  <cond ret>
+=buscarperfil  				  <email>   <cond ret>
+=mostrarperfil  			  <email>   <cond ret>
+=excluirperfil                <email>   <cond ret>
+=alterarnome                  <email>   <nome>   	<cond ret>
+=alterarcidade                <email>   <cidade>  	<cond ret>
+=alterardatanasc              <email>   <datanasc>	<cond ret>
+=alterargenero                <email>   <genero>  	<cond ret>
+=criaramizade                 <email1>  <email2>  	<cond ret>
+=excluiramizade               <email1>  <email2>  	<cond ret>
+=buscarramizades              <email1>  <cond ret>
+=enviarmensagem               <email1>  <email2>  	<texto>  	<cond ret>
+=carregarhistorico            <email1>  <email2>  	<cond ret>
+
+FUNCOES - MODULO GRAFO
+
+=criargrafo            		  <inxGrafo>
+=criarvertice          		  <inxGrafo>  <nome> 		email 		<cidade> <idade> <cond ret>
+=irvertice             	      <inxGrafo>  <email> 		<cond ret>
+=excluirvertice        		  <inxGrafo>  <cond ret>
+=excluirgrafo          	      <inxGrafo>  <cond ret> 
+=criararesta           	      <inxGrafo>  <email> 		<email2 	<cond ret> 
+=excluiraresta         		  <inxGrafo>  <email> 		<email2 	<cond ret>
+=irvizinho             		  <inxGrafo>  <email> 		<cond ret>
+
+FUNCOES - MODULO CONTROLADOR
+
+=resetteste - anula o vetor de Mensagens e o de Perfil. Provoca vazamento de memória
+=criarmensagem          	<inxMensagem>   inxPerfil1                  inxPerfil2   string(texto)
+=obtertexto             	<inxMensagem>   <texto>               		<cond ret>
+=obterid                	<inxMensagem>   idMen (indice + 1)          <cond ret>
+=obterremetente         	<inxMensagem>   inxPerfil1                  <cond ret>
+=obterdestinatario      	<inxMensagem>   inxPerfil2                  <cond ret>
+=compararmensagem       	<inxMensagem1>  inxMensagem2                <cond ret>
+=desativarremetente     	<inxMensagem>   CondRet
+=desativardestinatario  	<inxMensagem>   CondRet
+=criarperfil            	<inxPerfil>     string(nome)
+
+FUNCOES  - MODULO CONTA:
+
+=inicializarcontadores     <cond ret>
+=terminarcontadores        <cond ret>
+=registraracumulador       <nome arquivo acumulador>
+=lercontadores             <nome arquivo contadores> <num erros esperados>
+=zerartodoscontadores      <cond ret>
+=zerarcontador             <nome contador> <cond ret>
+=iniciarcontagem
+=pararcontagem
+=contagemcontador          <nome contador> <contagem esperada>
+=numcontadores             <num esperado>
+=contagemtotal             <Contagem esperada>
+=verificarcontagens        <num contadores zero esperados>
+
+FUNCOES - MODULO PERFIL
+
+=resetteste: anula o vetor de listas. Provoca vazamento de memória
+=criarperfil                  inxPerfil string(nome) string(email) string(cidade) char(genero) string(dataNasc)
+=destruirperfil  			  inxPerfil
+=compararperfil               inxPerfil1  string(email) 	CondRet
+=mostrarperfil  			  inxPerfil   CondRet
+=obteremail                   inxPerfil   string(email)  	CondRet
+=obternome                    inxPerfil   string(nome)  	CondRet
+=obtercidade                  inxPerfil   string(cidade) 	CondRet
+=obterdatanasc                inxPerfil   string(dataNasc)  CondRet
+=obtergenero   				  inxPerfil   string(genero)  	CondRet
+=alterarnome  				  inxPerfil   string(nome)    	CondRet
+=alterarcidade  			  inxPerfil   string(cidade)   	CondRet
+=alterardatanasc  			  inxPerfil   string(dataNasc) 	CondRet
+=alterargenero  			  inxPerfil   char(genero)     	CondRet
+=enviarmensagem  			  inxPerfil1  inxPerfil2      	string(texto)  CondRet
+=buscarmsgenv  				  inxPerfil   string(email)   	CondRet
+=buscarmsgrec  				  inxPerfil   string(email)   	CondRet
+
+
+FUNCOES MODULO CESPDIN:
+
+=exibirtodosespacos         <Regra>
+=verificartodosespacos      <numFalhasEsperado>
+=obternumeroespacosalocados <numAlocadosEsperado>
+=obternumerototalespacos    <numTotalEsperado>
+=obternumeroregra           <regra>  <numEsperado>
+=obtertotalespacosalocado   <totalEsperado>
+=limitarmemoriadisponivel   <novoLimite>
+=limitarnumeroespacos       <novoLimite>
+=eliminarlimitesespaco
